@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "zombie_apocalypse",
+  "version": "${version}",
+  "name": "Zombie Apocalypse Mod",
+  "description": "Zombies will eat your brains",
+  "authors": [
+    "Me!"
+  ],
+  "contact": {},
+  "license": "CC0-1.0",
+  "icon": "assets/modid/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.offbeat_stuff.zombie_apocalypse.ZombieMod"
+    ]
+  },
+  "mixins": [
+    "modid.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.19",
+    "fabric-api": "*",
+    "minecraft": "~1.19.4",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
