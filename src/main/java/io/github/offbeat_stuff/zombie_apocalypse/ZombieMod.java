@@ -41,10 +41,10 @@ public class ZombieMod implements ModInitializer {
 		if (item == null) {
 			return ItemStack.EMPTY;
 		}
-		return EnchantmentHelper.enchant(XRANDOM, item.getDefaultStack(), XRANDOM.nextBetween(5, 40), true);
+		return EnchantmentHelper.enchant(XRANDOM, item.getDefaultStack(), XRANDOM.nextBetween(Config.minEnchantmentLevel, Config.maxEnchantmentLevel), true);
 	}
 
-	private ItemStack randomArmor(ServerWorld world,Item[] items,float[] chances) {
+	private ItemStack randomArmor(ServerWorld world, Item[] items, float[] chances) {
 		var r = randomEnchanctedItemStack(items, chances);
 		ArmorTrimHander.applyRandomArmorTrim(world, r);
 		return r;
@@ -66,22 +66,20 @@ public class ZombieMod implements ModInitializer {
 				Items.LEATHER_LEGGINGS };
 		Item[] boots = { Items.NETHERITE_BOOTS, Items.DIAMOND_BOOTS, Items.IRON_BOOTS, Items.LEATHER_BOOTS };
 
-		float[] chances = { 0.0003f, 0.0025f, 0.025f, 0.15f };
-		float[] weaponChances = { 0.001f, 0.0075f, 0.01f, 0.02f,0.05f,0.1f };
-		zombie.equipStack(EquipmentSlot.HEAD, randomArmor(world,helmets, chances));
-		zombie.equipStack(EquipmentSlot.CHEST,randomArmor(world,chestplates, chances));
-		zombie.equipStack(EquipmentSlot.LEGS, randomArmor(world,leggings, chances));
-		zombie.equipStack(EquipmentSlot.FEET, randomArmor(world,boots, chances));
+		zombie.equipStack(EquipmentSlot.HEAD, randomArmor(world, helmets, Config.armorPieceChances));
+		zombie.equipStack(EquipmentSlot.CHEST, randomArmor(world, chestplates, Config.armorPieceChances));
+		zombie.equipStack(EquipmentSlot.LEGS, randomArmor(world, leggings, Config.armorPieceChances));
+		zombie.equipStack(EquipmentSlot.FEET, randomArmor(world, boots, Config.armorPieceChances));
 		if (XRANDOM.nextBoolean()) {
 			zombie.equipStack(EquipmentSlot.MAINHAND, randomEnchanctedItemStack(
 					new Item[] { Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.IRON_AXE, Items.GOLDEN_AXE,
 							Items.STONE_AXE, Items.WOODEN_AXE },
-					weaponChances));
+					Config.weaponChances));
 		} else {
 			zombie.equipStack(EquipmentSlot.MAINHAND, randomEnchanctedItemStack(
 					new Item[] { Items.NETHERITE_SWORD, Items.DIAMOND_SWORD, Items.IRON_SWORD, Items.GOLDEN_SWORD,
 							Items.STONE_SWORD, Items.WOODEN_SWORD },
-					weaponChances));
+					Config.weaponChances));
 		}
 	}
 
@@ -106,36 +104,35 @@ public class ZombieMod implements ModInitializer {
 		return null;
 	}
 
-	private int randomCutout() {
-		int r = XRANDOM.nextInt(64);
-		if (r < 32) {
-			r -= 32;
+	private int randomCutout(int max, int min) {
+		int fullRange = (max - min);
+		int r = XRANDOM.nextBetween(-fullRange, fullRange);
+		if (r < 0) {
+			r -= min;
+		} else {
+			r += min;
 		}
 		return r;
 	}
 
 	private int[] randomBoxPos() {
-		int[] r = {0,0,0};
-		r[0] = XRANDOM.nextBetween(-64,64);
-		r[1] = XRANDOM.nextBetween(-64,64);
-		r[2] = XRANDOM.nextBetween(-64,64);
+		int[] r = { 0, 0, 0 };
+		r[0] = XRANDOM.nextBetween(-Config.boxSpawnMax, Config.boxSpawnMax);
+		r[1] = XRANDOM.nextBetween(-Config.boxSpawnMax, Config.boxSpawnMax);
+		r[2] = XRANDOM.nextBetween(-Config.boxSpawnMax, Config.boxSpawnMax);
 
-		r[XRANDOM.nextInt(3)] = randomCutout();
+		r[XRANDOM.nextInt(3)] = randomCutout(Config.boxSpawnMax, Config.boxSpawnMin);
 
 		return r;
 	}
 
 	private int[] randomAxisPos() {
-		int a = XRANDOM.nextInt(48);
-		if (a < 24) {
-			a -= 48;
-		}
-		int[] result = {0,0,0};
-		result[XRANDOM.nextInt(3)] = a;
+		int[] result = { 0, 0, 0 };
+		result[XRANDOM.nextInt(3)] = randomCutout(Config.axisRangeMax, Config.axisRangeMin);
 		return result;
 	}
 
-	private void spawnAttemptForPlayer(ServerPlayerEntity player,int[] pos) {
+	private void spawnAttemptForPlayer(ServerPlayerEntity player, int[] pos) {
 		if (pos.length != 3) {
 			return;
 		}
@@ -154,10 +151,14 @@ public class ZombieMod implements ModInitializer {
 	public void onInitialize() {
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			server.getPlayerManager().getPlayerList().forEach(player -> {
-				for (int i = 0; i < 5; i++) {
-					spawnAttemptForPlayer(player,randomBoxPos());
+				if (player.world.getTimeOfDay() > Config.minTime && player.world.getTimeOfDay() < Config.maxTime) {
+					if (XRANDOM.nextFloat() < Config.boxSpawnChance) {
+						spawnAttemptForPlayer(player, randomBoxPos());
+					}
+					if (XRANDOM.nextFloat() < Config.axisSpawnChance) {
+						spawnAttemptForPlayer(player, randomAxisPos());
+					}
 				}
-				spawnAttemptForPlayer(player,randomAxisPos());
 			});
 		});
 	}

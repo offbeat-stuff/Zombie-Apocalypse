@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import io.github.offbeat_stuff.zombie_apocalypse.Config;
 import net.minecraft.entity.mob.ZombieEntity;
 
 @Mixin(ZombieEntity.class)
@@ -16,7 +17,7 @@ public class ZombieEntityMixin {
       cancellable = true
     )
     void dontBurn(CallbackInfoReturnable<Boolean> cir){
-      cir.setReturnValue(false);
+      cir.setReturnValue(Config.zombiesBurnInSunlight);
     }
 
 }
