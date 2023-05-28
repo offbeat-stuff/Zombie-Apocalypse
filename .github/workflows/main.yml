@@ -1,0 +1,32 @@
+name: Java Gradle Build and Upload
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build (optional)'
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '20'
+          cache: 'gradle'
+
+      - name: Build with Gradle
+        run: ./gradlew build --no-daemon
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: project-artifacts
+          path: build/libs/*
