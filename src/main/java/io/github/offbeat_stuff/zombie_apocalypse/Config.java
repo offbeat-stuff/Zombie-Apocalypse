@@ -14,6 +14,11 @@ public class Config {
     public int axisRangeMin = 24;
     public int axisRangeMax = 48;
 
+    // Chance that a zombie spawns in a single plane of player each tick
+    public float planeSpawnChance = 1f;
+    public int planeRangeMin = 24;
+    public int planeRangeMax = 48;
+
     // Chance that a zombie spawns in a box around player but not inside the smaller
     // box each tick
     public float boxSpawnChance = 1f;

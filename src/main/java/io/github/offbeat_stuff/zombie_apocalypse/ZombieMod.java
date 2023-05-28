@@ -170,6 +170,16 @@ public class ZombieMod implements ModInitializer {
 		return result;
 	}
 
+	private int[] randomPlanePos() {
+		int[] result = {0,0,0};
+		int r = XRANDOM.nextInt(3);
+		result[r] = XRANDOM.nextBetween(-config.planeRangeMax, config.planeRangeMax);
+		r += XRANDOM.nextInt(2);
+		r = r % 3;
+		result[r] = randomCutout(config.planeRangeMax, config.planeRangeMin);
+		return result;
+	}
+
 	private void spawnAttemptForPlayer(ServerPlayerEntity player, int[] pos) {
 		if (pos.length != 3) {
 			return;
@@ -202,6 +212,9 @@ public class ZombieMod implements ModInitializer {
 			if (isTimeRight(player.world.getTimeOfDay())) {
 				if (XRANDOM.nextFloat() < config.boxSpawnChance) {
 					spawnAttemptForPlayer(player, randomBoxPos());
+				}
+				if (XRANDOM.nextFloat() < config.planeSpawnChance) {
+					spawnAttemptForPlayer(player, randomPlanePos());
 				}
 				if (XRANDOM.nextFloat() < config.axisSpawnChance) {
 					spawnAttemptForPlayer(player, randomAxisPos());
