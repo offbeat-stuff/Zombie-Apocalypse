@@ -31,4 +31,7 @@ public class Config {
 
     // minimum distance from player
     public float minPlayerDistance = 24f;
+
+    // Max zombie count per player
+    public int maxZombieCount = 100;
 }

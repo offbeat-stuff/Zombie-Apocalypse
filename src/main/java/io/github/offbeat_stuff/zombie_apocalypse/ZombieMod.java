@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.mob.MobEntity;
@@ -183,20 +184,28 @@ public class ZombieMod implements ModInitializer {
 		}
 	}
 
+	private void spawnZombiesInWorld(ServerWorld world) {
+		if (world.getChunkManager().getSpawnInfo().getGroupToCount()
+				.getInt(SpawnGroup.MONSTER) > config.maxZombieCount) {
+			return;
+		}
+		world.getPlayers().forEach(player -> {
+			if (player.world.getTimeOfDay() > config.minTime && player.world.getTimeOfDay() < config.maxTime) {
+				if (XRANDOM.nextFloat() < config.boxSpawnChance) {
+					spawnAttemptForPlayer(player, randomBoxPos());
+				}
+				if (XRANDOM.nextFloat() < config.axisSpawnChance) {
+					spawnAttemptForPlayer(player, randomAxisPos());
+				}
+			}
+		});
+	}
+
 	@Override
 	public void onInitialize() {
 		handleConfig();
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			server.getPlayerManager().getPlayerList().forEach(player -> {
-				if (player.world.getTimeOfDay() > config.minTime && player.world.getTimeOfDay() < config.maxTime) {
-					if (XRANDOM.nextFloat() < config.boxSpawnChance) {
-						spawnAttemptForPlayer(player, randomBoxPos());
-					}
-					if (XRANDOM.nextFloat() < config.axisSpawnChance) {
-						spawnAttemptForPlayer(player, randomAxisPos());
-					}
-				}
-			});
+			server.getWorlds().forEach(this::spawnZombiesInWorld);
 		});
 	}
 }
