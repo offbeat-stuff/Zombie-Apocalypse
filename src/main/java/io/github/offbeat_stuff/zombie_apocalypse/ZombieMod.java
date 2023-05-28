@@ -41,7 +41,8 @@ public class ZombieMod implements ModInitializer {
 		if (item == null) {
 			return ItemStack.EMPTY;
 		}
-		return EnchantmentHelper.enchant(XRANDOM, item.getDefaultStack(), XRANDOM.nextBetween(Config.minEnchantmentLevel, Config.maxEnchantmentLevel), true);
+		return EnchantmentHelper.enchant(XRANDOM, item.getDefaultStack(),
+				XRANDOM.nextBetween(Config.minEnchantmentLevel, Config.maxEnchantmentLevel), true);
 	}
 
 	private ItemStack randomArmor(ServerWorld world, Item[] items, float[] chances) {
@@ -51,7 +52,7 @@ public class ZombieMod implements ModInitializer {
 	}
 
 	private void trySpawnZombieAt(ServerWorld world, BlockPos spawnPos) {
-		if (world.isPlayerInRange(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 24)) {
+		if (world.isPlayerInRange(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Config.minPlayerDistance)) {
 			return;
 		}
 		var zombie = EntityType.ZOMBIE.spawn(world, spawnPos, SpawnReason.NATURAL);

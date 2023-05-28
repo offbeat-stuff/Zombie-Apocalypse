@@ -28,4 +28,7 @@ public class Config {
     // Enchantment levels for armor and weapons
     public static final int minEnchantmentLevel = 5;
     public static final int maxEnchantmentLevel = 40;
+
+    // minimum distance from player
+    public static final float minPlayerDistance = 24f;
 }
