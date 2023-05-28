@@ -34,4 +34,11 @@ public class Config {
 
     // Max zombie count per player
     public int maxZombieCount = 100;
+
+    // Status effects for Zombie
+    public float firstChance = 0.1f;
+    public float secondChance = 0.1f;
+    public int maxPotionTimeInTicks = 12000;
+    // range 1 - 255
+    public int maxAmplifier = 2;
 }

@@ -91,6 +91,7 @@ public class ZombieMod implements ModInitializer {
 			return;
 		}
 		var zombie = EntityType.ZOMBIE.spawn(world, spawnPos, SpawnReason.NATURAL);
+		PotionEffectHandler.applyRandomPotionEffects(zombie);
 		if (!world.isSpaceEmpty(zombie) || !world.doesNotIntersectEntities(zombie)) {
 			zombie.setRemoved(RemovalReason.DISCARDED);
 			return;
