@@ -5,9 +5,12 @@ public class Config {
 
     // 0.01 is 1% chance
     // NETHERITE DIAMOND IRON LEATHER
-    public float[] armorPieceChances = { 0.0003f, 0.0025f, 0.025f, 0.15f };
+    public float armorChance = 0.5f;
+    public Float[] armorPieceChances = { 0.0005f, 0.0025f };
     // NETHERITE DIAMOND IRON GOLD STONE WOODEN
-    public float[] weaponChances = { 0.001f, 0.0075f, 0.01f, 0.02f, 0.05f, 0.1f };
+    public float weaponChance = 0.5f;
+    public float axeChance = 0.3f;
+    public Float[] weaponChances = { 0.001f, 0.0075f, 0.01f};
 
     // Chance that a zombie spawns in a single axis of player each tick
     public float axisSpawnChance = 1f;

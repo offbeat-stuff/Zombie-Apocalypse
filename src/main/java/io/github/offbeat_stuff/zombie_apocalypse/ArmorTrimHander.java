@@ -32,7 +32,7 @@ public class ArmorTrimHander {
         }
         var pattern = getRandomEntry(world.getRegistryManager().get(RegistryKeys.TRIM_PATTERN));
         var material = getRandomEntry(world.getRegistryManager().get(RegistryKeys.TRIM_MATERIAL));
-        var trim = new ArmorTrim(material,pattern);
+        var trim = new ArmorTrim(material, pattern);
         ArmorTrim.apply(world.getRegistryManager(), istack, trim);
     }
 }

@@ -19,6 +19,9 @@ import net.minecraft.util.math.random.Xoroshiro128PlusPlusRandom;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -33,6 +36,27 @@ public class ZombieMod implements ModInitializer {
 
 	private final File settingsFile = new File("config", "zombie_apocalypse.toml");
 	public static Config config = null;
+
+	private static final List<Item> helmets = List.of(Items.NETHERITE_HELMET, Items.DIAMOND_HELMET, Items.IRON_HELMET,
+			Items.LEATHER_HELMET);
+	private static final List<Item> chestplates = List.of(Items.NETHERITE_CHESTPLATE, Items.DIAMOND_CHESTPLATE,
+			Items.IRON_CHESTPLATE,
+			Items.LEATHER_CHESTPLATE);
+	private static final List<Item> leggings = List.of(Items.NETHERITE_LEGGINGS, Items.DIAMOND_LEGGINGS,
+			Items.IRON_LEGGINGS,
+			Items.LEATHER_LEGGINGS);
+	private static final List<Item> boots = List.of(Items.NETHERITE_BOOTS, Items.DIAMOND_BOOTS, Items.IRON_BOOTS,
+			Items.LEATHER_BOOTS);
+
+	private static final List<Item> axes = List.of(Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.IRON_AXE,
+			Items.GOLDEN_AXE,
+			Items.STONE_AXE, Items.WOODEN_AXE);
+	private static final List<Item> swords = List.of(Items.NETHERITE_SWORD, Items.DIAMOND_SWORD, Items.IRON_SWORD,
+			Items.GOLDEN_SWORD,
+			Items.STONE_SWORD, Items.WOODEN_SWORD);
+
+	private static List<Float> armorChances = new ArrayList<Float>();
+	private static List<Float> weaponChances = new ArrayList<Float>();
 
 	private void writeConfig() {
 		if (settingsFile.exists())
@@ -57,22 +81,13 @@ public class ZombieMod implements ModInitializer {
 		if (config == null) {
 			config = new Config();
 		}
+		armorChances = new ArrayList<Float>(Arrays.asList(config.armorPieceChances));
+		weaponChances = new ArrayList<Float>(Arrays.asList(config.weaponChances));
 		writeConfig();
-
 	}
 
-	private Item chooseRandomItem(Item[] items, float[] chances) {
-		float chance = XRANDOM.nextFloat();
-		for (int i = 0; i < chances.length; i++) {
-			if (chance < chances[i]) {
-				return items[i];
-			}
-		}
-		return null;
-	}
-
-	private ItemStack randomEnchanctedItemStack(Item[] items, float[] chances) {
-		Item item = chooseRandomItem(items, chances);
+	private ItemStack randomEnchanctedItemStack(List<Item> items, List<Float> chances) {
+		Item item = ProbabilityHandler.chooseRandom(items, chances);
 		if (item == null) {
 			return ItemStack.EMPTY;
 		}
@@ -80,7 +95,7 @@ public class ZombieMod implements ModInitializer {
 				XRANDOM.nextBetween(config.minEnchantmentLevel, config.maxEnchantmentLevel), true);
 	}
 
-	private ItemStack randomArmor(ServerWorld world, Item[] items, float[] chances) {
+	private ItemStack randomArmor(ServerWorld world, List<Item> items, List<Float> chances) {
 		var r = randomEnchanctedItemStack(items, chances);
 		ArmorTrimHander.applyRandomArmorTrim(world, r);
 		return r;
@@ -96,27 +111,31 @@ public class ZombieMod implements ModInitializer {
 			zombie.setRemoved(RemovalReason.DISCARDED);
 			return;
 		}
-		Item[] helmets = { Items.NETHERITE_HELMET, Items.DIAMOND_HELMET, Items.IRON_HELMET, Items.LEATHER_HELMET };
-		Item[] chestplates = { Items.NETHERITE_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.IRON_CHESTPLATE,
-				Items.LEATHER_CHESTPLATE };
-		Item[] leggings = { Items.NETHERITE_LEGGINGS, Items.DIAMOND_LEGGINGS, Items.IRON_LEGGINGS,
-				Items.LEATHER_LEGGINGS };
-		Item[] boots = { Items.NETHERITE_BOOTS, Items.DIAMOND_BOOTS, Items.IRON_BOOTS, Items.LEATHER_BOOTS };
 
-		zombie.equipStack(EquipmentSlot.HEAD, randomArmor(world, helmets, config.armorPieceChances));
-		zombie.equipStack(EquipmentSlot.CHEST, randomArmor(world, chestplates, config.armorPieceChances));
-		zombie.equipStack(EquipmentSlot.LEGS, randomArmor(world, leggings, config.armorPieceChances));
-		zombie.equipStack(EquipmentSlot.FEET, randomArmor(world, boots, config.armorPieceChances));
-		if (XRANDOM.nextBoolean()) {
+		if (XRANDOM.nextFloat() < config.armorChance) {
+			zombie.equipStack(EquipmentSlot.HEAD, randomArmor(world, helmets, armorChances));
+		}
+		if (XRANDOM.nextFloat() < config.armorChance) {
+			zombie.equipStack(EquipmentSlot.CHEST, randomArmor(world, chestplates, armorChances));
+		}
+		if (XRANDOM.nextFloat() < config.armorChance) {
+			zombie.equipStack(EquipmentSlot.LEGS, randomArmor(world, leggings, armorChances));
+		}
+		if (XRANDOM.nextFloat() < config.armorChance) {
+			zombie.equipStack(EquipmentSlot.FEET, randomArmor(world, boots, armorChances));
+		}
+
+		if (XRANDOM.nextFloat() > config.weaponChance) {
+			return;
+		}
+		if (XRANDOM.nextFloat() < config.axeChance) {
 			zombie.equipStack(EquipmentSlot.MAINHAND, randomEnchanctedItemStack(
-					new Item[] { Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.IRON_AXE, Items.GOLDEN_AXE,
-							Items.STONE_AXE, Items.WOODEN_AXE },
-					config.weaponChances));
+					axes,
+					weaponChances));
 		} else {
 			zombie.equipStack(EquipmentSlot.MAINHAND, randomEnchanctedItemStack(
-					new Item[] { Items.NETHERITE_SWORD, Items.DIAMOND_SWORD, Items.IRON_SWORD, Items.GOLDEN_SWORD,
-							Items.STONE_SWORD, Items.WOODEN_SWORD },
-					config.weaponChances));
+					swords,
+					weaponChances));
 		}
 	}
 
@@ -171,7 +190,7 @@ public class ZombieMod implements ModInitializer {
 	}
 
 	private int[] randomPlanePos() {
-		int[] result = {0,0,0};
+		int[] result = { 0, 0, 0 };
 		int r = XRANDOM.nextInt(3);
 		result[r] = XRANDOM.nextBetween(-config.planeRangeMax, config.planeRangeMax);
 		r += XRANDOM.nextInt(2);

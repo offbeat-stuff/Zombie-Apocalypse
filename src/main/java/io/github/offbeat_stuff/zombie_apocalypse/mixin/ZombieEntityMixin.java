@@ -11,13 +11,9 @@ import net.minecraft.entity.mob.ZombieEntity;
 @Mixin(ZombieEntity.class)
 public class ZombieEntityMixin {
 
-    @Inject(
-      method = "burnsInDaylight",
-      at = @At("HEAD"),
-      cancellable = true
-    )
-    void dontBurn(CallbackInfoReturnable<Boolean> cir){
-      cir.setReturnValue(ZombieMod.config.zombiesBurnInSunlight);
-    }
+  @Inject(method = "burnsInDaylight", at = @At("HEAD"), cancellable = true)
+  void dontBurn(CallbackInfoReturnable<Boolean> cir) {
+    cir.setReturnValue(ZombieMod.config.zombiesBurnInSunlight);
+  }
 
 }

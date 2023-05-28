@@ -32,6 +32,7 @@ public class PotionEffectHandler {
     private static void applyRandomPotionEffect(ZombieEntity entity) {
         var effect = statusEffectChoices[ZombieMod.XRANDOM.nextInt(statusEffectChoices.length)];
         entity.addStatusEffect(
-                new StatusEffectInstance(effect, ZombieMod.XRANDOM.nextInt(ZombieMod.config.maxPotionTimeInTicks), ZombieMod.XRANDOM.nextInt(ZombieMod.config.maxAmplifier) + 1));
+                new StatusEffectInstance(effect, ZombieMod.XRANDOM.nextInt(ZombieMod.config.maxPotionTimeInTicks),
+                        ZombieMod.XRANDOM.nextInt(ZombieMod.config.maxAmplifier) + 1));
     }
 }
