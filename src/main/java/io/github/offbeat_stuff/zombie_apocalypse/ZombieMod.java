@@ -8,6 +8,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.entity.Entity.RemovalReason;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -57,8 +58,8 @@ public class ZombieMod implements ModInitializer {
 				Items.LEATHER_LEGGINGS };
 		Item[] boots = { Items.NETHERITE_BOOTS, Items.DIAMOND_BOOTS, Items.IRON_BOOTS, Items.LEATHER_BOOTS };
 
-		float[] chances = { 0.01f, 0.05f, 0.1f, 0.5f };
-		float[] weaponChances = { 0.01f, 0.02f, 0.08f, 0.1f, 0.2f, 0.3f };
+		float[] chances = { 0.0003f, 0.0025f, 0.025f, 0.15f };
+		float[] weaponChances = { 0.001f, 0.0075f, 0.01f, 0.02f,0.05f,0.1f };
 		zombie.equipStack(EquipmentSlot.HEAD, randomEnchanctedItemStack(helmets, chances));
 		zombie.equipStack(EquipmentSlot.CHEST, randomEnchanctedItemStack(chestplates, chances));
 		zombie.equipStack(EquipmentSlot.LEGS, randomEnchanctedItemStack(leggings, chances));
@@ -78,9 +79,9 @@ public class ZombieMod implements ModInitializer {
 
 	private boolean isSpawnableForZombie(ServerWorld world, BlockPos pos) {
 		return world.getWorldBorder().contains(pos)
-				&& SpawnRestriction.canSpawn(EntityType.ZOMBIE, world, SpawnReason.NATURAL, pos,
+				&& MobEntity.canMobSpawn(EntityType.ZOMBIE, world, SpawnReason.NATURAL, pos,
 						world.getRandom())
-				&& world.isSpaceEmpty(new Box(pos.up(), pos.up(2).add(1, 1, 1)));
+				&& world.isSpaceEmpty(new Box(pos, pos.up().add(1, 1, 1)));
 	}
 
 	private BlockPos findSpawnablePosNear(ServerWorld world, BlockPos spawnPos) {
@@ -97,27 +98,44 @@ public class ZombieMod implements ModInitializer {
 		return null;
 	}
 
-	private int randomPosInt() {
-		int start = XRANDOM.nextBetween(-112, 112);
-
-		if (start < 0) {
-			start -= 16;
-		} else {
-			start += 16;
+	private int randomCutout() {
+		int r = XRANDOM.nextInt(64);
+		if (r < 32) {
+			r -= 32;
 		}
-		return start;
+		return r;
 	}
 
-	private void spawnAttemptForPlayer(ServerPlayerEntity player) {
+	private int[] randomBoxPos() {
+		int[] r = {0,0,0};
+		r[0] = XRANDOM.nextBetween(-64,64);
+		r[1] = XRANDOM.nextBetween(-64,64);
+		r[2] = XRANDOM.nextBetween(-64,64);
+
+		r[XRANDOM.nextInt(3)] = randomCutout();
+
+		return r;
+	}
+
+	private int[] randomAxisPos() {
+		int a = XRANDOM.nextInt(48);
+		if (a < 24) {
+			a -= 48;
+		}
+		int[] result = {0,0,0};
+		result[XRANDOM.nextInt(3)] = a;
+		return result;
+	}
+
+	private void spawnAttemptForPlayer(ServerPlayerEntity player,int[] pos) {
+		if (pos.length != 3) {
+			return;
+		}
 		ServerWorld world = player.getWorld();
 		BlockPos playerPos = player.getBlockPos();
 
-		int xdistance = randomPosInt();
-		int ydistance = randomPosInt();
-		int zdistance = randomPosInt();
-
-		BlockPos spawnPos = new BlockPos(playerPos.getX() + xdistance, playerPos.getY() + ydistance,
-				playerPos.getZ() + zdistance);
+		BlockPos spawnPos = new BlockPos(playerPos.getX() + pos[0], playerPos.getY() + pos[1],
+				playerPos.getZ() + pos[2]);
 		spawnPos = findSpawnablePosNear(world, spawnPos);
 		if (spawnPos != null) {
 			trySpawnZombieAt(world, spawnPos);
@@ -128,9 +146,10 @@ public class ZombieMod implements ModInitializer {
 	public void onInitialize() {
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			server.getPlayerManager().getPlayerList().forEach(player -> {
-				for (int i = 0; i < 10; i++) {
-					spawnAttemptForPlayer(player);
+				for (int i = 0; i < 5; i++) {
+					spawnAttemptForPlayer(player,randomBoxPos());
 				}
+				spawnAttemptForPlayer(player,randomAxisPos());
 			});
 		});
 	}
