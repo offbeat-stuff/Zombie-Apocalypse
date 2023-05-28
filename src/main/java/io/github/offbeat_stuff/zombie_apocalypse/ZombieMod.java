@@ -6,7 +6,6 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.Item;
@@ -42,10 +41,19 @@ public class ZombieMod implements ModInitializer {
 		if (item == null) {
 			return ItemStack.EMPTY;
 		}
-		return EnchantmentHelper.enchant(XRANDOM, item.getDefaultStack(), XRANDOM.nextBetween(20, 40), true);
+		return EnchantmentHelper.enchant(XRANDOM, item.getDefaultStack(), XRANDOM.nextBetween(5, 40), true);
+	}
+
+	private ItemStack randomArmor(ServerWorld world,Item[] items,float[] chances) {
+		var r = randomEnchanctedItemStack(items, chances);
+		ArmorTrimHander.applyRandomArmorTrim(world, r);
+		return r;
 	}
 
 	private void trySpawnZombieAt(ServerWorld world, BlockPos spawnPos) {
+		if (world.isPlayerInRange(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 24)) {
+			return;
+		}
 		var zombie = EntityType.ZOMBIE.spawn(world, spawnPos, SpawnReason.NATURAL);
 		if (!world.isSpaceEmpty(zombie)) {
 			zombie.setRemoved(RemovalReason.DISCARDED);
@@ -60,10 +68,10 @@ public class ZombieMod implements ModInitializer {
 
 		float[] chances = { 0.0003f, 0.0025f, 0.025f, 0.15f };
 		float[] weaponChances = { 0.001f, 0.0075f, 0.01f, 0.02f,0.05f,0.1f };
-		zombie.equipStack(EquipmentSlot.HEAD, randomEnchanctedItemStack(helmets, chances));
-		zombie.equipStack(EquipmentSlot.CHEST, randomEnchanctedItemStack(chestplates, chances));
-		zombie.equipStack(EquipmentSlot.LEGS, randomEnchanctedItemStack(leggings, chances));
-		zombie.equipStack(EquipmentSlot.FEET, randomEnchanctedItemStack(boots, chances));
+		zombie.equipStack(EquipmentSlot.HEAD, randomArmor(world,helmets, chances));
+		zombie.equipStack(EquipmentSlot.CHEST,randomArmor(world,chestplates, chances));
+		zombie.equipStack(EquipmentSlot.LEGS, randomArmor(world,leggings, chances));
+		zombie.equipStack(EquipmentSlot.FEET, randomArmor(world,boots, chances));
 		if (XRANDOM.nextBoolean()) {
 			zombie.equipStack(EquipmentSlot.MAINHAND, randomEnchanctedItemStack(
 					new Item[] { Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.IRON_AXE, Items.GOLDEN_AXE,
