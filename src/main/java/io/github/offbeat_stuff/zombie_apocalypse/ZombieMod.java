@@ -84,10 +84,11 @@ public class ZombieMod implements ModInitializer {
 	}
 
 	private boolean isSpawnableForZombie(ServerWorld world, BlockPos pos) {
+		var box = EntityType.ZOMBIE.createSimpleBoundingBox(pos.getX() + 0.5, pos.getY(), pos.getZ());
 		return world.getWorldBorder().contains(pos)
 				&& MobEntity.canMobSpawn(EntityType.ZOMBIE, world, SpawnReason.NATURAL, pos,
 						world.getRandom())
-				&& world.isSpaceEmpty(new Box(pos, pos.up().add(1, 1, 1)));
+				&& world.isSpaceEmpty(box) && !world.containsFluid(box);
 	}
 
 	private BlockPos findSpawnablePosNear(ServerWorld world, BlockPos spawnPos) {
