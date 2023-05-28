@@ -91,7 +91,7 @@ public class ZombieMod implements ModInitializer {
 			return;
 		}
 		var zombie = EntityType.ZOMBIE.spawn(world, spawnPos, SpawnReason.NATURAL);
-		if (!world.isSpaceEmpty(zombie)) {
+		if (!world.isSpaceEmpty(zombie) || !world.doesNotIntersectEntities(zombie)) {
 			zombie.setRemoved(RemovalReason.DISCARDED);
 			return;
 		}
@@ -184,13 +184,21 @@ public class ZombieMod implements ModInitializer {
 		}
 	}
 
+	private boolean isTimeRight(long time) {
+		if (config.maxTime < config.minTime) {
+			return (time > 0 && time < config.maxTime) || (time < 24000 && time > config.minTime);
+		} else {
+			return time < config.maxTime && time > config.minTime;
+		}
+	}
+
 	private void spawnZombiesInWorld(ServerWorld world) {
 		if (world.getChunkManager().getSpawnInfo().getGroupToCount()
 				.getInt(SpawnGroup.MONSTER) > config.maxZombieCount) {
 			return;
 		}
 		world.getPlayers().forEach(player -> {
-			if (player.world.getTimeOfDay() > config.minTime && player.world.getTimeOfDay() < config.maxTime) {
+			if (isTimeRight(player.world.getTimeOfDay())) {
 				if (XRANDOM.nextFloat() < config.boxSpawnChance) {
 					spawnAttemptForPlayer(player, randomBoxPos());
 				}
