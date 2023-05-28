@@ -14,17 +14,51 @@ import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.random.Xoroshiro128PlusPlusRandom;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.moandjiezana.toml.Toml;
+import com.moandjiezana.toml.TomlWriter;
+
 public class ZombieMod implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("zombie_apocalypse");
 	public static Xoroshiro128PlusPlusRandom XRANDOM = new Xoroshiro128PlusPlusRandom(new Random().nextLong());
+
+	private final File settingsFile = new File("config", "zombie_apocalypse.toml");
+	public static Config config = null;
+
+	private void writeConfig() {
+		if (settingsFile.exists())
+			settingsFile.delete();
+		try {
+			new TomlWriter().write(config, settingsFile);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void handleConfig() {
+		if (settingsFile.exists()) {
+			try {
+				config = new Toml().read(settingsFile).to(Config.class);
+			} catch (Exception ex) {
+				System.out.println("Error while loading config! Creating a new one!");
+				ex.printStackTrace();
+			}
+		}
+
+		if (config == null) {
+			config = new Config();
+		}
+		writeConfig();
+
+	}
 
 	private Item chooseRandomItem(Item[] items, float[] chances) {
 		float chance = XRANDOM.nextFloat();
@@ -42,7 +76,7 @@ public class ZombieMod implements ModInitializer {
 			return ItemStack.EMPTY;
 		}
 		return EnchantmentHelper.enchant(XRANDOM, item.getDefaultStack(),
-				XRANDOM.nextBetween(Config.minEnchantmentLevel, Config.maxEnchantmentLevel), true);
+				XRANDOM.nextBetween(config.minEnchantmentLevel, config.maxEnchantmentLevel), true);
 	}
 
 	private ItemStack randomArmor(ServerWorld world, Item[] items, float[] chances) {
@@ -52,7 +86,7 @@ public class ZombieMod implements ModInitializer {
 	}
 
 	private void trySpawnZombieAt(ServerWorld world, BlockPos spawnPos) {
-		if (world.isPlayerInRange(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), Config.minPlayerDistance)) {
+		if (world.isPlayerInRange(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), config.minPlayerDistance)) {
 			return;
 		}
 		var zombie = EntityType.ZOMBIE.spawn(world, spawnPos, SpawnReason.NATURAL);
@@ -67,20 +101,20 @@ public class ZombieMod implements ModInitializer {
 				Items.LEATHER_LEGGINGS };
 		Item[] boots = { Items.NETHERITE_BOOTS, Items.DIAMOND_BOOTS, Items.IRON_BOOTS, Items.LEATHER_BOOTS };
 
-		zombie.equipStack(EquipmentSlot.HEAD, randomArmor(world, helmets, Config.armorPieceChances));
-		zombie.equipStack(EquipmentSlot.CHEST, randomArmor(world, chestplates, Config.armorPieceChances));
-		zombie.equipStack(EquipmentSlot.LEGS, randomArmor(world, leggings, Config.armorPieceChances));
-		zombie.equipStack(EquipmentSlot.FEET, randomArmor(world, boots, Config.armorPieceChances));
+		zombie.equipStack(EquipmentSlot.HEAD, randomArmor(world, helmets, config.armorPieceChances));
+		zombie.equipStack(EquipmentSlot.CHEST, randomArmor(world, chestplates, config.armorPieceChances));
+		zombie.equipStack(EquipmentSlot.LEGS, randomArmor(world, leggings, config.armorPieceChances));
+		zombie.equipStack(EquipmentSlot.FEET, randomArmor(world, boots, config.armorPieceChances));
 		if (XRANDOM.nextBoolean()) {
 			zombie.equipStack(EquipmentSlot.MAINHAND, randomEnchanctedItemStack(
 					new Item[] { Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.IRON_AXE, Items.GOLDEN_AXE,
 							Items.STONE_AXE, Items.WOODEN_AXE },
-					Config.weaponChances));
+					config.weaponChances));
 		} else {
 			zombie.equipStack(EquipmentSlot.MAINHAND, randomEnchanctedItemStack(
 					new Item[] { Items.NETHERITE_SWORD, Items.DIAMOND_SWORD, Items.IRON_SWORD, Items.GOLDEN_SWORD,
 							Items.STONE_SWORD, Items.WOODEN_SWORD },
-					Config.weaponChances));
+					config.weaponChances));
 		}
 	}
 
@@ -119,18 +153,18 @@ public class ZombieMod implements ModInitializer {
 
 	private int[] randomBoxPos() {
 		int[] r = { 0, 0, 0 };
-		r[0] = XRANDOM.nextBetween(-Config.boxSpawnMax, Config.boxSpawnMax);
-		r[1] = XRANDOM.nextBetween(-Config.boxSpawnMax, Config.boxSpawnMax);
-		r[2] = XRANDOM.nextBetween(-Config.boxSpawnMax, Config.boxSpawnMax);
+		r[0] = XRANDOM.nextBetween(-config.boxSpawnMax, config.boxSpawnMax);
+		r[1] = XRANDOM.nextBetween(-config.boxSpawnMax, config.boxSpawnMax);
+		r[2] = XRANDOM.nextBetween(-config.boxSpawnMax, config.boxSpawnMax);
 
-		r[XRANDOM.nextInt(3)] = randomCutout(Config.boxSpawnMax, Config.boxSpawnMin);
+		r[XRANDOM.nextInt(3)] = randomCutout(config.boxSpawnMax, config.boxSpawnMin);
 
 		return r;
 	}
 
 	private int[] randomAxisPos() {
 		int[] result = { 0, 0, 0 };
-		result[XRANDOM.nextInt(3)] = randomCutout(Config.axisRangeMax, Config.axisRangeMin);
+		result[XRANDOM.nextInt(3)] = randomCutout(config.axisRangeMax, config.axisRangeMin);
 		return result;
 	}
 
@@ -151,13 +185,14 @@ public class ZombieMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		handleConfig();
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			server.getPlayerManager().getPlayerList().forEach(player -> {
-				if (player.world.getTimeOfDay() > Config.minTime && player.world.getTimeOfDay() < Config.maxTime) {
-					if (XRANDOM.nextFloat() < Config.boxSpawnChance) {
+				if (player.world.getTimeOfDay() > config.minTime && player.world.getTimeOfDay() < config.maxTime) {
+					if (XRANDOM.nextFloat() < config.boxSpawnChance) {
 						spawnAttemptForPlayer(player, randomBoxPos());
 					}
-					if (XRANDOM.nextFloat() < Config.axisSpawnChance) {
+					if (XRANDOM.nextFloat() < config.axisSpawnChance) {
 						spawnAttemptForPlayer(player, randomAxisPos());
 					}
 				}
