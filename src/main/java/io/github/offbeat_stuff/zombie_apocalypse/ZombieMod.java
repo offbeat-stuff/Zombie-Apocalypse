@@ -228,7 +228,7 @@ public class ZombieMod implements ModInitializer {
 			return;
 		}
 		world.getPlayers().forEach(player -> {
-			if (isTimeRight(player.world.getTimeOfDay())) {
+			if (isTimeRight(player.world.getTimeOfDay() % 24000)) {
 				if (XRANDOM.nextFloat() < config.boxSpawnChance) {
 					spawnAttemptForPlayer(player, randomBoxPos());
 				}
