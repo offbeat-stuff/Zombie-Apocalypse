@@ -30,8 +30,8 @@ public class Config {
 
     // Time based Spawning in ticks - currently set to 0 to 1 am
     // each hour in minecraft represents 50 seconds or 1000 ticks
-    public int minTime = 0 * 1000;
-    public int maxTime = 1 * 1000;
+    public int minTime = 1 * 1000;
+    public int maxTime = 13 * 1000;
 
     // Enchantment levels for armor and weapons
     public int minEnchantmentLevel = 5;
@@ -41,10 +41,10 @@ public class Config {
     public float minPlayerDistance = 24f;
 
     // Max zombie count per player
-    public int maxZombieCount = 100;
+    public int maxZombieCount = 150;
 
     // Status effects for Zombie
-    public float firstChance = 0.1f;
+    public float firstChance = 0.05f;
     public float secondChance = 0.1f;
     public int maxPotionTimeInTicks = 12000;
     // range 1 - 255
