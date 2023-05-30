@@ -11,28 +11,30 @@ import net.minecraft.server.world.ServerWorld;
 
 public class ArmorTrimHander {
 
-    private static <T> RegistryEntry<T> getRandomEntry(Registry<T> registry) {
-        var entries = registry.stream().toList();
+  private static <T> RegistryEntry<T> getRandomEntry(Registry<T> registry) {
+    var entries = registry.stream().toList();
 
-        if (entries.isEmpty()) {
-            return null; // Handle the case when the registry is empty
-        }
-
-        int randomIndex = ZombieMod.XRANDOM.nextInt(entries.size());
-        return registry.getEntry(entries.get(randomIndex));
+    if (entries.isEmpty()) {
+      return null; // Handle the case when the registry is empty
     }
 
-    public static void applyRandomArmorTrim(ServerWorld world, ItemStack istack) {
-        if (!(world.getEnabledFeatures().contains(FeatureFlags.UPDATE_1_20))) {
-            return;
-        }
+    int randomIndex = ZombieMod.XRANDOM.nextInt(entries.size());
+    return registry.getEntry(entries.get(randomIndex));
+  }
 
-        if (!(istack.getItem() instanceof ArmorItem)) {
-            return;
-        }
-        var pattern = getRandomEntry(world.getRegistryManager().get(RegistryKeys.TRIM_PATTERN));
-        var material = getRandomEntry(world.getRegistryManager().get(RegistryKeys.TRIM_MATERIAL));
-        var trim = new ArmorTrim(material, pattern);
-        ArmorTrim.apply(world.getRegistryManager(), istack, trim);
+  public static void applyRandomArmorTrim(ServerWorld world, ItemStack istack) {
+    if (!(world.getEnabledFeatures().contains(FeatureFlags.UPDATE_1_20))) {
+      return;
     }
+
+    if (!(istack.getItem() instanceof ArmorItem)) {
+      return;
+    }
+    var pattern = getRandomEntry(
+        world.getRegistryManager().get(RegistryKeys.TRIM_PATTERN));
+    var material = getRandomEntry(
+        world.getRegistryManager().get(RegistryKeys.TRIM_MATERIAL));
+    var trim = new ArmorTrim(material, pattern);
+    ArmorTrim.apply(world.getRegistryManager(), istack, trim);
+  }
 }
