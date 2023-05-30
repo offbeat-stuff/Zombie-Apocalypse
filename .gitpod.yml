@@ -1,0 +1,6 @@
+tasks:
+  - init: ./gradlew build
+image:
+  file: .gitpod.Dockerfile
+vscode:
+  extensions:
