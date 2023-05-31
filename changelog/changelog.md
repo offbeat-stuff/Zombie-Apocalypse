@@ -1,5 +1,5 @@
 ## Changes
 
-- update config and add more checks
+- change config to use tables
 
 
