@@ -1,6 +1,6 @@
 package io.github.offbeat_stuff.zombie_apocalypse.mixin;
 
-import io.github.offbeat_stuff.zombie_apocalypse.ZombieMod;
+import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import net.minecraft.entity.mob.ZombieEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,6 +12,6 @@ public class ZombieEntityMixin {
 
   @Inject(method = "burnsInDaylight", at = @At("HEAD"), cancellable = true)
   void dontBurn(CallbackInfoReturnable<Boolean> cir) {
-    cir.setReturnValue(ZombieMod.config.zombiesBurnInSunlight);
+    cir.setReturnValue(ConfigHandler.zombiesBurnInSunlight);
   }
 }

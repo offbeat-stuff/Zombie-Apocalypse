@@ -1,5 +1,6 @@
 package io.github.offbeat_stuff.zombie_apocalypse;
 
+import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -19,11 +20,11 @@ public class PotionEffectHandler {
       StatusEffects.DOLPHINS_GRACE};
 
   public static void applyRandomPotionEffects(ZombieEntity entity) {
-    if (ZombieMod.XRANDOM.nextFloat() > ZombieMod.config.firstChance) {
+    if (ZombieMod.XRANDOM.nextFloat() > ConfigHandler.firstChance) {
       return;
     }
     applyRandomPotionEffect(entity);
-    if (ZombieMod.XRANDOM.nextFloat() > ZombieMod.config.secondChance) {
+    if (ZombieMod.XRANDOM.nextFloat() > ConfigHandler.secondChance) {
       return;
     }
     applyRandomPotionEffect(entity);
@@ -33,8 +34,7 @@ public class PotionEffectHandler {
     var effect = statusEffectChoices[ZombieMod.XRANDOM.nextInt(
         statusEffectChoices.length)];
     entity.addStatusEffect(new StatusEffectInstance(
-        effect,
-        ZombieMod.XRANDOM.nextInt(ZombieMod.config.maxPotionTimeInTicks),
-        ZombieMod.XRANDOM.nextInt(ZombieMod.config.maxAmplifier) + 1));
+        effect, ZombieMod.XRANDOM.nextInt(ConfigHandler.maxPotionTimeInTicks),
+        ZombieMod.XRANDOM.nextInt(ConfigHandler.maxAmplifier) + 1));
   }
 }

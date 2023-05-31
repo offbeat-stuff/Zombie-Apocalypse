@@ -1,4 +1,4 @@
-package io.github.offbeat_stuff.zombie_apocalypse;
+package io.github.offbeat_stuff.zombie_apocalypse.config;
 
 public class Config {
   public boolean zombiesBurnInSunlight = false;
