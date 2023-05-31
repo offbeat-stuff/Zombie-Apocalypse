@@ -120,7 +120,7 @@ public class ConfigHandler {
 
   private static Float[] toArray(List<Float> list) {
     var result = new Float[list.size()];
-    for (int i = 0;i < list.size();i++) {
+    for (int i = 0; i < list.size(); i++) {
       result[i] = list.get(i);
     }
     return result;
