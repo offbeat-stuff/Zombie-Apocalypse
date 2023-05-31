@@ -47,3 +47,42 @@ secondChance = 0.1
 maxPotionTimeInTicks = 12000
 maxAmplifier = 2
 ```
+
+Default Config next beta
+```toml
+zombiesBurnInSunlight = false
+armorChance = 0.5
+armorPieceChances = [5.0E-4, 0.0025, 0.049999997, 0.99999994]
+weaponChance = 0.5
+axeChance = 0.3
+weaponChances = [0.001, 0.0075, 0.01, 0.04641589, 0.21544349, 1.0000001]
+minPlayerDistance = 24.0
+maxZombieCount = 150
+firstChance = 0.05
+secondChance = 0.1
+maxPotionTimeInTicks = 12000
+maxAmplifier = 2
+
+[axisSpawnParameters]
+chance = 1.0
+min = 24
+max = 48
+
+[planeSpawnParameters]
+chance = 1.0
+min = 24
+max = 48
+
+[boxSpawnParameters]
+chance = 1.0
+min = 32
+max = 64
+
+[timeRange]
+min = 1000
+max = 13000
+
+[enchantmentLevelRange]
+min = 5
+max = 40
+```
