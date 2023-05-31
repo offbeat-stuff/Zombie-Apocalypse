@@ -62,6 +62,7 @@ firstChance = 0.05
 secondChance = 0.1
 maxPotionTimeInTicks = 12000
 maxAmplifier = 2
+allowedDimensions = ["minecraft:overworld", "minecraft:ther_nether", "minecraft:the_end"]
 
 [axisSpawnParameters]
 chance = 1.0
@@ -85,4 +86,5 @@ max = 13000
 [enchantmentLevelRange]
 min = 5
 max = 40
+
 ```
