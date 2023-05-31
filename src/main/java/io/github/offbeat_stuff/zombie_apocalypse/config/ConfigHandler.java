@@ -118,6 +118,14 @@ public class ConfigHandler {
     return Math.max(min, Math.min(r, max));
   }
 
+  private static Float[] toArray(List<Float> list) {
+    var result = new Float[list.size()];
+    for (int i = 0;i < list.size();i++) {
+      result[i] = list.get(i);
+    }
+    return result;
+  }
+
   public static void handleConfig(Config config) {
 
     armorChance = clamp(config.armorChance, 0f, 1f);
@@ -130,7 +138,7 @@ public class ConfigHandler {
         armorPieceChances,
         Math.max(Math.max(HELMETS.size(), CHESTPLATES.size()),
                  Math.max(LEGGINGS.size(), BOOTS.size())));
-    config.armorPieceChances = (Float[])armorPieceChances.toArray();
+    config.armorPieceChances = toArray(armorPieceChances);
 
     weaponChance = clamp(config.weaponChance, 0f, 1f);
     config.weaponChance = weaponChance;
@@ -139,7 +147,7 @@ public class ConfigHandler {
       weaponChances = new ArrayList<Float>(Arrays.asList(config.weaponChances));
     ProbabilityHandler.fillUp(weaponChances,
                               Math.max(AXES.size(), SWORDS.size()));
-    config.weaponChances = (Float[])weaponChances.toArray();
+    config.weaponChances = toArray(weaponChances);
 
     axisSpawnChance = config.axisSpawnChance;
     axisRangeMin = config.axisRangeMin;
