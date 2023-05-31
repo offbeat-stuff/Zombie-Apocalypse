@@ -106,8 +106,17 @@ public class ConfigHandler {
   // range 1 - 255
   public static int maxAmplifier = 2;
 
+  public static List<String> allowedDimensions =
+      List.of("overworld", "ther_nether", "the_end");
+
   private static float clamp(float r, float min, float max) {
     return Math.max(min, Math.min(r, max));
+  }
+
+  private static String fixRegistryKey(String f) {
+    if (!f.contains(":"))
+      return "minecraft:" + f;
+    return f;
   }
 
   public static void handleConfig(Config config) {
@@ -157,5 +166,10 @@ public class ConfigHandler {
     secondChance = config.secondChance;
     maxPotionTimeInTicks = config.maxPotionTimeInTicks;
     maxAmplifier = config.maxAmplifier;
+
+    config.allowedDimensions = config.allowedDimensions.stream()
+                                   .map(ConfigHandler::fixRegistryKey)
+                                   .toList();
+    allowedDimensions = config.allowedDimensions;
   }
 }

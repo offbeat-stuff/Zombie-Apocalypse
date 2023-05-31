@@ -44,4 +44,7 @@ public class Config {
   public int maxPotionTimeInTicks = 12000;
   // range 1 - 255
   public int maxAmplifier = 2;
+
+  public List<String> allowedDimensions =
+      List.of("overworld", "ther_nether", "the_end");
 }
