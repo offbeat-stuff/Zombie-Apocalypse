@@ -6,7 +6,6 @@ import net.minecraft.item.trim.ArmorTrim;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.server.world.ServerWorld;
 
 public class ArmorTrimHander {
@@ -23,10 +22,6 @@ public class ArmorTrimHander {
   }
 
   public static void applyRandomArmorTrim(ServerWorld world, ItemStack istack) {
-    if (!(world.getEnabledFeatures().contains(FeatureFlags.UPDATE_1_20))) {
-      return;
-    }
-
     if (!(istack.getItem() instanceof ArmorItem)) {
       return;
     }

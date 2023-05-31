@@ -1,5 +1,1 @@
-## New Features
-
-- allowed dimensions config
-
-
+Updated to 1.20
