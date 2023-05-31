@@ -66,8 +66,7 @@ public class ZombieMod implements ModInitializer {
     }
     return EnchantmentHelper.enchant(
         XRANDOM, item.getDefaultStack(),
-        XRANDOM.nextBetween(ConfigHandler.minEnchantmentLevel,
-                            ConfigHandler.maxEnchantmentLevel),
+        ConfigHandler.enchantmentLevelRange.generate(),
         true);
   }
 

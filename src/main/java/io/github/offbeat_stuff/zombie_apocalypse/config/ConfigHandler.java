@@ -1,6 +1,7 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
 
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
+import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
 import java.util.ArrayList;
@@ -48,49 +49,47 @@ public class ConfigHandler {
     return start.add(x, y, z);
   }
 
-  private static float axisSpawnChance = 1f;
-  private static int axisRangeMin = 24;
-  private static int axisRangeMax = 48;
+  public static SpawnParameters axisSpawnParameters = new SpawnParameters(1f, 24, 48);
+
+
 
   private static BlockPos randomAxisPos(BlockPos start) {
     int[] r = {0, 0, 0};
-    r[XRANDOM.nextInt(3)] = randomCutoutPos(axisRangeMax, axisRangeMin);
+    r[XRANDOM.nextInt(3)] = axisSpawnParameters.generateExclusive();
     return toBlockPos(start, r[0], r[1], r[2]);
   }
 
-  private static float planeSpawnChance = 1f;
-  private static int planeRangeMin = 24;
-  private static int planeRangeMax = 48;
+  public static SpawnParameters planeSpawnParameters = new SpawnParameters(1f, 24, 48);
+
 
   private static BlockPos randomPlanePos(BlockPos start) {
     int[] r = {0, 0, 0};
     int s = XRANDOM.nextInt(3);
-    r[s] = randomCutoutPos(planeRangeMax, planeRangeMin);
+    r[s] = planeSpawnParameters.generateExclusive();
     s = (s + XRANDOM.nextInt(2)) % 3;
-    r[s] = XRANDOM.nextBetween(-planeRangeMax, planeRangeMax);
+    r[s] = planeSpawnParameters.generateInclusive();
     return toBlockPos(start, r[0], r[1], r[2]);
   }
 
-  private static float boxSpawnChance = 1f;
-  private static int boxSpawnMin = 32;
-  private static int boxSpawnMax = 64;
+  public static SpawnParameters boxSpawnParameters = new SpawnParameters(1f, 32, 64);
+
 
   private static BlockPos randomBoxPos(BlockPos start) {
     int[] r = {0, 0, 0};
     int s = XRANDOM.nextInt(3);
-    r[s] = randomCutoutPos(boxSpawnMax, boxSpawnMin);
-    r[(s + 1) % 3] = XRANDOM.nextBetween(-boxSpawnMax, boxSpawnMax);
-    r[(s + 2) % 3] = XRANDOM.nextBetween(-boxSpawnMax, boxSpawnMax);
+    r[s] = boxSpawnParameters.generateExclusive();
+    r[(s + 1) % 3] = boxSpawnParameters.generateInclusive();
+    r[(s + 2) % 3] = boxSpawnParameters.generateInclusive();
     return toBlockPos(start, r[0], r[1], r[2]);
   }
 
   public static List<BlockPos> generateSpawnPosition(BlockPos start) {
     var r = new ArrayList<BlockPos>();
-    if (XRANDOM.nextFloat() < axisSpawnChance)
+    if (XRANDOM.nextFloat() < axisSpawnParameters.chance)
       r.add(randomAxisPos(start));
-    if (XRANDOM.nextFloat() < planeSpawnChance)
+    if (XRANDOM.nextFloat() < planeSpawnParameters.chance)
       r.add(randomPlanePos(start));
-    if (XRANDOM.nextFloat() < boxSpawnChance)
+    if (XRANDOM.nextFloat() < boxSpawnParameters.chance)
       r.add(randomBoxPos(start));
     return r;
   }
@@ -98,8 +97,7 @@ public class ConfigHandler {
   public static Predicate<Integer> isTimeRight;
 
   // Enchantment levels for armor and weapons
-  public static int minEnchantmentLevel = 5;
-  public static int maxEnchantmentLevel = 40;
+  public static Range enchantmentLevelRange = new Range(5, 40);
 
   // minimum distance from player
   public static float minPlayerDistance = 24f;
@@ -118,62 +116,43 @@ public class ConfigHandler {
     return Math.max(min, Math.min(r, max));
   }
 
-  private static Float[] toArray(List<Float> list) {
-    var result = new Float[list.size()];
-    for (int i = 0; i < list.size(); i++) {
-      result[i] = list.get(i);
-    }
-    return result;
-  }
-
   public static void handleConfig(Config config) {
 
     armorChance = clamp(config.armorChance, 0f, 1f);
     config.armorChance = armorChance;
 
-    if (config.armorPieceChances.length > 1)
+    if (config.armorPieceChances.size() > 1)
       armorPieceChances =
-          new ArrayList<Float>(Arrays.asList(config.armorPieceChances));
+          new ArrayList<Float>(config.armorPieceChances);
     ProbabilityHandler.fillUp(
         armorPieceChances,
         Math.max(Math.max(HELMETS.size(), CHESTPLATES.size()),
                  Math.max(LEGGINGS.size(), BOOTS.size())));
-    config.armorPieceChances = toArray(armorPieceChances);
+    config.armorPieceChances = armorPieceChances;
 
     weaponChance = clamp(config.weaponChance, 0f, 1f);
     config.weaponChance = weaponChance;
 
-    if (config.weaponChances.length > 1)
-      weaponChances = new ArrayList<Float>(Arrays.asList(config.weaponChances));
+    if (config.weaponChances.size() > 1)
+      weaponChances = new ArrayList<Float>(config.weaponChances);
     ProbabilityHandler.fillUp(weaponChances,
                               Math.max(AXES.size(), SWORDS.size()));
-    config.weaponChances = toArray(weaponChances);
+    config.weaponChances = weaponChances;
 
-    axisSpawnChance = config.axisSpawnChance;
-    axisRangeMin = config.axisRangeMin;
-    axisRangeMax = config.axisRangeMax;
+    axisSpawnParameters = config.axisSpawnParameters;
 
-    planeSpawnChance = config.planeSpawnChance;
-    planeRangeMin = config.planeRangeMin;
-    planeRangeMax = config.planeRangeMax;
+    planeSpawnParameters = config.planeSpawnParameters;
 
-    boxSpawnChance = config.boxSpawnChance;
-    boxSpawnMin = config.boxSpawnMin;
-    boxSpawnMax = config.boxSpawnMax;
+    boxSpawnParameters = config.boxSpawnParameters;
 
-    config.minTime = config.minTime % 24000;
-    config.maxTime = config.maxTime % 24000;
+    config.timeRange.min %= 24000;
+    config.timeRange.max %= 24000;
 
-    if (config.minTime < config.maxTime) {
-      isTimeRight = (t) -> t >= config.minTime && t <= config.maxTime;
-    } else {
-      isTimeRight = (t) -> t <= config.maxTime || t >= config.minTime;
-    }
+    isTimeRight = config.timeRange.toModPredicate(24000);
 
-    minEnchantmentLevel = Math.max(config.minEnchantmentLevel, 1);
-    config.minEnchantmentLevel = minEnchantmentLevel;
-    maxEnchantmentLevel = Math.max(config.maxEnchantmentLevel, 1);
-    config.maxEnchantmentLevel = maxEnchantmentLevel;
+    config.enchantmentLevelRange.min = Math.max(1,config.enchantmentLevelRange.min);
+    config.enchantmentLevelRange.max = Math.max(1,config.enchantmentLevelRange.max);
+    enchantmentLevelRange = config.enchantmentLevelRange;
 
     minPlayerDistance = Math.max(config.minPlayerDistance, 0f);
     config.minPlayerDistance = minPlayerDistance;

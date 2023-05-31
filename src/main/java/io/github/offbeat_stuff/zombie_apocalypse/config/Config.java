@@ -1,4 +1,7 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
+import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
+
+import java.util.List;
 
 public class Config {
   public boolean zombiesBurnInSunlight = false;
@@ -6,36 +9,28 @@ public class Config {
   // 0.01 is 1% chance
   // NETHERITE DIAMOND IRON LEATHER
   public float armorChance = 0.5f;
-  public Float[] armorPieceChances = {0.0005f, 0.0025f};
+  public List<Float> armorPieceChances = List.of(0.0005f, 0.0025f);
   // NETHERITE DIAMOND IRON GOLD STONE WOODEN
   public float weaponChance = 0.5f;
   public float axeChance = 0.3f;
-  public Float[] weaponChances = {0.001f, 0.0075f, 0.01f};
+  public List<Float> weaponChances = List.of(0.001f, 0.0075f, 0.01f);
 
   // Chance that a zombie spawns in a single axis of player each tick
-  public float axisSpawnChance = 1f;
-  public int axisRangeMin = 24;
-  public int axisRangeMax = 48;
+  public SpawnParameters axisSpawnParameters = new SpawnParameters(1f, 24, 48);
 
   // Chance that a zombie spawns in a single plane of player each tick
-  public float planeSpawnChance = 1f;
-  public int planeRangeMin = 24;
-  public int planeRangeMax = 48;
+  public SpawnParameters planeSpawnParameters = new SpawnParameters(1f, 24, 48);
 
   // Chance that a zombie spawns in a box around player but not inside the
   // smaller box each tick
-  public float boxSpawnChance = 1f;
-  public int boxSpawnMin = 32;
-  public int boxSpawnMax = 64;
+  public SpawnParameters boxSpawnParameters = new SpawnParameters(1f, 32, 64);
 
   // Time based Spawning in ticks - currently set to 0 to 1 am
   // each hour in minecraft represents 50 seconds or 1000 ticks
-  public int minTime = 1 * 1000;
-  public int maxTime = 13 * 1000;
+  public Range timeRange = new Range(1000,13000);
 
   // Enchantment levels for armor and weapons
-  public int minEnchantmentLevel = 5;
-  public int maxEnchantmentLevel = 40;
+  public Range enchantmentLevelRange = new Range(5, 40);
 
   // minimum distance from player
   public float minPlayerDistance = 24f;
