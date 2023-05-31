@@ -1,8 +1,8 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
 
-import java.util.function.Predicate;
-
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
+
+import java.util.function.Predicate;
 
 public class Common {
   public static class SpawnParameters {
@@ -10,14 +10,15 @@ public class Common {
     public int min;
     public int max;
 
-    public SpawnParameters(float chance,int min,int max) {
+    public SpawnParameters(float chance, int min, int max) {
       this.chance = chance;
       this.min = min;
       this.max = max;
     }
 
     public int generateExclusive() {
-      return XRANDOM.nextBetween(this.min, this.max) * ((XRANDOM.nextInt(2) * 2) - 1);
+      return XRANDOM.nextBetween(this.min, this.max) *
+          ((XRANDOM.nextInt(2) * 2) - 1);
     }
 
     public int generateInclusive() {
@@ -29,18 +30,14 @@ public class Common {
     public int min;
     public int max;
 
-    public Range(int min,int max) {
+    public Range(int min, int max) {
       this.min = min;
       this.max = max;
     }
 
-    public boolean test(int v) {
-      return v >= this.min && v <= this.max;
-    }
+    public boolean test(int v) { return v >= this.min && v <= this.max; }
 
-    public int generate() {
-      return XRANDOM.nextBetween(this.min, this.max);
-    }
+    public int generate() { return XRANDOM.nextBetween(this.min, this.max); }
 
     public Predicate<Integer> toModPredicate(int m) {
       int min = this.min % m;

@@ -27,7 +27,7 @@ public class Config {
 
   // Time based Spawning in ticks - currently set to 0 to 1 am
   // each hour in minecraft represents 50 seconds or 1000 ticks
-  public Range timeRange = new Range(1000,13000);
+  public Range timeRange = new Range(1000, 13000);
 
   // Enchantment levels for armor and weapons
   public Range enchantmentLevelRange = new Range(5, 40);

@@ -66,8 +66,7 @@ public class ZombieMod implements ModInitializer {
     }
     return EnchantmentHelper.enchant(
         XRANDOM, item.getDefaultStack(),
-        ConfigHandler.enchantmentLevelRange.generate(),
-        true);
+        ConfigHandler.enchantmentLevelRange.generate(), true);
   }
 
   private ItemStack randomArmor(ServerWorld world, List<Item> items,

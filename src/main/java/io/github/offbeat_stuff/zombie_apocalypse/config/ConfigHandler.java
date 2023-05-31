@@ -5,7 +5,6 @@ import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.item.Item;
@@ -41,17 +40,12 @@ public class ConfigHandler {
   public static float axeChance = 0.3f;
   public static List<Float> weaponChances = List.of(0.001f);
 
-  private static int randomCutoutPos(int max, int min) {
-    return XRANDOM.nextBetween(min, max) * ((2 * XRANDOM.nextInt(2)) - 1);
-  }
-
   private static BlockPos toBlockPos(BlockPos start, int x, int y, int z) {
     return start.add(x, y, z);
   }
 
-  public static SpawnParameters axisSpawnParameters = new SpawnParameters(1f, 24, 48);
-
-
+  public static SpawnParameters axisSpawnParameters =
+      new SpawnParameters(1f, 24, 48);
 
   private static BlockPos randomAxisPos(BlockPos start) {
     int[] r = {0, 0, 0};
@@ -59,8 +53,8 @@ public class ConfigHandler {
     return toBlockPos(start, r[0], r[1], r[2]);
   }
 
-  public static SpawnParameters planeSpawnParameters = new SpawnParameters(1f, 24, 48);
-
+  public static SpawnParameters planeSpawnParameters =
+      new SpawnParameters(1f, 24, 48);
 
   private static BlockPos randomPlanePos(BlockPos start) {
     int[] r = {0, 0, 0};
@@ -71,8 +65,8 @@ public class ConfigHandler {
     return toBlockPos(start, r[0], r[1], r[2]);
   }
 
-  public static SpawnParameters boxSpawnParameters = new SpawnParameters(1f, 32, 64);
-
+  public static SpawnParameters boxSpawnParameters =
+      new SpawnParameters(1f, 32, 64);
 
   private static BlockPos randomBoxPos(BlockPos start) {
     int[] r = {0, 0, 0};
@@ -122,8 +116,7 @@ public class ConfigHandler {
     config.armorChance = armorChance;
 
     if (config.armorPieceChances.size() > 1)
-      armorPieceChances =
-          new ArrayList<Float>(config.armorPieceChances);
+      armorPieceChances = new ArrayList<Float>(config.armorPieceChances);
     ProbabilityHandler.fillUp(
         armorPieceChances,
         Math.max(Math.max(HELMETS.size(), CHESTPLATES.size()),
@@ -150,8 +143,10 @@ public class ConfigHandler {
 
     isTimeRight = config.timeRange.toModPredicate(24000);
 
-    config.enchantmentLevelRange.min = Math.max(1,config.enchantmentLevelRange.min);
-    config.enchantmentLevelRange.max = Math.max(1,config.enchantmentLevelRange.max);
+    config.enchantmentLevelRange.min =
+        Math.max(1, config.enchantmentLevelRange.min);
+    config.enchantmentLevelRange.max =
+        Math.max(1, config.enchantmentLevelRange.max);
     enchantmentLevelRange = config.enchantmentLevelRange;
 
     minPlayerDistance = Math.max(config.minPlayerDistance, 0f);
