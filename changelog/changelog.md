@@ -1,5 +1,5 @@
-## Changes
+## New Features
 
-- change config to use tables
+- allowed dimensions config
 
 
