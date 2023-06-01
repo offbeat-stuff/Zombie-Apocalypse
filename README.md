@@ -52,7 +52,7 @@ Default Config next beta
 ```toml
 zombiesBurnInSunlight = false
 armorChance = 0.5
-armorPieceChances = [5.0E-4, 0.0025, 0.049999997, 0.99999994]
+armorPieceChances = [5.0E-4, 0.0025, 0.008286135, 0.027464015, 0.09102822, 0.30170885, 1.0000001]
 weaponChance = 0.5
 axeChance = 0.3
 weaponChances = [0.001, 0.0075, 0.01, 0.04641589, 0.21544349, 1.0000001]
@@ -62,7 +62,13 @@ firstChance = 0.05
 secondChance = 0.1
 maxPotionTimeInTicks = 12000
 maxAmplifier = 2
-allowedDimensions = ["minecraft:overworld", "minecraft:ther_nether", "minecraft:the_end"]
+allowedDimensions = ["overworld", "ther_nether", "the_end"]
+
+[armorList]
+helmets = ["netherite", "diamond", "iron", "gold", "chainmail", "leather", "turtle"]
+chestplates = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
+leggings = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
+boots = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
 
 [axisSpawnParameters]
 chance = 1.0
@@ -86,5 +92,4 @@ max = 13000
 [enchantmentLevelRange]
 min = 5
 max = 40
-
 ```
