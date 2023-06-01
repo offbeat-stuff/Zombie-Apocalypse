@@ -21,7 +21,10 @@ public class ConfigHandler {
   public static List<Item> LEGGINGS;
   public static List<Item> BOOTS;
   public static float armorChance = 0.5f;
-  public static List<Float> armorPieceChances = List.of(0.0005f);
+  public static List<Float> HELMETS_CHANCES;
+  public static List<Float> CHESTPLATES_CHANCES;
+  public static List<Float> LEGGINGS_CHANCES;
+  public static List<Float> BOOTS_CHANCES;
 
   public static final List<Item> AXES =
       List.of(Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.IRON_AXE,
@@ -104,6 +107,27 @@ public class ConfigHandler {
     return Math.max(min, Math.min(r, max));
   }
 
+  private static List<Float> generateChances(List<Integer> weights) {
+    var sum = weights.stream().mapToInt(Integer::intValue).sum();
+    return weights.stream().map(f -> (float)f / sum).toList();
+  }
+
+  private static List<Float> generateChances(int len, List<Integer> weights,
+                                             int extraWeights) {
+    var extra = len - weights.size();
+    if (extra == 0) {
+      return generateChances(weights);
+    }
+    var finalWeights = new ArrayList<Integer>(weights);
+    var rem = extraWeights;
+    for (int i = 0; i < extra - 1; i++) {
+      finalWeights.add(extraWeights / extra);
+      rem -= extraWeights / extra;
+    }
+    finalWeights.add(rem);
+    return generateChances(finalWeights);
+  }
+
   public static void handleConfig(Config config) {
 
     HELMETS = config.armorList.getHelmets();
@@ -114,13 +138,18 @@ public class ConfigHandler {
     armorChance = clamp(config.armorChance, 0f, 1f);
     config.armorChance = armorChance;
 
-    if (config.armorPieceChances.size() > 1)
-      armorPieceChances = new ArrayList<Float>(config.armorPieceChances);
-    ProbabilityHandler.fillUp(
-        armorPieceChances,
-        Math.max(Math.max(HELMETS.size(), CHESTPLATES.size()),
-                 Math.max(LEGGINGS.size(), BOOTS.size())));
-    config.armorPieceChances = armorPieceChances;
+    config.armorPieceChances =
+        config.armorPieceChances.stream().map(f -> Math.abs(f)).toList();
+    config.extraWeights = Math.abs(config.extraWeights);
+
+    HELMETS_CHANCES = generateChances(HELMETS.size(), config.armorPieceChances,
+                                      config.extraWeights);
+    CHESTPLATES_CHANCES = generateChances(
+        CHESTPLATES.size(), config.armorPieceChances, config.extraWeights);
+    LEGGINGS_CHANCES = generateChances(
+        LEGGINGS.size(), config.armorPieceChances, config.extraWeights);
+    BOOTS_CHANCES = generateChances(BOOTS.size(), config.armorPieceChances,
+                                    config.extraWeights);
 
     weaponChance = clamp(config.weaponChance, 0f, 1f);
     config.weaponChance = weaponChance;

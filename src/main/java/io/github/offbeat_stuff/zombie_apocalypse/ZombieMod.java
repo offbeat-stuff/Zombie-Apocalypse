@@ -92,22 +92,22 @@ public class ZombieMod implements ModInitializer {
     if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
       zombie.equipStack(EquipmentSlot.HEAD,
                         randomArmor(world, ConfigHandler.HELMETS,
-                                    ConfigHandler.armorPieceChances));
+                                    ConfigHandler.HELMETS_CHANCES));
     }
     if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
       zombie.equipStack(EquipmentSlot.CHEST,
                         randomArmor(world, ConfigHandler.CHESTPLATES,
-                                    ConfigHandler.armorPieceChances));
+                                    ConfigHandler.CHESTPLATES_CHANCES));
     }
     if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
       zombie.equipStack(EquipmentSlot.LEGS,
                         randomArmor(world, ConfigHandler.LEGGINGS,
-                                    ConfigHandler.armorPieceChances));
+                                    ConfigHandler.LEGGINGS_CHANCES));
     }
     if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
-      zombie.equipStack(EquipmentSlot.FEET,
-                        randomArmor(world, ConfigHandler.BOOTS,
-                                    ConfigHandler.armorPieceChances));
+      zombie.equipStack(
+          EquipmentSlot.FEET,
+          randomArmor(world, ConfigHandler.BOOTS, ConfigHandler.BOOTS_CHANCES));
     }
 
     if (XRANDOM.nextFloat() > ConfigHandler.weaponChance) {

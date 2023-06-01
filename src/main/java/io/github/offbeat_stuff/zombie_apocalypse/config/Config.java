@@ -8,14 +8,15 @@ public class Config {
 
   // 0.01 is 1% chance
   // NETHERITE DIAMOND IRON LEATHER
-  public float armorChance = 0.5f;
+  public float armorChance = 0.1f;
   public ArmorList armorList = new ArmorList(
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
               "turtle"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"));
-  public List<Float> armorPieceChances = List.of(0.0005f, 0.0025f);
+  public int extraWeights = 100;
+  public List<Integer> armorPieceChances = List.of(1, 10, 100, 50, 50, 250);
   // NETHERITE DIAMOND IRON GOLD STONE WOODEN
   public float weaponChance = 0.5f;
   public float axeChance = 0.3f;
