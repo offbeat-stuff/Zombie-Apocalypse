@@ -154,6 +154,9 @@ public class ConfigHandler {
     weaponChance = clamp(config.weaponChance, 0f, 1f);
     config.weaponChance = weaponChance;
 
+    config.axeChance = clamp(config.axeChance,0f,1f);
+    axeChance = config.axeChance;
+
     config.weaponChances =
         config.weaponChances.stream().map(f -> Math.abs(f)).toList();
     config.extraWeaponWeights = Math.abs(config.extraWeaponWeights);
