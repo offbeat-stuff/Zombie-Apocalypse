@@ -2,6 +2,7 @@ package io.github.offbeat_stuff.zombie_apocalypse.config;
 
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 
+import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -52,12 +53,68 @@ public class Common {
     }
   }
 
-  public static class ItemList {
-    public static Item getItem(String idString) {
-      var id = new Identifier(idString);
-      if (!Registries.ITEM.containsId(id))
-        return null;
-      return Registries.ITEM.get(id);
+  public static Item getItem(String idString) {
+    var id = new Identifier(idString);
+    if (!Registries.ITEM.containsId(id))
+      return null;
+    return Registries.ITEM.get(id);
+  }
+
+  public static List<Item> getItems(List<String> idStrings) {
+    return idStrings.stream()
+        .map(Common::getItem)
+        .filter(f -> f != null)
+        .toList();
+  }
+
+  public static class ArmorList {
+    public static final List<String> allowedMaterials =
+        List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
+                "turtle");
+    public List<String> helmets;
+    public List<String> chestplates;
+    public List<String> leggings;
+    public List<String> boots;
+
+    public ArmorList(List<String> helmets, List<String> chestplates,
+                     List<String> leggings, List<String> boots) {
+      this.helmets = helmets;
+      this.chestplates = chestplates;
+      this.leggings = leggings;
+      this.boots = boots;
     }
+
+    private static String append(String prefix, String suffix) {
+      for (int i = 0; i < allowedMaterials.size(); i++) {
+        if (prefix.startsWith(allowedMaterials.get(i))) {
+          prefix = allowedMaterials.get(i);
+          break;
+        }
+      }
+      if (prefix.startsWith("gold")) {
+        prefix = "golden";
+      }
+
+      return prefix + "_" + suffix;
+    }
+
+    private List<Item> getList(List<String> list, String suffix) {
+      return list.stream()
+          .map(prefix -> append(prefix, suffix))
+          .map(Common::getItem)
+          .toList();
+    }
+
+    public List<Item> getHelmets() { return this.getList(helmets, "helmet"); }
+
+    public List<Item> getChestplates() {
+      return this.getList(chestplates, "chestplate");
+    }
+
+    public List<Item> getLeggings() {
+      return this.getList(leggings, "leggings");
+    }
+
+    public List<Item> getBoots() { return this.getList(boots, "boots"); }
   }
 }

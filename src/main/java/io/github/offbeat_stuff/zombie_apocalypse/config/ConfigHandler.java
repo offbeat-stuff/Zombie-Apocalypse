@@ -16,18 +16,10 @@ public class ConfigHandler {
 
   public static boolean zombiesBurnInSunlight = false;
 
-  public static List<Item> HELMETS =
-      List.of(Items.NETHERITE_HELMET, Items.DIAMOND_HELMET, Items.IRON_HELMET,
-              Items.LEATHER_HELMET);
-  public static final List<Item> CHESTPLATES =
-      List.of(Items.NETHERITE_CHESTPLATE, Items.DIAMOND_CHESTPLATE,
-              Items.IRON_CHESTPLATE, Items.LEATHER_CHESTPLATE);
-  public static final List<Item> LEGGINGS =
-      List.of(Items.NETHERITE_LEGGINGS, Items.DIAMOND_LEGGINGS,
-              Items.IRON_LEGGINGS, Items.LEATHER_LEGGINGS);
-  public static final List<Item> BOOTS =
-      List.of(Items.NETHERITE_BOOTS, Items.DIAMOND_BOOTS, Items.IRON_BOOTS,
-              Items.LEATHER_BOOTS);
+  public static List<Item> HELMETS;
+  public static List<Item> CHESTPLATES;
+  public static List<Item> LEGGINGS;
+  public static List<Item> BOOTS;
   public static float armorChance = 0.5f;
   public static List<Float> armorPieceChances = List.of(0.0005f);
 
@@ -113,6 +105,11 @@ public class ConfigHandler {
   }
 
   public static void handleConfig(Config config) {
+
+    HELMETS = config.armorList.getHelmets();
+    CHESTPLATES = config.armorList.getChestplates();
+    LEGGINGS = config.armorList.getLeggings();
+    BOOTS = config.armorList.getBoots();
 
     armorChance = clamp(config.armorChance, 0f, 1f);
     config.armorChance = armorChance;
