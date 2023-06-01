@@ -3,7 +3,6 @@ package io.github.offbeat_stuff.zombie_apocalypse.config;
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 
-import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -34,7 +33,8 @@ public class ConfigHandler {
               Items.GOLDEN_SWORD, Items.STONE_SWORD, Items.WOODEN_SWORD);
   public static float weaponChance = 0.5f;
   public static float axeChance = 0.3f;
-  public static List<Float> weaponChances = List.of(0.001f);
+  public static List<Float> SWORD_CHANCES;
+  public static List<Float> AXE_CHANCES;
 
   private static BlockPos toBlockPos(BlockPos start, int x, int y, int z) {
     return start.add(x, y, z);
@@ -154,11 +154,14 @@ public class ConfigHandler {
     weaponChance = clamp(config.weaponChance, 0f, 1f);
     config.weaponChance = weaponChance;
 
-    if (config.weaponChances.size() > 1)
-      weaponChances = new ArrayList<Float>(config.weaponChances);
-    ProbabilityHandler.fillUp(weaponChances,
-                              Math.max(AXES.size(), SWORDS.size()));
-    config.weaponChances = weaponChances;
+    config.weaponChances =
+        config.weaponChances.stream().map(f -> Math.abs(f)).toList();
+    config.extraWeaponWeights = Math.abs(config.extraWeaponWeights);
+
+    SWORD_CHANCES = generateChances(SWORDS.size(), config.weaponChances,
+                                    config.extraWeaponWeights);
+    AXE_CHANCES = generateChances(AXES.size(), config.weaponChances,
+                                  config.extraWeaponWeights);
 
     axisSpawnParameters = config.axisSpawnParameters;
 

@@ -116,11 +116,11 @@ public class ZombieMod implements ModInitializer {
     if (XRANDOM.nextFloat() < ConfigHandler.axeChance) {
       zombie.equipStack(EquipmentSlot.MAINHAND,
                         randomEnchanctedItemStack(ConfigHandler.AXES,
-                                                  ConfigHandler.weaponChances));
+                                                  ConfigHandler.AXE_CHANCES));
     } else {
       zombie.equipStack(EquipmentSlot.MAINHAND,
                         randomEnchanctedItemStack(ConfigHandler.SWORDS,
-                                                  ConfigHandler.weaponChances));
+                                                  ConfigHandler.SWORD_CHANCES));
     }
   }
 

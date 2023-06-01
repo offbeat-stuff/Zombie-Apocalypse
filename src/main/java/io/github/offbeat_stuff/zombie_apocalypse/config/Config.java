@@ -6,7 +6,6 @@ import java.util.List;
 public class Config {
   public boolean zombiesBurnInSunlight = false;
 
-  // 0.01 is 1% chance
   // NETHERITE DIAMOND IRON LEATHER
   public float armorChance = 0.1f;
   public ArmorList armorList = new ArmorList(
@@ -20,7 +19,8 @@ public class Config {
   // NETHERITE DIAMOND IRON GOLD STONE WOODEN
   public float weaponChance = 0.5f;
   public float axeChance = 0.3f;
-  public List<Float> weaponChances = List.of(0.001f, 0.0075f, 0.01f);
+  public int extraWeaponWeights = 100;
+  public List<Integer> weaponChances = List.of(1, 10, 100, 50, 200, 200);
 
   // Chance that a zombie spawns in a single axis of player each tick
   public SpawnParameters axisSpawnParameters = new SpawnParameters(1f, 24, 48);
