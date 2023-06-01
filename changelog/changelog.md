@@ -1,5 +1,6 @@
-## New Features
+## Changes
 
-- allowed dimensions config
+- Now allows for specifying armor materials in the config
+- changed dimension checking
 
 
