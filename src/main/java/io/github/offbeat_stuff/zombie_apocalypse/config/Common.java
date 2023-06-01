@@ -3,6 +3,9 @@ package io.github.offbeat_stuff.zombie_apocalypse.config;
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 
 import java.util.function.Predicate;
+import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 public class Common {
   public static class SpawnParameters {
@@ -46,6 +49,15 @@ public class Common {
         return (t) -> (t % m) >= min && (t % m) <= max;
       }
       return (t) -> (t % m) <= max || (t % m) >= min;
+    }
+  }
+
+  public static class ItemList {
+    public static Item getItem(String idString) {
+      var id = new Identifier(idString);
+      if (!Registries.ITEM.containsId(id))
+        return null;
+      return Registries.ITEM.get(id);
     }
   }
 }

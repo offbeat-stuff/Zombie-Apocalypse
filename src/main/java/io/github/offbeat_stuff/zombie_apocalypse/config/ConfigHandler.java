@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 public class ConfigHandler {
@@ -106,17 +107,9 @@ public class ConfigHandler {
   // range 1 - 255
   public static int maxAmplifier = 2;
 
-  public static List<String> allowedDimensions =
-      List.of("overworld", "ther_nether", "the_end");
-
+  public static List<Identifier> allowedDimensions;
   private static float clamp(float r, float min, float max) {
     return Math.max(min, Math.min(r, max));
-  }
-
-  private static String fixRegistryKey(String f) {
-    if (!f.contains(":"))
-      return "minecraft:" + f;
-    return f;
   }
 
   public static void handleConfig(Config config) {
@@ -167,9 +160,7 @@ public class ConfigHandler {
     maxPotionTimeInTicks = config.maxPotionTimeInTicks;
     maxAmplifier = config.maxAmplifier;
 
-    config.allowedDimensions = config.allowedDimensions.stream()
-                                   .map(ConfigHandler::fixRegistryKey)
-                                   .toList();
-    allowedDimensions = config.allowedDimensions;
+    allowedDimensions =
+        config.allowedDimensions.stream().map(f -> new Identifier(f)).toList();
   }
 }

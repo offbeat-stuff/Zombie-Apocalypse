@@ -144,7 +144,7 @@ public class ZombieMod implements ModInitializer {
 
   private void spawnZombiesInWorld(ServerWorld world) {
     if (!(ConfigHandler.allowedDimensions.contains(
-            world.getRegistryKey().getValue().toString())))
+            world.getRegistryKey().getValue())))
       return;
     if (world.getChunkManager().getSpawnInfo().getGroupToCount().getInt(
             SpawnGroup.MONSTER) > ConfigHandler.maxZombieCount)
