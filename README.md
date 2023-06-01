@@ -51,11 +51,13 @@ maxAmplifier = 2
 Default Config next beta
 ```toml
 zombiesBurnInSunlight = false
-armorChance = 0.5
-armorPieceChances = [5.0E-4, 0.0025, 0.008286135, 0.027464015, 0.09102822, 0.30170885, 1.0000001]
+armorChance = 0.1
+extraWeights = 100
+armorPieceChances = [1, 10, 100, 50, 50, 250]
 weaponChance = 0.5
 axeChance = 0.3
-weaponChances = [0.001, 0.0075, 0.01, 0.04641589, 0.21544349, 1.0000001]
+extraWeaponWeights = 100
+weaponChances = [1, 10, 100, 50, 200, 200]
 minPlayerDistance = 24.0
 maxZombieCount = 150
 firstChance = 0.05
