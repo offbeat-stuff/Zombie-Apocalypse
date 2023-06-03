@@ -6,6 +6,8 @@ import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
@@ -14,16 +16,6 @@ import net.minecraft.util.math.BlockPos;
 public class ConfigHandler {
 
   public static boolean zombiesBurnInSunlight = false;
-
-  public static List<Item> HELMETS;
-  public static List<Item> CHESTPLATES;
-  public static List<Item> LEGGINGS;
-  public static List<Item> BOOTS;
-  public static float armorChance = 0.5f;
-  public static List<Float> HELMETS_CHANCES;
-  public static List<Float> CHESTPLATES_CHANCES;
-  public static List<Float> LEGGINGS_CHANCES;
-  public static List<Float> BOOTS_CHANCES;
 
   public static final List<Item> AXES =
       List.of(Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.IRON_AXE,
@@ -112,49 +104,28 @@ public class ConfigHandler {
     return weights.stream().map(f -> (float)f / sum).toList();
   }
 
-  private static List<Float> generateChances(int len, List<Integer> weights,
-                                             int extraWeights) {
-    var extra = len - weights.size();
-    if (extra == 0) {
-      return generateChances(weights);
-    }
-    var finalWeights = new ArrayList<Integer>(weights);
-    var rem = extraWeights;
-    for (int i = 0; i < extra - 1; i++) {
-      finalWeights.add(extraWeights / extra);
-      rem -= extraWeights / extra;
-    }
-    finalWeights.add(rem);
-    return generateChances(finalWeights);
+  private static Stream<Integer> splitEvenly(int weight, int len) {
+    return IntStream.range(0, len).mapToObj(
+        f -> (weight / len) + (f < (weight % len) ? 1 : 0));
+  }
+
+  public static List<Float> generateChances(int len, List<Integer> weights,
+                                            int extraWeights) {
+    return generateChances(
+        Stream
+            .concat(weights.stream().limit(len),
+                    splitEvenly(extraWeights, len - weights.size()))
+            .toList());
   }
 
   public static void handleConfig(Config config) {
 
-    HELMETS = config.armorList.getHelmets();
-    CHESTPLATES = config.armorList.getChestplates();
-    LEGGINGS = config.armorList.getLeggings();
-    BOOTS = config.armorList.getBoots();
-
-    armorChance = clamp(config.armorChance, 0f, 1f);
-    config.armorChance = armorChance;
-
-    config.armorPieceChances =
-        config.armorPieceChances.stream().map(f -> Math.abs(f)).toList();
-    config.extraWeights = Math.abs(config.extraWeights);
-
-    HELMETS_CHANCES = generateChances(HELMETS.size(), config.armorPieceChances,
-                                      config.extraWeights);
-    CHESTPLATES_CHANCES = generateChances(
-        CHESTPLATES.size(), config.armorPieceChances, config.extraWeights);
-    LEGGINGS_CHANCES = generateChances(
-        LEGGINGS.size(), config.armorPieceChances, config.extraWeights);
-    BOOTS_CHANCES = generateChances(BOOTS.size(), config.armorPieceChances,
-                                    config.extraWeights);
+    ZombieArmorHandler.handleRawArmorHandler(config.Armor);
 
     weaponChance = clamp(config.weaponChance, 0f, 1f);
     config.weaponChance = weaponChance;
 
-    config.axeChance = clamp(config.axeChance,0f,1f);
+    config.axeChance = clamp(config.axeChance, 0f, 1f);
     axeChance = config.axeChance;
 
     config.weaponChances =

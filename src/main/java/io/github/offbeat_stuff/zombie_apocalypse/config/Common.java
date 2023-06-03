@@ -2,9 +2,12 @@ package io.github.offbeat_stuff.zombie_apocalypse.config;
 
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 
+import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
 import java.util.List;
 import java.util.function.Predicate;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
@@ -65,6 +68,17 @@ public class Common {
         .map(Common::getItem)
         .filter(f -> f != null)
         .toList();
+  }
+
+  public static ItemStack randomEnchanctedItemStack(List<Item> items,
+                                                    List<Float> chances) {
+    Item item = ProbabilityHandler.chooseRandom(items, chances);
+    if (item == null) {
+      return ItemStack.EMPTY;
+    }
+    return EnchantmentHelper.enchant(
+        XRANDOM, item.getDefaultStack(),
+        ConfigHandler.enchantmentLevelRange.generate(), true);
   }
 
   public static class ArmorList {

@@ -2,23 +2,21 @@ package io.github.offbeat_stuff.zombie_apocalypse;
 
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
+import io.github.offbeat_stuff.zombie_apocalypse.config.Common;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieArmorHandler;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Xoroshiro128PlusPlusRandom;
@@ -58,24 +56,6 @@ public class ZombieMod implements ModInitializer {
     }
   }
 
-  private ItemStack randomEnchanctedItemStack(List<Item> items,
-                                              List<Float> chances) {
-    Item item = ProbabilityHandler.chooseRandom(items, chances);
-    if (item == null) {
-      return ItemStack.EMPTY;
-    }
-    return EnchantmentHelper.enchant(
-        XRANDOM, item.getDefaultStack(),
-        ConfigHandler.enchantmentLevelRange.generate(), true);
-  }
-
-  private ItemStack randomArmor(ServerWorld world, List<Item> items,
-                                List<Float> chances) {
-    var r = randomEnchanctedItemStack(items, chances);
-    ArmorTrimHander.applyRandomArmorTrim(world, r);
-    return r;
-  }
-
   private void trySpawnZombieAt(ServerWorld world, BlockPos spawnPos) {
     if (world.isPlayerInRange(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(),
                               ConfigHandler.minPlayerDistance)) {
@@ -89,38 +69,19 @@ public class ZombieMod implements ModInitializer {
       return;
     }
 
-    if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
-      zombie.equipStack(EquipmentSlot.HEAD,
-                        randomArmor(world, ConfigHandler.HELMETS,
-                                    ConfigHandler.HELMETS_CHANCES));
-    }
-    if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
-      zombie.equipStack(EquipmentSlot.CHEST,
-                        randomArmor(world, ConfigHandler.CHESTPLATES,
-                                    ConfigHandler.CHESTPLATES_CHANCES));
-    }
-    if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
-      zombie.equipStack(EquipmentSlot.LEGS,
-                        randomArmor(world, ConfigHandler.LEGGINGS,
-                                    ConfigHandler.LEGGINGS_CHANCES));
-    }
-    if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
-      zombie.equipStack(
-          EquipmentSlot.FEET,
-          randomArmor(world, ConfigHandler.BOOTS, ConfigHandler.BOOTS_CHANCES));
-    }
+    ZombieArmorHandler.handleZombie(world, zombie);
 
     if (XRANDOM.nextFloat() > ConfigHandler.weaponChance) {
       return;
     }
     if (XRANDOM.nextFloat() < ConfigHandler.axeChance) {
       zombie.equipStack(EquipmentSlot.MAINHAND,
-                        randomEnchanctedItemStack(ConfigHandler.AXES,
-                                                  ConfigHandler.AXE_CHANCES));
+                        Common.randomEnchanctedItemStack(
+                            ConfigHandler.AXES, ConfigHandler.AXE_CHANCES));
     } else {
       zombie.equipStack(EquipmentSlot.MAINHAND,
-                        randomEnchanctedItemStack(ConfigHandler.SWORDS,
-                                                  ConfigHandler.SWORD_CHANCES));
+                        Common.randomEnchanctedItemStack(
+                            ConfigHandler.SWORDS, ConfigHandler.SWORD_CHANCES));
     }
   }
 

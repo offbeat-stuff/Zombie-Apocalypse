@@ -1,4 +1,5 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
+
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 
 import java.util.List;
@@ -6,17 +7,16 @@ import java.util.List;
 public class Config {
   public boolean zombiesBurnInSunlight = false;
 
-  // NETHERITE DIAMOND IRON LEATHER
-  public float armorChance = 0.1f;
-  public ArmorList armorList = new ArmorList(
+  public ZombieArmorHandler
+      .RawArmorHandler Armor = new ZombieArmorHandler.RawArmorHandler(
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
               "turtle"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
-      List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"));
-  public int extraWeights = 100;
-  public List<Integer> armorPieceChances = List.of(1, 10, 100, 50, 50, 250);
-  // NETHERITE DIAMOND IRON GOLD STONE WOODEN
+      List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
+      0.1f, List.of(0.1f, 0.1f, 0.1f, 0.1f), 100,
+      List.of(1, 10, 100, 50, 50, 100));
+
   public float weaponChance = 0.5f;
   public float axeChance = 0.3f;
   public int extraWeaponWeights = 100;

@@ -15,4 +15,8 @@ public class ProbabilityHandler {
     }
     return items.get(items.size() - 1);
   }
+
+  public static boolean tryChance(float chance) {
+    return ZombieMod.XRANDOM.nextFloat() < chance;
+  }
 }
