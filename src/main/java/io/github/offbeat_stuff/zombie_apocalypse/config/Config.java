@@ -30,14 +30,14 @@ public class Config {
           new WeightList(List.of(1, 10, 100, 50, 50, 100), 100), 0.1f);
 
   // Chance that a zombie spawns in a single axis of player each tick
-  public SpawnParameters axisSpawnParameters = new SpawnParameters(1f, 24, 48);
+  public SpawnParameters axisSpawnParameters = new SpawnParameters(0.1f, 16, 48);
 
   // Chance that a zombie spawns in a single plane of player each tick
-  public SpawnParameters planeSpawnParameters = new SpawnParameters(1f, 24, 48);
+  public SpawnParameters planeSpawnParameters = new SpawnParameters(0.1f, 16, 48);
 
   // Chance that a zombie spawns in a box around player but not inside the
   // smaller box each tick
-  public SpawnParameters boxSpawnParameters = new SpawnParameters(1f, 32, 64);
+  public SpawnParameters boxSpawnParameters = new SpawnParameters(0.1f, 24, 64);
 
   // Time based Spawning in ticks - currently set to 0 to 1 am
   // each hour in minecraft represents 50 seconds or 1000 ticks
@@ -47,7 +47,7 @@ public class Config {
   public Range enchantmentLevelRange = new Range(5, 40);
 
   // minimum distance from player
-  public float minPlayerDistance = 24f;
+  public float minPlayerDistance = 16f;
 
   // Max zombie count per player
   public int maxZombieCount = 150;
