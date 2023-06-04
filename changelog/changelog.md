@@ -1,5 +1,10 @@
-## New Features
+## Changes
 
-- Fire + Frost Zombie
+- More baby proofing of config
+
+
+## Fixes
+
+- Fix Spawning
 
 
