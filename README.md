@@ -22,36 +22,9 @@ Default Config
 
 ```toml
 zombiesBurnInSunlight = false
-armorChance = 0.5
-armorPieceChances = [5.0E-4, 0.0025]
-weaponChance = 0.5
-axeChance = 0.3
-weaponChances = [0.001, 0.0075, 0.01]
-axisSpawnChance = 1.0
-axisRangeMin = 24
-axisRangeMax = 48
-planeSpawnChance = 1.0
-planeRangeMin = 24
-planeRangeMax = 48
-boxSpawnChance = 1.0
-boxSpawnMin = 32
-boxSpawnMax = 64
-minTime = 1000
-maxTime = 13000
-minEnchantmentLevel = 5
-maxEnchantmentLevel = 40
-minPlayerDistance = 24.0
-maxZombieCount = 150
-firstChance = 0.05
-secondChance = 0.1
-maxPotionTimeInTicks = 12000
-maxAmplifier = 2
-```
-
-Default Config next beta
-```toml
-zombiesBurnInSunlight = false
 spawnInstantly = false
+frostZombieChance = 0.01
+fireZombieChance = 0.01
 minPlayerDistance = 16.0
 maxZombieCount = 150
 firstChance = 0.05
