@@ -25,7 +25,7 @@ public class Common {
 
     public int generateExclusive() {
       return XRANDOM.nextBetween(this.min, this.max) *
-          ((XRANDOM.nextInt(2) * 2) - 1);
+          (XRANDOM.nextInt(2) == 0 ? -1 : 1);
     }
 
     public int generateInclusive() {

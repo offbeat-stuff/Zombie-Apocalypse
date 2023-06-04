@@ -117,11 +117,11 @@ public class ConfigHandler {
     minPlayerDistance = Math.max(config.minPlayerDistance, 0f);
     config.minPlayerDistance = minPlayerDistance;
 
-    maxZombieCount = config.maxZombieCount;
-    firstChance = config.firstChance;
-    secondChance = config.secondChance;
+    maxZombieCount = Math.abs(config.maxZombieCount);
+    firstChance = clamp(config.firstChance,0f,1f);
+    secondChance = clamp(config.secondChance,0f,1f);
     maxPotionTimeInTicks = config.maxPotionTimeInTicks;
-    maxAmplifier = config.maxAmplifier;
+    maxAmplifier = Math.abs(config.maxAmplifier);
 
     allowedDimensions =
         config.allowedDimensions.stream().map(f -> new Identifier(f)).toList();
