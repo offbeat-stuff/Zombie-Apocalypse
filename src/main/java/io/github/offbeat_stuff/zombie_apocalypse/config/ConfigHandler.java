@@ -3,13 +3,13 @@ package io.github.offbeat_stuff.zombie_apocalypse.config;
 import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
+import static net.minecraft.util.math.MathHelper.clamp;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import static net.minecraft.util.math.MathHelper.clamp;
 
 public class ConfigHandler {
 
@@ -91,8 +91,8 @@ public class ConfigHandler {
     zombiesBurnInSunlight = config.zombiesBurnInSunlight;
     spawnInstantly = config.spawnInstantly;
 
-    frostZombieChance = clamp(config.frostZombieChance,0f,1f);
-    fireZombieChance = clamp(config.fireZombieChance,0f,1f);
+    frostZombieChance = clamp(config.frostZombieChance, 0f, 1f);
+    fireZombieChance = clamp(config.fireZombieChance, 0f, 1f);
 
     ZombieArmorHandler.handleRawArmorHandler(config.Armor);
     ZombieWeaponHandler.handleRawWeaponHander(config.Weapon);
@@ -118,8 +118,8 @@ public class ConfigHandler {
     config.minPlayerDistance = minPlayerDistance;
 
     maxZombieCount = Math.abs(config.maxZombieCount);
-    firstChance = clamp(config.firstChance,0f,1f);
-    secondChance = clamp(config.secondChance,0f,1f);
+    firstChance = clamp(config.firstChance, 0f, 1f);
+    secondChance = clamp(config.secondChance, 0f, 1f);
     maxPotionTimeInTicks = config.maxPotionTimeInTicks;
     maxAmplifier = Math.abs(config.maxAmplifier);
 

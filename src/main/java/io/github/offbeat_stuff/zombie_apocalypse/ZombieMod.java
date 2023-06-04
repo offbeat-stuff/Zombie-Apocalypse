@@ -6,7 +6,6 @@ import io.github.offbeat_stuff.zombie_apocalypse.config.Config;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieArmorHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieWeaponHandler;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -89,11 +88,15 @@ public class ZombieMod implements ModInitializer {
   }
 
   private void zombieSpawnAttempt(ServerWorld world, BlockPos pos) {
-    if (isSpawnableForZombie(world, pos))
+    if (isSpawnableForZombie(world, pos)) {
       trySpawnZombieAt(world, pos);
+      return;
+    }
     for (var bpos : BlockPos.iterate(pos.add(-4, -4, -4), pos.add(4, 4, 4))) {
-      if (isSpawnableForZombie(world, pos))
+      if (isSpawnableForZombie(world, pos)) {
         trySpawnZombieAt(world, bpos);
+        return;
+      }
     }
   }
 
