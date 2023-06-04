@@ -56,15 +56,15 @@ public class ZombieArmorHandler {
                         randomArmor(world, HELMETS, HELMETS_CHANCES));
     }
     if (tryChance(chances.get(1))) {
-      entity.equipStack(EquipmentSlot.HEAD,
+      entity.equipStack(EquipmentSlot.CHEST,
                         randomArmor(world, CHESTPLATES, CHESTPLATES_CHANCES));
     }
     if (tryChance(chances.get(2))) {
-      entity.equipStack(EquipmentSlot.HEAD,
+      entity.equipStack(EquipmentSlot.LEGS,
                         randomArmor(world, LEGGINGS, LEGGINGS_CHANCES));
     }
     if (tryChance(chances.get(3))) {
-      entity.equipStack(EquipmentSlot.HEAD,
+      entity.equipStack(EquipmentSlot.FEET,
                         randomArmor(world, BOOTS, BOOTS_CHANCES));
     }
   }
