@@ -12,7 +12,8 @@ import net.minecraft.util.math.BlockPos;
 
 public class ConfigHandler {
 
-  public static boolean zombiesBurnInSunlight = false;
+  public static boolean zombiesBurnInSunlight;
+  public static boolean spawnInstantly;
 
   private static BlockPos toBlockPos(BlockPos start, int x, int y, int z) {
     return start.add(x, y, z);
@@ -83,6 +84,8 @@ public class ConfigHandler {
   public static List<Identifier> allowedDimensions;
 
   public static void handleConfig(Config config) {
+    zombiesBurnInSunlight = config.zombiesBurnInSunlight;
+    spawnInstantly = config.spawnInstantly;
 
     ZombieArmorHandler.handleRawArmorHandler(config.Armor);
     ZombieWeaponHandler.handleRawWeaponHander(config.Weapon);

@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Config {
   public boolean zombiesBurnInSunlight = false;
+  public boolean spawnInstantly = false;
 
   public ZombieArmorHandler
       .RawArmorHandler Armor = new ZombieArmorHandler.RawArmorHandler(

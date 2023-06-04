@@ -94,17 +94,25 @@ public class ZombieMod implements ModInitializer {
     if (!(ConfigHandler.allowedDimensions.contains(
             world.getRegistryKey().getValue())))
       return;
-    if (world.getChunkManager().getSpawnInfo().getGroupToCount().getInt(
-            SpawnGroup.MONSTER) > ConfigHandler.maxZombieCount)
+    int zombieCount =
+        world.getChunkManager().getSpawnInfo().getGroupToCount().getInt(
+            SpawnGroup.MONSTER);
+    if (zombieCount > ConfigHandler.maxZombieCount)
       return;
 
     var time = world.getTimeOfDay() % 24000;
     if (!ConfigHandler.isTimeRight.test((int)time))
       return;
 
+    final int count = ConfigHandler.spawnInstantly
+                          ? ConfigHandler.maxZombieCount - zombieCount
+                          : 1;
+
     world.getPlayers().forEach(player -> {
-      ConfigHandler.generateSpawnPosition(player.getBlockPos())
-          .forEach(b -> zombieSpawnAttempt(world, b));
+      for (int i = 0; i < count; i += 3) {
+        ConfigHandler.generateSpawnPosition(player.getBlockPos())
+            .forEach(b -> zombieSpawnAttempt(world, b));
+      }
     });
   }
 
