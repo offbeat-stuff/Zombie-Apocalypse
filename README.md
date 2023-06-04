@@ -51,7 +51,8 @@ maxAmplifier = 2
 Default Config next beta
 ```toml
 zombiesBurnInSunlight = false
-minPlayerDistance = 24.0
+spawnInstantly = false
+minPlayerDistance = 16.0
 maxZombieCount = 150
 firstChance = 0.05
 secondChance = 0.1
@@ -71,7 +72,7 @@ defaultChance = 0.1
 
 [Armor.materialWeights]
 weights = [1, 10, 100, 50, 50, 100]
-weightsForExtraEntries = 100
+weightsForExtraEntries = 10
 
 [Weapon]
 swords = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
@@ -79,7 +80,7 @@ shovels = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
 pickaxes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
 axes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
 hoes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-chance = 1.0
+chance = 0.1
 
 [Weapon.weightsForTools]
 weights = [100, 20, 20, 75, 1]
@@ -90,18 +91,18 @@ weights = [1, 10, 100, 50, 50, 100]
 weightsForExtraEntries = 100
 
 [axisSpawnParameters]
-chance = 1.0
-min = 24
+chance = 0.1
+min = 16
 max = 48
 
 [planeSpawnParameters]
-chance = 1.0
-min = 24
+chance = 0.1
+min = 16
 max = 48
 
 [boxSpawnParameters]
-chance = 1.0
-min = 32
+chance = 0.1
+min = 24
 max = 64
 
 [timeRange]
