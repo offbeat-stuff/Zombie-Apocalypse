@@ -1,6 +1,15 @@
+## New Features
+
+- Instant spawning through config (disabled by default)
+
+
 ## Changes
 
-- changed config structure, now allows for multiple kinds of tools
-- Change zombie armor config
+- change defaults to be more intense
+
+
+## Fixes
+
+- Fix zombies with pants on head
 
 
