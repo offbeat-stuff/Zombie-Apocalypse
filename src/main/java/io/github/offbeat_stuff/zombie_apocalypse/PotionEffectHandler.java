@@ -5,6 +5,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.ZombieEntity;
+import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
 
 public class PotionEffectHandler {
 
@@ -20,11 +21,11 @@ public class PotionEffectHandler {
       StatusEffects.DOLPHINS_GRACE};
 
   public static void applyRandomPotionEffects(ZombieEntity entity) {
-    if (ZombieMod.XRANDOM.nextFloat() > ConfigHandler.firstChance) {
+    if (!tryChance(ConfigHandler.firstChance)) {
       return;
     }
     applyRandomPotionEffect(entity);
-    if (ZombieMod.XRANDOM.nextFloat() > ConfigHandler.secondChance) {
+    if (!tryChance(ConfigHandler.secondChance)) {
       return;
     }
     applyRandomPotionEffect(entity);

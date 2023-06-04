@@ -6,27 +6,13 @@ import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
 
 public class ConfigHandler {
 
   public static boolean zombiesBurnInSunlight = false;
-
-  public static final List<Item> AXES =
-      List.of(Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.IRON_AXE,
-              Items.GOLDEN_AXE, Items.STONE_AXE, Items.WOODEN_AXE);
-  public static final List<Item> SWORDS =
-      List.of(Items.NETHERITE_SWORD, Items.DIAMOND_SWORD, Items.IRON_SWORD,
-              Items.GOLDEN_SWORD, Items.STONE_SWORD, Items.WOODEN_SWORD);
-  public static float weaponChance = 0.5f;
-  public static float axeChance = 0.3f;
-  public static List<Float> SWORD_CHANCES;
-  public static List<Float> AXE_CHANCES;
 
   private static BlockPos toBlockPos(BlockPos start, int x, int y, int z) {
     return start.add(x, y, z);
@@ -67,11 +53,11 @@ public class ConfigHandler {
 
   public static List<BlockPos> generateSpawnPosition(BlockPos start) {
     var r = new ArrayList<BlockPos>();
-    if (XRANDOM.nextFloat() < axisSpawnParameters.chance)
+    if (tryChance(axisSpawnParameters.chance))
       r.add(randomAxisPos(start));
-    if (XRANDOM.nextFloat() < planeSpawnParameters.chance)
+    if (tryChance(planeSpawnParameters.chance))
       r.add(randomPlanePos(start));
-    if (XRANDOM.nextFloat() < boxSpawnParameters.chance)
+    if (tryChance(boxSpawnParameters.chance))
       r.add(randomBoxPos(start));
     return r;
   }
@@ -95,47 +81,11 @@ public class ConfigHandler {
   public static int maxAmplifier = 2;
 
   public static List<Identifier> allowedDimensions;
-  private static float clamp(float r, float min, float max) {
-    return Math.max(min, Math.min(r, max));
-  }
-
-  private static List<Float> generateChances(List<Integer> weights) {
-    var sum = weights.stream().mapToInt(Integer::intValue).sum();
-    return weights.stream().map(f -> (float)f / sum).toList();
-  }
-
-  private static Stream<Integer> splitEvenly(int weight, int len) {
-    return IntStream.range(0, len).mapToObj(
-        f -> (weight / len) + (f < (weight % len) ? 1 : 0));
-  }
-
-  public static List<Float> generateChances(int len, List<Integer> weights,
-                                            int extraWeights) {
-    return generateChances(
-        Stream
-            .concat(weights.stream().limit(len),
-                    splitEvenly(extraWeights, len - weights.size()))
-            .toList());
-  }
 
   public static void handleConfig(Config config) {
 
     ZombieArmorHandler.handleRawArmorHandler(config.Armor);
-
-    weaponChance = clamp(config.weaponChance, 0f, 1f);
-    config.weaponChance = weaponChance;
-
-    config.axeChance = clamp(config.axeChance, 0f, 1f);
-    axeChance = config.axeChance;
-
-    config.weaponChances =
-        config.weaponChances.stream().map(f -> Math.abs(f)).toList();
-    config.extraWeaponWeights = Math.abs(config.extraWeaponWeights);
-
-    SWORD_CHANCES = generateChances(SWORDS.size(), config.weaponChances,
-                                    config.extraWeaponWeights);
-    AXE_CHANCES = generateChances(AXES.size(), config.weaponChances,
-                                  config.extraWeaponWeights);
+    ZombieWeaponHandler.handleRawWeaponHander(config.Weapon);
 
     axisSpawnParameters = config.axisSpawnParameters;
 

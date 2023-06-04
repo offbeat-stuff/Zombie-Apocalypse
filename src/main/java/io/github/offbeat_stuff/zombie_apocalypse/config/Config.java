@@ -1,5 +1,6 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
 
+import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.*;
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 
 import java.util.List;
@@ -7,20 +8,23 @@ import java.util.List;
 public class Config {
   public boolean zombiesBurnInSunlight = false;
 
-  public ZombieArmorHandler
-      .RawArmorHandler Armor = new ZombieArmorHandler.RawArmorHandler(
+  public ZombieArmorHandler.RawArmorHandler Armor = new ZombieArmorHandler.RawArmorHandler(
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
-              "turtle"),
+          "turtle"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
-      0.1f, List.of(0.1f, 0.1f, 0.1f, 0.1f), 100,
-      List.of(1, 10, 100, 50, 50, 100));
+      new ChanceList(List.of(0.1f, 0.1f, 0.1f, 0.1f), 0.1f),
+      new WeightList(List.of(1, 10, 100, 50, 50, 100), 10));
 
-  public float weaponChance = 0.5f;
-  public float axeChance = 0.3f;
-  public int extraWeaponWeights = 100;
-  public List<Integer> weaponChances = List.of(1, 10, 100, 50, 200, 200);
+  public ZombieWeaponHandler.RawWeaponHander Weapon = new ZombieWeaponHandler.RawWeaponHander(
+      List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
+      List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
+      List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
+      List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
+      List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
+      new WeightList(List.of(100,20,20,75,1), 100),
+      new WeightList(List.of(1,10,100,50,50,100), 100),0.1f);
 
   // Chance that a zombie spawns in a single axis of player each tick
   public SpawnParameters axisSpawnParameters = new SpawnParameters(1f, 24, 48);
@@ -52,6 +56,5 @@ public class Config {
   // range 1 - 255
   public int maxAmplifier = 2;
 
-  public List<String> allowedDimensions =
-      List.of("overworld", "ther_nether", "the_end");
+  public List<String> allowedDimensions = List.of("overworld", "ther_nether", "the_end");
 }

@@ -81,54 +81,19 @@ public class Common {
         ConfigHandler.enchantmentLevelRange.generate(), true);
   }
 
-  public static class ArmorList {
-    public static final List<String> allowedMaterials =
-        List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
-                "turtle");
-    public List<String> helmets;
-    public List<String> chestplates;
-    public List<String> leggings;
-    public List<String> boots;
-
-    public ArmorList(List<String> helmets, List<String> chestplates,
-                     List<String> leggings, List<String> boots) {
-      this.helmets = helmets;
-      this.chestplates = chestplates;
-      this.leggings = leggings;
-      this.boots = boots;
+  public static String append(String prefix, String suffix) {
+    if (prefix.equals("gold")) {
+      prefix = "golden";
     }
 
-    private static String append(String prefix, String suffix) {
-      for (int i = 0; i < allowedMaterials.size(); i++) {
-        if (prefix.startsWith(allowedMaterials.get(i))) {
-          prefix = allowedMaterials.get(i);
-          break;
-        }
-      }
-      if (prefix.startsWith("gold")) {
-        prefix = "golden";
-      }
+    return prefix + "_" + suffix;
+  }
 
-      return prefix + "_" + suffix;
-    }
-
-    private List<Item> getList(List<String> list, String suffix) {
-      return list.stream()
-          .map(prefix -> append(prefix, suffix))
-          .map(Common::getItem)
-          .toList();
-    }
-
-    public List<Item> getHelmets() { return this.getList(helmets, "helmet"); }
-
-    public List<Item> getChestplates() {
-      return this.getList(chestplates, "chestplate");
-    }
-
-    public List<Item> getLeggings() {
-      return this.getList(leggings, "leggings");
-    }
-
-    public List<Item> getBoots() { return this.getList(boots, "boots"); }
+  public static List<Item> getList(List<String> list, String suffix) {
+    return list.stream()
+        .map(prefix -> Common.append(prefix, suffix))
+        .map(Common::getItem)
+        .filter(f -> f != null)
+        .toList();
   }
 }

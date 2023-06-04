@@ -2,10 +2,11 @@ package io.github.offbeat_stuff.zombie_apocalypse;
 
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
-import io.github.offbeat_stuff.zombie_apocalypse.config.Common;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieArmorHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieWeaponHandler;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -13,7 +14,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.MobEntity;
@@ -70,19 +70,7 @@ public class ZombieMod implements ModInitializer {
     }
 
     ZombieArmorHandler.handleZombie(world, zombie);
-
-    if (XRANDOM.nextFloat() > ConfigHandler.weaponChance) {
-      return;
-    }
-    if (XRANDOM.nextFloat() < ConfigHandler.axeChance) {
-      zombie.equipStack(EquipmentSlot.MAINHAND,
-                        Common.randomEnchanctedItemStack(
-                            ConfigHandler.AXES, ConfigHandler.AXE_CHANCES));
-    } else {
-      zombie.equipStack(EquipmentSlot.MAINHAND,
-                        Common.randomEnchanctedItemStack(
-                            ConfigHandler.SWORDS, ConfigHandler.SWORD_CHANCES));
-    }
+    ZombieWeaponHandler.handleZombie(world, zombie);
   }
 
   private boolean isSpawnableForZombie(ServerWorld world, BlockPos pos) {

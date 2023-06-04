@@ -51,13 +51,6 @@ maxAmplifier = 2
 Default Config next beta
 ```toml
 zombiesBurnInSunlight = false
-armorChance = 0.1
-extraWeights = 100
-armorPieceChances = [1, 10, 100, 50, 50, 250]
-weaponChance = 0.5
-axeChance = 0.3
-extraWeaponWeights = 100
-weaponChances = [1, 10, 100, 50, 200, 200]
 minPlayerDistance = 24.0
 maxZombieCount = 150
 firstChance = 0.05
@@ -66,11 +59,35 @@ maxPotionTimeInTicks = 12000
 maxAmplifier = 2
 allowedDimensions = ["overworld", "ther_nether", "the_end"]
 
-[armorList]
+[Armor]
 helmets = ["netherite", "diamond", "iron", "gold", "chainmail", "leather", "turtle"]
 chestplates = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
 leggings = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
 boots = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
+
+[Armor.chancesPerSlot]
+chances = [0.1, 0.1, 0.1, 0.1]
+defaultChance = 0.1
+
+[Armor.materialWeights]
+weights = [1, 10, 100, 50, 50, 100]
+weightsForExtraEntries = 100
+
+[Weapon]
+swords = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
+shovels = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
+pickaxes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
+axes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
+hoes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
+chance = 1.0
+
+[Weapon.weightsForTools]
+weights = [100, 20, 20, 75, 1]
+weightsForExtraEntries = 100
+
+[Weapon.commonWeights]
+weights = [1, 10, 100, 50, 50, 100]
+weightsForExtraEntries = 100
 
 [axisSpawnParameters]
 chance = 1.0

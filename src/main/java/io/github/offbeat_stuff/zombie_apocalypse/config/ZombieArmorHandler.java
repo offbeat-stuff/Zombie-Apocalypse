@@ -3,8 +3,9 @@ package io.github.offbeat_stuff.zombie_apocalypse.config;
 import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
 
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHander;
+import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.ChanceList;
+import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.WeightList;
 import java.util.List;
-import java.util.stream.IntStream;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.item.Item;
@@ -12,6 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 
 public class ZombieArmorHandler {
+  public static final List<String> allowedMaterials = List.of(
+      "netherite", "diamond", "iron", "gold", "chainmail", "leather", "turtle");
+  public static final List<String> allowedSlots =
+      List.of("helmet", "chestplate", "leggings", "boots");
+
   private static List<Item> HELMETS;
   private static List<Item> CHESTPLATES;
   private static List<Item> LEGGINGS;
@@ -25,20 +31,16 @@ public class ZombieArmorHandler {
 
   public static void handleRawArmorHandler(RawArmorHandler raw) {
     raw.fixAll();
-    HELMETS = getList(raw.helmets, "helmet");
-    CHESTPLATES = getList(raw.chestplates, "chestplate");
-    LEGGINGS = getList(raw.leggings, "leggings");
-    BOOTS = getList(raw.boots, "boots");
+    HELMETS = Common.getList(raw.helmets, allowedSlots.get(0));
+    CHESTPLATES = Common.getList(raw.chestplates, allowedSlots.get(1));
+    LEGGINGS = Common.getList(raw.leggings, allowedSlots.get(2));
+    BOOTS = Common.getList(raw.boots, allowedSlots.get(3));
 
-    chances = raw.chancesPerSlot;
-    HELMETS_CHANCES = ConfigHandler.generateChances(
-        HELMETS.size(), raw.materialWeights, raw.weightForExtraMaterials);
-    CHESTPLATES_CHANCES = ConfigHandler.generateChances(
-        CHESTPLATES.size(), raw.materialWeights, raw.weightForExtraMaterials);
-    LEGGINGS_CHANCES = ConfigHandler.generateChances(
-        LEGGINGS.size(), raw.materialWeights, raw.weightForExtraMaterials);
-    BOOTS_CHANCES = ConfigHandler.generateChances(
-        BOOTS.size(), raw.materialWeights, raw.weightForExtraMaterials);
+    chances = raw.chancesPerSlot.getChances(4);
+    HELMETS_CHANCES = raw.materialWeights.getChances(HELMETS.size());
+    CHESTPLATES_CHANCES = raw.materialWeights.getChances(CHESTPLATES.size());
+    LEGGINGS_CHANCES = raw.materialWeights.getChances(LEGGINGS.size());
+    BOOTS_CHANCES = raw.materialWeights.getChances(BOOTS.size());
   }
 
   private static ItemStack randomArmor(ServerWorld world, List<Item> items,
@@ -67,48 +69,24 @@ public class ZombieArmorHandler {
     }
   }
 
-  private static String append(String prefix, String suffix) {
-    if (prefix.equals("gold")) {
-      prefix = "golden";
-    }
-
-    return prefix + "_" + suffix;
-  }
-
-  private static List<Item> getList(List<String> list, String suffix) {
-    return list.stream()
-        .map(prefix -> append(prefix, suffix))
-        .map(Common::getItem)
-        .filter(f -> f != null)
-        .toList();
-  }
-
   public static class RawArmorHandler {
-    public static final List<String> allowedMaterials =
-        List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
-                "turtle");
     public List<String> helmets;
     public List<String> chestplates;
     public List<String> leggings;
     public List<String> boots;
 
-    public float defaultChance;
-    public List<Float> chancesPerSlot;
-    public int weightForExtraMaterials;
-    public List<Integer> materialWeights;
+    public ChanceList chancesPerSlot;
+    public WeightList materialWeights;
 
     public RawArmorHandler(List<String> helmets, List<String> chestplates,
                            List<String> leggings, List<String> boots,
-                           float defaultChance, List<Float> chances,
-                           int extraWeights, List<Integer> weights) {
+                           ChanceList chances, WeightList weights) {
       this.helmets = helmets;
       this.chestplates = chestplates;
       this.leggings = leggings;
       this.boots = boots;
 
-      this.defaultChance = defaultChance;
       this.chancesPerSlot = chances;
-      this.weightForExtraMaterials = extraWeights;
       this.materialWeights = weights;
     }
 
@@ -127,30 +105,11 @@ public class ZombieArmorHandler {
           .toList();
     }
 
-    private static float clamp(float r, float min, float max) {
-      return Math.max(min, Math.min(r, max));
-    }
-
-    private float getChanceAt(int i) {
-      return i < this.chancesPerSlot.size()
-          ? clamp(this.chancesPerSlot.get(i), 0f, 1f)
-          : this.defaultChance;
-    }
-
     private void fixAll() {
       this.helmets = fixIt(this.helmets);
       this.chestplates = fixIt(this.chestplates);
       this.leggings = fixIt(this.leggings);
       this.boots = fixIt(this.boots);
-
-      this.defaultChance = clamp(this.defaultChance, 0f, 1f);
-
-      this.chancesPerSlot =
-          IntStream.range(0, 4).mapToObj(this::getChanceAt).toList();
-
-      this.weightForExtraMaterials = Math.abs(this.weightForExtraMaterials);
-      this.materialWeights =
-          this.materialWeights.stream().map(Math::abs).toList();
     }
   }
 }
