@@ -1,11 +1,12 @@
 package io.github.offbeat_stuff.zombie_apocalypse;
 
+import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
+
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.ZombieEntity;
-import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
 
 public class PotionEffectHandler {
 

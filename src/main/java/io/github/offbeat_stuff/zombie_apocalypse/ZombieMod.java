@@ -6,7 +6,6 @@ import io.github.offbeat_stuff.zombie_apocalypse.config.Config;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieArmorHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieWeaponHandler;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;

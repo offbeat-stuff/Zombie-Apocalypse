@@ -58,12 +58,16 @@ public class ProbabilityHandler {
 
     public List<Float> getChances(int len) {
       int size = this.weights.size();
-      var chances = IntStream.range(0, len).mapToObj(
-          idx
-          -> idx < size ? Math.abs(weights.get(idx))
-                        : getDistributedWeightAt(
-                              idx - size, Math.abs(this.weightsForExtraEntries),
-                              len - size)).toList();
+      var chances =
+          IntStream.range(0, len)
+              .mapToObj(idx
+                        -> idx < size
+                               ? Math.abs(weights.get(idx))
+                               : getDistributedWeightAt(
+                                     idx - size,
+                                     Math.abs(this.weightsForExtraEntries),
+                                     len - size))
+              .toList();
       var sum = (float)chances.stream().mapToInt(Integer::intValue).sum();
       return chances.stream().map(f -> (float)f / sum).toList();
     }

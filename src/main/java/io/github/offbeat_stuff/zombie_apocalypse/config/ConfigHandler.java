@@ -1,5 +1,6 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
 
+import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
 
 public class ConfigHandler {
 
