@@ -9,11 +9,15 @@ import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import static net.minecraft.util.math.MathHelper.clamp;
 
 public class ConfigHandler {
 
   public static boolean zombiesBurnInSunlight;
   public static boolean spawnInstantly;
+
+  public static float frostZombieChance = 0.01f;
+  public static float fireZombieChance = 0.01f;
 
   private static BlockPos toBlockPos(BlockPos start, int x, int y, int z) {
     return start.add(x, y, z);
@@ -86,6 +90,9 @@ public class ConfigHandler {
   public static void handleConfig(Config config) {
     zombiesBurnInSunlight = config.zombiesBurnInSunlight;
     spawnInstantly = config.spawnInstantly;
+
+    frostZombieChance = clamp(config.frostZombieChance,0f,1f);
+    fireZombieChance = clamp(config.fireZombieChance,0f,1f);
 
     ZombieArmorHandler.handleRawArmorHandler(config.Armor);
     ZombieWeaponHandler.handleRawWeaponHander(config.Weapon);

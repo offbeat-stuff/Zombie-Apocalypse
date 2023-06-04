@@ -9,6 +9,9 @@ public class Config {
   public boolean zombiesBurnInSunlight = false;
   public boolean spawnInstantly = false;
 
+  public float frostZombieChance = 0.01f;
+  public float fireZombieChance = 0.01f;
+
   public ZombieArmorHandler
       .RawArmorHandler Armor = new ZombieArmorHandler.RawArmorHandler(
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
@@ -30,10 +33,12 @@ public class Config {
           new WeightList(List.of(1, 10, 100, 50, 50, 100), 100), 0.1f);
 
   // Chance that a zombie spawns in a single axis of player each tick
-  public SpawnParameters axisSpawnParameters = new SpawnParameters(0.1f, 16, 48);
+  public SpawnParameters axisSpawnParameters =
+      new SpawnParameters(0.1f, 16, 48);
 
   // Chance that a zombie spawns in a single plane of player each tick
-  public SpawnParameters planeSpawnParameters = new SpawnParameters(0.1f, 16, 48);
+  public SpawnParameters planeSpawnParameters =
+      new SpawnParameters(0.1f, 16, 48);
 
   // Chance that a zombie spawns in a box around player but not inside the
   // smaller box each tick

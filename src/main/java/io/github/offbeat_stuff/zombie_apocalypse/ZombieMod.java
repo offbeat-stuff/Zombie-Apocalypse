@@ -6,6 +6,7 @@ import io.github.offbeat_stuff.zombie_apocalypse.config.Config;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieArmorHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieWeaponHandler;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -66,6 +67,12 @@ public class ZombieMod implements ModInitializer {
         !world.doesNotIntersectEntities(zombie)) {
       zombie.setRemoved(RemovalReason.DISCARDED);
       return;
+    }
+
+    if (ProbabilityHandler.tryChance(ConfigHandler.frostZombieChance)) {
+      ((ZombieEntityInterface)zombie).setZombieType("frost");
+    } else if (ProbabilityHandler.tryChance(ConfigHandler.fireZombieChance)) {
+      ((ZombieEntityInterface)zombie).setZombieType("fire");
     }
 
     ZombieArmorHandler.handleZombie(world, zombie);
