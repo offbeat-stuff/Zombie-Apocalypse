@@ -32,7 +32,7 @@ RUN (echo; echo "for i in \$(ls \$HOME/.bashrc.d/*); do source \$i; done"; echo)
 RUN sudo git lfs install --system
 # add aur
 RUN sudo su gitpod -c cd /tmp && \
-    git clone https://aur.archlinux.org/packages/paru-bin && \
+    git clone "https://aur.archlinux.org/paru-bin.git" && \
     cd paru-bin && \
     makepkg -si --noconfirm
 
