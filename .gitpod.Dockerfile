@@ -36,7 +36,7 @@ RUN sudo su gitpod -c cd /tmp && \
     cd paru-bin && \
     makepkg -si --noconfirm
 
-RUN yay -Sy --noconfirm --removemake jdk-openjdk gradle
+RUN paru -Sy --noconfirm --removemake jdk-openjdk gradle
 
 USER gitpod
 WORKDIR /workspace
