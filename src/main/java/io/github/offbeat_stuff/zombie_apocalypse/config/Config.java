@@ -3,6 +3,7 @@ package io.github.offbeat_stuff.zombie_apocalypse.config;
 import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.*;
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 
+import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import java.util.List;
 
 public class Config {
@@ -58,11 +59,13 @@ public class Config {
   public int maxZombieCount = 150;
 
   // Status effects for Zombie
-  public float firstChance = 0.05f;
-  public float secondChance = 0.1f;
-  public int maxPotionTimeInTicks = 12000;
-  // range 1 - 255
-  public int maxAmplifier = 2;
+  public PotionEffectHandler.RawStatusEffectHandler statusEffects =
+      new PotionEffectHandler.RawStatusEffectHandler(
+          List.of("speed", "haste", "strength", "jump_boost", "regeneration",
+                  "resistance", "fire_resistance", "water_breathing",
+                  "invisibility", "health_boost", "absorption", "saturation",
+                  "slow_falling", "conduit_power", "dolphins_grace"),
+          -1, List.of(0.1f, 0.5f, 0.8f, 0.9f), 5);
 
   public List<String> allowedDimensions =
       List.of("overworld", "ther_nether", "the_end");
