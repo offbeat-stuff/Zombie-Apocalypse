@@ -1,44 +1,23 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
 
+import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
+import static net.minecraft.util.math.MathHelper.clamp;
 
-import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 public class ConfigHandler {
 
-  public static boolean zombiesBurnInSunlight = false;
+  public static boolean zombiesBurnInSunlight;
+  public static boolean spawnInstantly;
 
-  public static List<Item> HELMETS =
-      List.of(Items.NETHERITE_HELMET, Items.DIAMOND_HELMET, Items.IRON_HELMET,
-              Items.LEATHER_HELMET);
-  public static final List<Item> CHESTPLATES =
-      List.of(Items.NETHERITE_CHESTPLATE, Items.DIAMOND_CHESTPLATE,
-              Items.IRON_CHESTPLATE, Items.LEATHER_CHESTPLATE);
-  public static final List<Item> LEGGINGS =
-      List.of(Items.NETHERITE_LEGGINGS, Items.DIAMOND_LEGGINGS,
-              Items.IRON_LEGGINGS, Items.LEATHER_LEGGINGS);
-  public static final List<Item> BOOTS =
-      List.of(Items.NETHERITE_BOOTS, Items.DIAMOND_BOOTS, Items.IRON_BOOTS,
-              Items.LEATHER_BOOTS);
-  public static float armorChance = 0.5f;
-  public static List<Float> armorPieceChances = List.of(0.0005f);
-
-  public static final List<Item> AXES =
-      List.of(Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.IRON_AXE,
-              Items.GOLDEN_AXE, Items.STONE_AXE, Items.WOODEN_AXE);
-  public static final List<Item> SWORDS =
-      List.of(Items.NETHERITE_SWORD, Items.DIAMOND_SWORD, Items.IRON_SWORD,
-              Items.GOLDEN_SWORD, Items.STONE_SWORD, Items.WOODEN_SWORD);
-  public static float weaponChance = 0.5f;
-  public static float axeChance = 0.3f;
-  public static List<Float> weaponChances = List.of(0.001f);
+  public static float frostZombieChance = 0.01f;
+  public static float fireZombieChance = 0.01f;
 
   private static BlockPos toBlockPos(BlockPos start, int x, int y, int z) {
     return start.add(x, y, z);
@@ -79,11 +58,11 @@ public class ConfigHandler {
 
   public static List<BlockPos> generateSpawnPosition(BlockPos start) {
     var r = new ArrayList<BlockPos>();
-    if (XRANDOM.nextFloat() < axisSpawnParameters.chance)
+    if (tryChance(axisSpawnParameters.chance))
       r.add(randomAxisPos(start));
-    if (XRANDOM.nextFloat() < planeSpawnParameters.chance)
+    if (tryChance(planeSpawnParameters.chance))
       r.add(randomPlanePos(start));
-    if (XRANDOM.nextFloat() < boxSpawnParameters.chance)
+    if (tryChance(boxSpawnParameters.chance))
       r.add(randomBoxPos(start));
     return r;
   }
@@ -106,40 +85,17 @@ public class ConfigHandler {
   // range 1 - 255
   public static int maxAmplifier = 2;
 
-  public static List<String> allowedDimensions =
-      List.of("overworld", "ther_nether", "the_end");
-
-  private static float clamp(float r, float min, float max) {
-    return Math.max(min, Math.min(r, max));
-  }
-
-  private static String fixRegistryKey(String f) {
-    if (!f.contains(":"))
-      return "minecraft:" + f;
-    return f;
-  }
+  public static List<Identifier> allowedDimensions;
 
   public static void handleConfig(Config config) {
+    zombiesBurnInSunlight = config.zombiesBurnInSunlight;
+    spawnInstantly = config.spawnInstantly;
 
-    armorChance = clamp(config.armorChance, 0f, 1f);
-    config.armorChance = armorChance;
+    frostZombieChance = clamp(config.frostZombieChance, 0f, 1f);
+    fireZombieChance = clamp(config.fireZombieChance, 0f, 1f);
 
-    if (config.armorPieceChances.size() > 1)
-      armorPieceChances = new ArrayList<Float>(config.armorPieceChances);
-    ProbabilityHandler.fillUp(
-        armorPieceChances,
-        Math.max(Math.max(HELMETS.size(), CHESTPLATES.size()),
-                 Math.max(LEGGINGS.size(), BOOTS.size())));
-    config.armorPieceChances = armorPieceChances;
-
-    weaponChance = clamp(config.weaponChance, 0f, 1f);
-    config.weaponChance = weaponChance;
-
-    if (config.weaponChances.size() > 1)
-      weaponChances = new ArrayList<Float>(config.weaponChances);
-    ProbabilityHandler.fillUp(weaponChances,
-                              Math.max(AXES.size(), SWORDS.size()));
-    config.weaponChances = weaponChances;
+    ZombieArmorHandler.handleRawArmorHandler(config.Armor);
+    ZombieWeaponHandler.handleRawWeaponHander(config.Weapon);
 
     axisSpawnParameters = config.axisSpawnParameters;
 
@@ -161,15 +117,13 @@ public class ConfigHandler {
     minPlayerDistance = Math.max(config.minPlayerDistance, 0f);
     config.minPlayerDistance = minPlayerDistance;
 
-    maxZombieCount = config.maxZombieCount;
-    firstChance = config.firstChance;
-    secondChance = config.secondChance;
+    maxZombieCount = Math.abs(config.maxZombieCount);
+    firstChance = clamp(config.firstChance, 0f, 1f);
+    secondChance = clamp(config.secondChance, 0f, 1f);
     maxPotionTimeInTicks = config.maxPotionTimeInTicks;
-    maxAmplifier = config.maxAmplifier;
+    maxAmplifier = Math.abs(config.maxAmplifier);
 
-    config.allowedDimensions = config.allowedDimensions.stream()
-                                   .map(ConfigHandler::fixRegistryKey)
-                                   .toList();
-    allowedDimensions = config.allowedDimensions;
+    allowedDimensions =
+        config.allowedDimensions.stream().map(f -> new Identifier(f)).toList();
   }
 }

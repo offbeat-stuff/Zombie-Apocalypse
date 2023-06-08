@@ -4,21 +4,18 @@ import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieArmorHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieWeaponHandler;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Xoroshiro128PlusPlusRandom;
@@ -58,24 +55,6 @@ public class ZombieMod implements ModInitializer {
     }
   }
 
-  private ItemStack randomEnchanctedItemStack(List<Item> items,
-                                              List<Float> chances) {
-    Item item = ProbabilityHandler.chooseRandom(items, chances);
-    if (item == null) {
-      return ItemStack.EMPTY;
-    }
-    return EnchantmentHelper.enchant(
-        XRANDOM, item.getDefaultStack(),
-        ConfigHandler.enchantmentLevelRange.generate(), true);
-  }
-
-  private ItemStack randomArmor(ServerWorld world, List<Item> items,
-                                List<Float> chances) {
-    var r = randomEnchanctedItemStack(items, chances);
-    ArmorTrimHander.applyRandomArmorTrim(world, r);
-    return r;
-  }
-
   private void trySpawnZombieAt(ServerWorld world, BlockPos spawnPos) {
     if (world.isPlayerInRange(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(),
                               ConfigHandler.minPlayerDistance)) {
@@ -89,39 +68,14 @@ public class ZombieMod implements ModInitializer {
       return;
     }
 
-    if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
-      zombie.equipStack(EquipmentSlot.HEAD,
-                        randomArmor(world, ConfigHandler.HELMETS,
-                                    ConfigHandler.armorPieceChances));
-    }
-    if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
-      zombie.equipStack(EquipmentSlot.CHEST,
-                        randomArmor(world, ConfigHandler.CHESTPLATES,
-                                    ConfigHandler.armorPieceChances));
-    }
-    if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
-      zombie.equipStack(EquipmentSlot.LEGS,
-                        randomArmor(world, ConfigHandler.LEGGINGS,
-                                    ConfigHandler.armorPieceChances));
-    }
-    if (XRANDOM.nextFloat() < ConfigHandler.armorChance) {
-      zombie.equipStack(EquipmentSlot.FEET,
-                        randomArmor(world, ConfigHandler.BOOTS,
-                                    ConfigHandler.armorPieceChances));
+    if (ProbabilityHandler.tryChance(ConfigHandler.frostZombieChance)) {
+      ((ZombieEntityInterface)zombie).setZombieType("frost");
+    } else if (ProbabilityHandler.tryChance(ConfigHandler.fireZombieChance)) {
+      ((ZombieEntityInterface)zombie).setZombieType("fire");
     }
 
-    if (XRANDOM.nextFloat() > ConfigHandler.weaponChance) {
-      return;
-    }
-    if (XRANDOM.nextFloat() < ConfigHandler.axeChance) {
-      zombie.equipStack(EquipmentSlot.MAINHAND,
-                        randomEnchanctedItemStack(ConfigHandler.AXES,
-                                                  ConfigHandler.weaponChances));
-    } else {
-      zombie.equipStack(EquipmentSlot.MAINHAND,
-                        randomEnchanctedItemStack(ConfigHandler.SWORDS,
-                                                  ConfigHandler.weaponChances));
-    }
+    ZombieArmorHandler.handleZombie(world, zombie);
+    ZombieWeaponHandler.handleZombie(world, zombie);
   }
 
   private boolean isSpawnableForZombie(ServerWorld world, BlockPos pos) {
@@ -134,29 +88,41 @@ public class ZombieMod implements ModInitializer {
   }
 
   private void zombieSpawnAttempt(ServerWorld world, BlockPos pos) {
-    if (isSpawnableForZombie(world, pos))
+    if (isSpawnableForZombie(world, pos)) {
       trySpawnZombieAt(world, pos);
+      return;
+    }
     for (var bpos : BlockPos.iterate(pos.add(-4, -4, -4), pos.add(4, 4, 4))) {
-      if (isSpawnableForZombie(world, pos))
+      if (isSpawnableForZombie(world, pos)) {
         trySpawnZombieAt(world, bpos);
+        return;
+      }
     }
   }
 
   private void spawnZombiesInWorld(ServerWorld world) {
     if (!(ConfigHandler.allowedDimensions.contains(
-            world.getRegistryKey().getValue().toString())))
+            world.getRegistryKey().getValue())))
       return;
-    if (world.getChunkManager().getSpawnInfo().getGroupToCount().getInt(
-            SpawnGroup.MONSTER) > ConfigHandler.maxZombieCount)
+    int zombieCount =
+        world.getChunkManager().getSpawnInfo().getGroupToCount().getInt(
+            SpawnGroup.MONSTER);
+    if (zombieCount > ConfigHandler.maxZombieCount)
       return;
 
     var time = world.getTimeOfDay() % 24000;
     if (!ConfigHandler.isTimeRight.test((int)time))
       return;
 
+    final int count = ConfigHandler.spawnInstantly
+                          ? ConfigHandler.maxZombieCount - zombieCount
+                          : 1;
+
     world.getPlayers().forEach(player -> {
-      ConfigHandler.generateSpawnPosition(player.getBlockPos())
-          .forEach(b -> zombieSpawnAttempt(world, b));
+      for (int i = 0; i < count; i += 3) {
+        ConfigHandler.generateSpawnPosition(player.getBlockPos())
+            .forEach(b -> zombieSpawnAttempt(world, b));
+      }
     });
   }
 
