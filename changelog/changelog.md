@@ -1,10 +1,5 @@
-## Changes
+## New Features
 
-- More baby proofing of config
-
-
-## Fixes
-
-- Fix Spawning
+- allow specifying status effects for zombies (mojang namespace only
 
 
