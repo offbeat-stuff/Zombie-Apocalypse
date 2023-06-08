@@ -5,6 +5,7 @@ import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 import static net.minecraft.util.math.MathHelper.clamp;
 
+import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -78,13 +79,6 @@ public class ConfigHandler {
   // Max zombie count per player
   public static int maxZombieCount = 150;
 
-  // Status effects for Zombie
-  public static float firstChance = 0.05f;
-  public static float secondChance = 0.1f;
-  public static int maxPotionTimeInTicks = 12000;
-  // range 1 - 255
-  public static int maxAmplifier = 2;
-
   public static List<Identifier> allowedDimensions;
 
   public static void handleConfig(Config config) {
@@ -96,6 +90,7 @@ public class ConfigHandler {
 
     ZombieArmorHandler.handleRawArmorHandler(config.Armor);
     ZombieWeaponHandler.handleRawWeaponHander(config.Weapon);
+    PotionEffectHandler.handleRaw(config.statusEffects);
 
     axisSpawnParameters = config.axisSpawnParameters;
 
@@ -118,10 +113,6 @@ public class ConfigHandler {
     config.minPlayerDistance = minPlayerDistance;
 
     maxZombieCount = Math.abs(config.maxZombieCount);
-    firstChance = clamp(config.firstChance, 0f, 1f);
-    secondChance = clamp(config.secondChance, 0f, 1f);
-    maxPotionTimeInTicks = config.maxPotionTimeInTicks;
-    maxAmplifier = Math.abs(config.maxAmplifier);
 
     allowedDimensions =
         config.allowedDimensions.stream().map(f -> new Identifier(f)).toList();
