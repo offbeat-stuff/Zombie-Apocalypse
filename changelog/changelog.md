@@ -1,10 +1,1 @@
-## Changes
-
-- More baby proofing of config
-
-
-## Fixes
-
-- Fix Spawning
-
-
+Updated to 1.20
