@@ -44,32 +44,4 @@ public class PotionEffectHandler {
         effect, ZombieMod.XRANDOM.nextInt(ConfigHandler.maxPotionTimeInTicks),
         ZombieMod.XRANDOM.nextInt(ConfigHandler.maxAmplifier) + 1));
   }
-
-  public static class RawStatusEffectHandler {
-    public List<String> effects = List.of();
-    public int maxTimeInTicks;
-    public List<Float> incrementalChances;
-
-    public RawStatusEffectHandler(List<String> effects, int maxTimeInTicks,List<Float> incrementalChances) {
-      this.effects = effects;
-      this.maxTimeInTicks = maxTimeInTicks;
-      this.incrementalChances = incrementalChances;
-    }
-
-    private String fixStatusEffect(List<String> IDS,String effect) {
-      effect = effect.trim().toLowerCase();
-      for (int i = 0;i < IDS.size();i++) {
-        if (effect.startsWith(IDS.get(i)) {
-          return IDS.get(i);
-        }
-      }
-      return "";
-    }
-
-    public void fixAll() {
-      var IDS = Registries.STATUS_EFFECT.getIds().stream().map(f -> f.getPath()).toList();
-      this.effects = this.effects.stream().map(f -> fixStatusEffect(IDS,f)).filter(f -> !f.equals("")).toList();
-      this.maxTimeInTicks = Math.max(this.maxTimeInTicks, -1);
-      this.incrementalChances = this.incrementalChances.stream().map(f -> clamp(f, 0f, 1f)).toList();
-    }
-  }}
+}
