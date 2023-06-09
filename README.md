@@ -4,13 +4,13 @@
 -   Equip randomly enchanted armor, including unique armor trims, to spawned zombies.
 -   Impose random status effects on zombies upon spawning.
 -   Configure the time range during which zombies spawn.
+-   Random Infinite Status effects (Currently finite).
+-   Enhanced configuration options for providing weapon lists.
+-   Zombies that inflict burning or frost effects on hit.
 
 ---
 
 **Planned Features**
--   Random Infinite Status effects (Currently finite).
--   Enhanced configuration options for providing weapon lists.
--   Zombies that inflict burning or frost effects on hit.
 -   Explosion zombies that exclusively damage entities.
 -   Assisting Zombies (supporting players or fellow zombies).
 -   Zombies that hit other zombies to propel them closer to you.
