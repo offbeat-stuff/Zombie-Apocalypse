@@ -3,6 +3,8 @@ package io.github.offbeat_stuff.zombie_apocalypse.config;
 import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.*;
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 
+import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHander;
+import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHander.RawTrimHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import java.util.List;
 
@@ -32,6 +34,12 @@ public class Config {
           List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
           new WeightList(List.of(100, 20, 20, 75, 1), 100),
           new WeightList(List.of(1, 10, 100, 50, 50, 100), 100), 0.1f);
+
+  public RawTrimHandler ArmorTrims = new RawTrimHandler(
+      ArmorTrimHander.vanillaPatterns, ArmorTrimHander.vanillaMaterials,
+      new WeightList(List.of(100, 100, 1, 50, 100, 100, 100, 10, 100, 100),
+                     100),
+      new WeightList(List.of(), 110), true, 0.1f);
 
   // Chance that a zombie spawns in a single axis of player each tick
   public SpawnParameters axisSpawnParameters =
