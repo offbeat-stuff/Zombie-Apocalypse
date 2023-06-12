@@ -3,11 +3,9 @@ package io.github.offbeat_stuff.zombie_apocalypse;
 import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
 import static net.minecraft.util.math.MathHelper.clamp;
 
-import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import java.util.List;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;

@@ -1,5 +1,5 @@
-cd changelog
-nim c changelog.nim
-bin/changelog > changelog.md
-cd ..
+#!/bin/sh
+nim changelog/bumpVersion.nims
+git add gradle.properties
+git commit -m "bump Version"
 gradle modrinth

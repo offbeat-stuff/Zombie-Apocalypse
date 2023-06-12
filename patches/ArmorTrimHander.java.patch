@@ -1,0 +1,7 @@
+9d8
+< import net.minecraft.resource.featuretoggle.FeatureFlags;
+26,29d24
+<     if (!(world.getEnabledFeatures().contains(FeatureFlags.UPDATE_1_20))) {
+<       return;
+<     }
+< 
