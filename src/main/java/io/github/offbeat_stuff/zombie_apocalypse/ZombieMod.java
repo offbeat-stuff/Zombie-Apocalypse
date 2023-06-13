@@ -16,7 +16,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Xoroshiro128PlusPlusRandom;
 import org.slf4j.Logger;
@@ -100,6 +103,8 @@ public class ZombieMod implements ModInitializer {
     }
   }
 
+  public static boolean wasTimeRight = false;
+
   private void spawnZombiesInWorld(ServerWorld world) {
     if (!(ConfigHandler.allowedDimensions.contains(
             world.getRegistryKey().getValue())))
@@ -111,8 +116,19 @@ public class ZombieMod implements ModInitializer {
       return;
 
     var time = world.getTimeOfDay() % 24000;
-    if (!ConfigHandler.isTimeRight.test((int)time))
+    if (!ConfigHandler.isTimeRight.test((int)time)) {
+      wasTimeRight = false;
       return;
+    }
+
+    if (!wasTimeRight) {
+      for (var player : world.getPlayers()) {
+        player.networkHandler.sendPacket(
+            new TitleS2CPacket(Text.literal("Zombies Are Coming").formatted(Formatting.DARK_RED)));
+      }
+    }
+
+    wasTimeRight = true;
 
     final int count = ConfigHandler.spawnInstantly
                           ? ConfigHandler.maxZombieCount - zombieCount
