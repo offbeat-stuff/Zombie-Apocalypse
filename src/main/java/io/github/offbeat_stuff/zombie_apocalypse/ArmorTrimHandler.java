@@ -15,7 +15,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-public class ArmorTrimHander {
+public class ArmorTrimHandler {
 
   public static final List<String> vanillaMaterials =
       List.of("quartz", "iron", "netherite", "redstone", "copper", "gold",

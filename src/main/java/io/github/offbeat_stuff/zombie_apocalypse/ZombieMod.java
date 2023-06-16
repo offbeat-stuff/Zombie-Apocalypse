@@ -123,8 +123,8 @@ public class ZombieMod implements ModInitializer {
 
     if (!wasTimeRight) {
       for (var player : world.getPlayers()) {
-        player.networkHandler.sendPacket(
-            new TitleS2CPacket(Text.literal("Zombies Are Coming").formatted(Formatting.DARK_RED)));
+        player.networkHandler.sendPacket(new TitleS2CPacket(
+            Text.literal("Zombies Are Coming").formatted(Formatting.DARK_RED)));
       }
     }
 

@@ -5,7 +5,7 @@ import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 import static net.minecraft.util.math.MathHelper.clamp;
 
-import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHander;
+import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,9 +90,9 @@ public class ConfigHandler {
     fireZombieChance = clamp(config.fireZombieChance, 0f, 1f);
 
     ZombieArmorHandler.handleRawArmorHandler(config.Armor);
-    ZombieWeaponHandler.handleRawWeaponHander(config.Weapon);
+    ZombieWeaponHandler.handleRawWeaponHandler(config.Weapon);
     PotionEffectHandler.handleRaw(config.statusEffects);
-    ArmorTrimHander.handleRawTrimHandler(config.ArmorTrims);
+    ArmorTrimHandler.handleRawTrimHandler(config.ArmorTrims);
 
     axisSpawnParameters = config.axisSpawnParameters;
 

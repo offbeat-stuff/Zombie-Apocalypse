@@ -34,7 +34,7 @@ public class ZombieWeaponHandler {
 
   private static float chance;
 
-  public static void handleRawWeaponHander(RawWeaponHander raw) {
+  public static void handleRawWeaponHandler(RawWeaponHandler raw) {
     raw.fixAll();
     SWORDS = Common.getList(raw.swords, allowedTools.get(0));
     SHOVELS = Common.getList(raw.shovels, allowedTools.get(1));
@@ -81,7 +81,7 @@ public class ZombieWeaponHandler {
     entity.equipStack(EquipmentSlot.MAINHAND, randomTool());
   }
 
-  public static class RawWeaponHander {
+  public static class RawWeaponHandler {
 
     public List<String> swords;
     public List<String> shovels;
@@ -93,7 +93,7 @@ public class ZombieWeaponHandler {
 
     public float chance;
 
-    public RawWeaponHander(List<String> swords, List<String> shovels,
+    public RawWeaponHandler(List<String> swords, List<String> shovels,
                            List<String> pickaxes, List<String> axes,
                            List<String> hoes, WeightList weights,
                            WeightList common, float chance) {
@@ -117,7 +117,7 @@ public class ZombieWeaponHandler {
 
     private static List<String> fixIt(List<String> materials) {
       return materials.stream()
-          .map(RawWeaponHander::fixPrefix)
+          .map(RawWeaponHandler::fixPrefix)
           .filter(f -> f != "")
           .toList();
     }

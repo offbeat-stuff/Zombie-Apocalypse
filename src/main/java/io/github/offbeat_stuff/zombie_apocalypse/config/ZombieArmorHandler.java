@@ -2,7 +2,7 @@ package io.github.offbeat_stuff.zombie_apocalypse.config;
 
 import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryChance;
 
-import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHander;
+import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.ChanceList;
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.WeightList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class ZombieArmorHandler {
   private static ItemStack randomArmor(ServerWorld world, List<Item> items,
                                        List<Float> chances) {
     var r = Common.randomEnchanctedItemStack(items, chances);
-    ArmorTrimHander.applyRandomArmorTrim(world, r);
+    ArmorTrimHandler.applyRandomArmorTrim(world, r);
     return r;
   }
 
