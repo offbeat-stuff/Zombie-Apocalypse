@@ -94,9 +94,9 @@ public class ZombieWeaponHandler {
     public float chance;
 
     public RawWeaponHandler(List<String> swords, List<String> shovels,
-                           List<String> pickaxes, List<String> axes,
-                           List<String> hoes, WeightList weights,
-                           WeightList common, float chance) {
+                            List<String> pickaxes, List<String> axes,
+                            List<String> hoes, WeightList weights,
+                            WeightList common, float chance) {
       this.swords = swords;
       this.shovels = shovels;
       this.pickaxes = pickaxes;
