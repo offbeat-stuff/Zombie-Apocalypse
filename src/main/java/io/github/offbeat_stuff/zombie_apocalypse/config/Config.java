@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Config {
   public boolean zombiesBurnInSunlight = false;
+  public boolean doScream = true;
   public boolean spawnInstantly = false;
 
   public float frostZombieChance = 0.01f;

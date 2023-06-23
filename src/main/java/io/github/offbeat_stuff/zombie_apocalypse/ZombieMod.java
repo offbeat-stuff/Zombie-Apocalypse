@@ -6,6 +6,7 @@ import io.github.offbeat_stuff.zombie_apocalypse.config.Config;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieArmorHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieWeaponHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.config.ScreamHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -123,8 +124,7 @@ public class ZombieMod implements ModInitializer {
 
     if (!wasTimeRight) {
       for (var player : world.getPlayers()) {
-        player.networkHandler.sendPacket(new TitleS2CPacket(
-            Text.literal("Zombies Are Coming").formatted(Formatting.DARK_RED)));
+        ScreamHandler.scream(player);
       }
     }
 

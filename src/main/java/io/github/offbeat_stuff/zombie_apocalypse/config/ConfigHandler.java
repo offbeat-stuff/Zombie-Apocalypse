@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import io.github.offbeat_stuff.zombie_apocalypse.config.ScreamHandler;
 
 public class ConfigHandler {
 
@@ -84,6 +85,7 @@ public class ConfigHandler {
 
   public static void handleConfig(Config config) {
     zombiesBurnInSunlight = config.zombiesBurnInSunlight;
+    ScreamHandler.handle(config.doScream);
     spawnInstantly = config.spawnInstantly;
 
     frostZombieChance = clamp(config.frostZombieChance, 0f, 1f);
