@@ -7,12 +7,12 @@ import static net.minecraft.util.math.MathHelper.clamp;
 
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.config.ScreamHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import io.github.offbeat_stuff.zombie_apocalypse.config.ScreamHandler;
 
 public class ConfigHandler {
 
