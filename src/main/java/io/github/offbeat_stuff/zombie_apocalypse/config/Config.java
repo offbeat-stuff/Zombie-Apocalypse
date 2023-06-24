@@ -16,8 +16,7 @@ public class Config {
   public float frostZombieChance = 0.01f;
   public float fireZombieChance = 0.01f;
 
-  public ArmorHandler
-      .RawArmorHandler Armor = new ArmorHandler.RawArmorHandler(
+  public ArmorHandler.RawArmorHandler Armor = new ArmorHandler.RawArmorHandler(
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
               "turtle"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
