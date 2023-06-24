@@ -1,7 +1,7 @@
 #!/bin/sh
 nim changelog/bumpVersion.nims
 git add gradle.properties
-git commit -m "bump Version"
+git commit -m "bump version"
 gradle modrinth
 
 patch gradle.properties -i patches/gradle.properties.patch
