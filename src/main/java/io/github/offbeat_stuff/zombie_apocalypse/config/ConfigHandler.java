@@ -91,8 +91,8 @@ public class ConfigHandler {
     frostZombieChance = clamp(config.frostZombieChance, 0f, 1f);
     fireZombieChance = clamp(config.fireZombieChance, 0f, 1f);
 
-    ZombieArmorHandler.handleRawArmorHandler(config.Armor);
-    ZombieWeaponHandler.handleRawWeaponHandler(config.Weapon);
+    ArmorHandler.handleRawArmorHandler(config.Armor);
+    WeaponHandler.handleRawWeaponHandler(config.Weapon);
     PotionEffectHandler.handleRaw(config.statusEffects);
     ArmorTrimHandler.handleRawTrimHandler(config.ArmorTrims);
 

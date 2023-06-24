@@ -5,8 +5,8 @@ import com.moandjiezana.toml.TomlWriter;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ScreamHandler;
-import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieArmorHandler;
-import io.github.offbeat_stuff.zombie_apocalypse.config.ZombieWeaponHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.config.ArmorHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.config.WeaponHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
@@ -78,8 +78,8 @@ public class ZombieMod implements ModInitializer {
       ((ZombieEntityInterface)zombie).setZombieType("fire");
     }
 
-    ZombieArmorHandler.handleZombie(world, zombie);
-    ZombieWeaponHandler.handleZombie(world, zombie);
+    ArmorHandler.handleZombie(world, zombie);
+    WeaponHandler.handleZombie(world, zombie);
   }
 
   private boolean isSpawnableForZombie(ServerWorld world, BlockPos pos) {

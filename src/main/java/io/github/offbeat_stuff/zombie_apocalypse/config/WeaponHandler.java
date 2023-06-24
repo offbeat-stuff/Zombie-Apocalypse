@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.MathHelper;
 
-public class ZombieWeaponHandler {
+public class WeaponHandler {
 
   public static final List<String> allowedMaterials =
       List.of("netherite", "diamond", "iron", "gold", "stone", "wood");

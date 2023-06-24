@@ -12,7 +12,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 
-public class ZombieArmorHandler {
+public class ArmorHandler {
   public static final List<String> allowedMaterials = List.of(
       "netherite", "diamond", "iron", "gold", "chainmail", "leather", "turtle");
   public static final List<String> allowedSlots =

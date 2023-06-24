@@ -16,8 +16,8 @@ public class Config {
   public float frostZombieChance = 0.01f;
   public float fireZombieChance = 0.01f;
 
-  public ZombieArmorHandler
-      .RawArmorHandler Armor = new ZombieArmorHandler.RawArmorHandler(
+  public ArmorHandler
+      .RawArmorHandler Armor = new ArmorHandler.RawArmorHandler(
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
               "turtle"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
@@ -26,8 +26,8 @@ public class Config {
       new ChanceList(List.of(0.1f, 0.1f, 0.1f, 0.1f), 0.1f),
       new WeightList(List.of(1, 10, 100, 50, 50, 100), 10));
 
-  public ZombieWeaponHandler.RawWeaponHandler Weapon =
-      new ZombieWeaponHandler.RawWeaponHandler(
+  public WeaponHandler.RawWeaponHandler Weapon =
+      new WeaponHandler.RawWeaponHandler(
           List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
           List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
           List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
