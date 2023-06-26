@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 public class Common {
   public static class SpawnParameters {
@@ -30,6 +31,12 @@ public class Common {
 
     public int generateInclusive() {
       return XRANDOM.nextBetween(-this.max, this.max);
+    }
+
+    public void fixup(int minDist) {
+      this.chance = MathHelper.clamp(this.chance, 0, 1);
+      this.min = Math.max(minDist, this.min);
+      this.max = Math.max(minDist, this.max);
     }
   }
 
