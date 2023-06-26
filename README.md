@@ -18,6 +18,16 @@
 
 ---
 
+I plan to keep this mod fully server side with no client side functionality.
+
+No custom resourcepack stuff too.
+
+I do plan to add the ability to specify zombies from other mods in the config.
+
+Try [Tissou's Zombie Pack](https://www.curseforge.com/minecraft/texture-packs/tissous-zombie-pack-optifine-1-7x-1-19) with this pack for the feels.
+
+---
+
 Latest Default Config
 
 ```toml
@@ -25,7 +35,16 @@ zombiesBurnInSunlight = false
 doScream = true
 frostZombieChance = 0.01
 fireZombieChance = 0.01
+```
 
+Frost Zombies give freezing effect on hit.
+
+Fire Zombie set player on fire on hit.
+
+Scream is just a on screen red message for now, will add sound later.
+
+
+```toml
 [spawn]
 spawnInstantly = false
 minPlayerDistance = 16.0
@@ -54,7 +73,15 @@ max = 64
 [spawn.timeRange]
 min = 1000
 max = 13000
+```
 
+Instant spawning basically spawns them while disregarding the chances.
+
+Time Range value will stay between 0 and 23999.
+
+> Note: day is 1000 and midnight is 18000.
+
+```toml
 [Armor]
 helmets = ["netherite", "diamond", "iron", "gold", "chainmail", "leather", "turtle"]
 chestplates = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
@@ -68,7 +95,11 @@ defaultChance = 0.1
 [Armor.materialWeights]
 weights = [1, 10, 100, 50, 50, 100]
 weightsForExtraEntries = 10
+```
 
+Slots are in order: `[head,chest,legs,boots]` 
+
+```toml
 [Weapon]
 swords = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
 shovels = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
@@ -84,7 +115,11 @@ weightsForExtraEntries = 100
 [Weapon.commonWeights]
 weights = [1, 10, 100, 50, 50, 100]
 weightsForExtraEntries = 100
+```
 
+Tools are in order: `[swords,shovels,pickaxes,axes,hoes]`
+
+```toml
 [ArmorTrims]
 patterns = ["sentry", "dune", "coast", "wild", "ward", "eye", "vex", "tide", "snout", "rib", "spire"]
 materials = ["quartz", "iron", "netherite", "redstone", "copper", "gold", "emerald", "diamond", "lapis", "amethyst"]
@@ -98,7 +133,11 @@ weightsForExtraEntries = 110
 [ArmorTrims.materialsWeights]
 weights = [100, 100, 1, 50, 100, 100, 100, 10, 100, 100]
 weightsForExtraEntries = 100
+```
 
+> Note: Armor trims can be added through datapacks and are tied to a world.
+
+```toml
 [enchantmentLevelRange]
 min = 5
 max = 40
@@ -109,3 +148,7 @@ maxTimeInTicks = -1
 incrementalChances = [0.1, 0.5, 0.8, 0.9]
 maxAmplifier = 5
 ```
+
+Will add a chance for enchanted gear later. For now everything is enchanted.
+
+If maxTimeInTicks is -1 that means all effects will be infinite.
