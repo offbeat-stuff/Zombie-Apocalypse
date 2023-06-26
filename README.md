@@ -22,12 +22,38 @@ Latest Default Config
 
 ```toml
 zombiesBurnInSunlight = false
-spawnInstantly = false
+doScream = true
 frostZombieChance = 0.01
 fireZombieChance = 0.01
+
+[spawn]
+spawnInstantly = false
 minPlayerDistance = 16.0
 maxZombieCount = 150
 allowedDimensions = ["overworld", "ther_nether", "the_end"]
+
+[spawn.instantSpawning]
+maxSpawnAttemptsPerTick = 100
+maxSpawnsPerTick = 10
+
+[spawn.axisSpawnParameters]
+chance = 0.1
+min = 16
+max = 48
+
+[spawn.planeSpawnParameters]
+chance = 0.1
+min = 16
+max = 48
+
+[spawn.boxSpawnParameters]
+chance = 0.1
+min = 24
+max = 64
+
+[spawn.timeRange]
+min = 1000
+max = 13000
 
 [Armor]
 helmets = ["netherite", "diamond", "iron", "gold", "chainmail", "leather", "turtle"]
@@ -59,24 +85,19 @@ weightsForExtraEntries = 100
 weights = [1, 10, 100, 50, 50, 100]
 weightsForExtraEntries = 100
 
-[axisSpawnParameters]
+[ArmorTrims]
+patterns = ["sentry", "dune", "coast", "wild", "ward", "eye", "vex", "tide", "snout", "rib", "spire"]
+materials = ["quartz", "iron", "netherite", "redstone", "copper", "gold", "emerald", "diamond", "lapis", "amethyst"]
+vanillaOnly = true
 chance = 0.1
-min = 16
-max = 48
 
-[planeSpawnParameters]
-chance = 0.1
-min = 16
-max = 48
+[ArmorTrims.patternsWeights]
+weights = []
+weightsForExtraEntries = 110
 
-[boxSpawnParameters]
-chance = 0.1
-min = 24
-max = 64
-
-[timeRange]
-min = 1000
-max = 13000
+[ArmorTrims.materialsWeights]
+weights = [100, 100, 1, 50, 100, 100, 100, 10, 100, 100]
+weightsForExtraEntries = 100
 
 [enchantmentLevelRange]
 min = 5
@@ -87,73 +108,4 @@ effects = ["speed", "haste", "strength", "jump_boost", "regeneration", "resistan
 maxTimeInTicks = -1
 incrementalChances = [0.1, 0.5, 0.8, 0.9]
 maxAmplifier = 5
-```
-
-Default Config
-
-```toml
-zombiesBurnInSunlight = false
-spawnInstantly = false
-frostZombieChance = 0.01
-fireZombieChance = 0.01
-minPlayerDistance = 16.0
-maxZombieCount = 150
-firstChance = 0.05
-secondChance = 0.1
-maxPotionTimeInTicks = 12000
-maxAmplifier = 2
-allowedDimensions = ["overworld", "ther_nether", "the_end"]
-
-[Armor]
-helmets = ["netherite", "diamond", "iron", "gold", "chainmail", "leather", "turtle"]
-chestplates = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
-leggings = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
-boots = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
-
-[Armor.chancesPerSlot]
-chances = [0.1, 0.1, 0.1, 0.1]
-defaultChance = 0.1
-
-[Armor.materialWeights]
-weights = [1, 10, 100, 50, 50, 100]
-weightsForExtraEntries = 10
-
-[Weapon]
-swords = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-shovels = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-pickaxes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-axes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-hoes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-chance = 0.1
-
-[Weapon.weightsForTools]
-weights = [100, 20, 20, 75, 1]
-weightsForExtraEntries = 100
-
-[Weapon.commonWeights]
-weights = [1, 10, 100, 50, 50, 100]
-weightsForExtraEntries = 100
-
-[axisSpawnParameters]
-chance = 0.1
-min = 16
-max = 48
-
-[planeSpawnParameters]
-chance = 0.1
-min = 16
-max = 48
-
-[boxSpawnParameters]
-chance = 0.1
-min = 24
-max = 64
-
-[timeRange]
-min = 1000
-max = 13000
-
-[enchantmentLevelRange]
-min = 5
-max = 40
 ```
