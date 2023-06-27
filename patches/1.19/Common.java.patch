@@ -1,0 +1,27 @@
+diff --git a/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/config/Common.java b/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/config/Common.java
+index 546516b..e3f6101 100644
+--- a/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/config/Common.java
++++ b/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/config/Common.java
+@@ -8,9 +8,9 @@ import java.util.function.Predicate;
+ import net.minecraft.enchantment.EnchantmentHelper;
+ import net.minecraft.item.Item;
+ import net.minecraft.item.ItemStack;
+-import net.minecraft.registry.Registries;
+ import net.minecraft.util.Identifier;
+ import net.minecraft.util.math.MathHelper;
++import net.minecraft.util.registry.Registry;
+ 
+ public class Common {
+   public static class SpawnParameters {
+@@ -65,9 +65,9 @@ public class Common {
+ 
+   public static Item getItem(String idString) {
+     var id = new Identifier(idString);
+-    if (!Registries.ITEM.containsId(id))
++    if (!Registry.ITEM.containsId(id))
+       return null;
+-    return Registries.ITEM.get(id);
++    return Registry.ITEM.get(id);
+   }
+ 
+   public static List<Item> getItems(List<String> idStrings) {

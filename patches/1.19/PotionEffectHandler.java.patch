@@ -1,0 +1,32 @@
+diff --git a/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/PotionEffectHandler.java b/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/PotionEffectHandler.java
+index 57e843d..4ccb0fd 100644
+--- a/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/PotionEffectHandler.java
++++ b/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/PotionEffectHandler.java
+@@ -7,8 +7,8 @@ import java.util.List;
+ import net.minecraft.entity.effect.StatusEffect;
+ import net.minecraft.entity.effect.StatusEffectInstance;
+ import net.minecraft.entity.mob.ZombieEntity;
+-import net.minecraft.registry.Registries;
+ import net.minecraft.util.Identifier;
++import net.minecraft.util.registry.Registry;
+ 
+ public class PotionEffectHandler {
+ 
+@@ -27,7 +27,7 @@ public class PotionEffectHandler {
+   }
+ 
+   private static StatusEffect getStatusEffect(String effect) {
+-    return Registries.STATUS_EFFECT.get(new Identifier(effect));
++    return Registry.STATUS_EFFECT.get(new Identifier(effect));
+   }
+ 
+   private static void applyRandomPotionEffect(ZombieEntity entity) {
+@@ -79,7 +79,7 @@ public class PotionEffectHandler {
+     }
+ 
+     public void fixAll() {
+-      var IDS = Registries.STATUS_EFFECT.getIds()
++      var IDS = Registry.STATUS_EFFECT.getIds()
+                     .stream()
+                     .map(f -> f.getPath())
+                     .toList();

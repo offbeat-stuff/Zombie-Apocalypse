@@ -1,3 +1,4 @@
+#!/bin/sh
 PATCH_HOME="patches/1.20/"
 
 patch gradle.properties -i $PATCH_HOME/gradle.properties.patch
