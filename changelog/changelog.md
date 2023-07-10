@@ -1,37 +1,19 @@
 ## New Features
 
-- Change Spawning and add new options to handle instant spawning
+- Add vanilla spawn checks with config options
+- Specify light level for spawning in config [#5](https://github.com/offbeat-stuff/Zombie-Apocalypse/issues/5)
 
 
-## Config changes
+## Changes
 
+- frost and fire spawning chances are now independent
+- Zombies no longer spawn in sun if they burn in sunlight
+
+
+## Config Changes
 ```toml
 [spawn]
-spawnInstantly = false
-minPlayerDistance = 16.0
-maxZombieCount = 150
-allowedDimensions = ["overworld", "ther_nether", "the_end"]
-
-[spawn.instantSpawning]
-maxSpawnAttemptsPerTick = 100
-maxSpawnsPerTick = 10
-
-[spawn.axisSpawnParameters]
-chance = 0.1
-min = 16
-max = 48
-
-[spawn.planeSpawnParameters]
-chance = 0.1
-min = 16
-max = 48
-
-[spawn.boxSpawnParameters]
-chance = 0.1
-min = 24
-max = 64
-
-[spawn.timeRange]
-min = 1000
-max = 13000
+vanillaSpawnRestrictionOnFoot = true
+checkIfBlockBelowAllowsSpawning = true
+lightLevel = 15
 ```
