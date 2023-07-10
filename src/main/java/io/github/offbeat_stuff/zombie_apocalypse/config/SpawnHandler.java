@@ -73,14 +73,22 @@ public class SpawnHandler {
     if (!world.getWorldBorder().contains(pos)) {
       return false;
     }
+
     if (world.getLightLevel(pos) > lightLevel) {
       return false;
     }
+
+    if (ConfigHandler.zombiesBurnInSunlight && world.isDay() &&
+        world.isSkyVisible(pos)) {
+      return false;
+    }
+
     if (world.getDifficulty().equals(Difficulty.PEACEFUL) ||
         !world.getBlockState(pos.down())
              .isSideSolidFullSquare(world, pos.down(), Direction.UP)) {
       return false;
     }
+
     var box = EntityType.ZOMBIE.createSimpleBoundingBox(
         pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
     return world.isSpaceEmpty(box) && !world.containsFluid(box);
