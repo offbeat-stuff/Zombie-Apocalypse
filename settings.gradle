@@ -7,4 +7,18 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+
+    dependencyResolutionManagement {
+      versionCatalogs {
+        libs {
+          library("minecraft","com.mojang","minecraft").version(minecraft_version)
+          library("yarn_mappings","net.fabricmc","yarn").version(yarn_mappings)
+          library("fabric_loader","net.fabricmc","fabric-loader").version(loader_version)
+          library("fabric_api","net.fabricmc.fabric-api","fabric-api").version(fabric_version)
+          library("toml4j","com.moandjiezana.toml","toml4j").version(toml4j)
+          plugin('fabric_loom', 'fabric-loom').version('1.+')
+          plugin('modrinth', 'com.modrinth.minotaur').version('2.+')
+        }
+      }
+    }
 }
