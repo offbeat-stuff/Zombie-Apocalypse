@@ -76,7 +76,7 @@ public class SpawnHandler {
     if (world.getLightLevel(pos) > lightLevel) {
       return false;
     }
-    if (world.getDifficulty() == Difficulty.PEACEFUL ||
+    if (world.getDifficulty().equals(Difficulty.PEACEFUL) ||
         !world.getBlockState(pos.down())
              .isSideSolidFullSquare(world, pos.down(), Direction.UP)) {
       return false;
