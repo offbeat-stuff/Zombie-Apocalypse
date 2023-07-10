@@ -5,16 +5,19 @@ import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 import static net.minecraft.util.math.Direction.Axis.VALUES;
 import static net.minecraft.util.math.MathHelper.clamp;
 
+import com.ibm.icu.util.CodePointTrie.Fast;
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieEntityInterface;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Common.SpawnParameters;
 import java.util.List;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -28,6 +31,8 @@ public class SpawnHandler {
   private static int maxZombieCount;
 
   private static boolean spawnInstantly;
+  private static boolean vanillaSpawnRestrictionOnFoot;
+  private static boolean checkIfBlockBelowAllowsSpawning;
   private static int lightLevel;
 
   private static SpawnParameters axis;
@@ -55,6 +60,8 @@ public class SpawnHandler {
     raw.lightLevel = clamp(raw.lightLevel, 0, 15);
 
     spawnInstantly = raw.spawnInstantly;
+    vanillaSpawnRestrictionOnFoot = raw.vanillaSpawnRestrictionOnFoot;
+    checkIfBlockBelowAllowsSpawning = raw.checkIfBlockBelowAllowsSpawning;
     lightLevel = raw.lightLevel;
 
     minPlayerDistance = raw.minPlayerDistance;
@@ -67,6 +74,13 @@ public class SpawnHandler {
 
     maxSpawnAttemptsPerTick = raw.instantSpawning.maxSpawnAttemptsPerTick;
     maxSpawnsPerTick = raw.instantSpawning.maxSpawnsPerTick;
+  }
+
+  private static boolean isBlockedAtFoot(ServerWorld world, BlockPos pos,
+                                         BlockState state) {
+    return state.emitsRedstonePower() ||
+        state.isIn(BlockTags.PREVENT_MOB_SPAWNING_INSIDE) ||
+        state.isIn(BlockTags.INVALID_SPAWN_INSIDE);
   }
 
   private static boolean isSpawnableForZombie(ServerWorld world, BlockPos pos) {
@@ -83,14 +97,28 @@ public class SpawnHandler {
       return false;
     }
 
-    if (world.getDifficulty().equals(Difficulty.PEACEFUL) ||
-        !world.getBlockState(pos.down())
-             .isSideSolidFullSquare(world, pos.down(), Direction.UP)) {
+    if (world.getDifficulty().equals(Difficulty.PEACEFUL)) {
+      return false;
+    }
+
+    var state = world.getBlockState(pos.down());
+
+    if (!state.isSideSolidFullSquare(world, pos.down(), Direction.UP)) {
+      return false;
+    }
+
+    if (checkIfBlockBelowAllowsSpawning &&
+        !state.allowsSpawning(world, pos, EntityType.ZOMBIE)) {
+      return false;
+    }
+
+    if (vanillaSpawnRestrictionOnFoot && isBlockedAtFoot(world, pos, state)) {
       return false;
     }
 
     var box = EntityType.ZOMBIE.createSimpleBoundingBox(
         pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+
     return world.isSpaceEmpty(box) && !world.containsFluid(box);
   }
 
@@ -212,6 +240,8 @@ public class SpawnHandler {
 
   public static class SpawnConfig {
     public boolean spawnInstantly = false;
+    public boolean vanillaSpawnRestrictionOnFoot = true;
+    public boolean checkIfBlockBelowAllowsSpawning = true;
     public InstantSpawning instantSpawning = new InstantSpawning();
     public int lightLevel = 15;
 
