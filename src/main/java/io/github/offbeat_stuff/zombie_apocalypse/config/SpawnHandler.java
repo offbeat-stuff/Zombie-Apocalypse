@@ -148,9 +148,11 @@ public class SpawnHandler {
       return false;
     }
 
-    if (ProbabilityHandler.tryChance(ConfigHandler.frostZombieChance)) {
+    var chance = XRANDOM.nextFloat() - ConfigHandler.frostZombieChance;
+
+    if (chance < 0) {
       ((ZombieEntityInterface)zombie).setZombieType("frost");
-    } else if (ProbabilityHandler.tryChance(ConfigHandler.fireZombieChance)) {
+    } else if (chance < ConfigHandler.fireZombieChance) {
       ((ZombieEntityInterface)zombie).setZombieType("fire");
     }
 
