@@ -1,23 +1,14 @@
 diff --git a/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/config/SpawnHandler.java b/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/config/SpawnHandler.java
-index d7e8d48..11108fb 100644
+index ab79615..1e172d9 100644
 --- a/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/config/SpawnHandler.java
 +++ b/src/main/java/io/github/offbeat_stuff/zombie_apocalypse/config/SpawnHandler.java
-@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityType;
- import net.minecraft.entity.SpawnGroup;
- import net.minecraft.entity.SpawnReason;
- import net.minecraft.entity.mob.MobEntity;
-+import net.minecraft.nbt.NbtCompound;
- import net.minecraft.server.network.ServerPlayerEntity;
- import net.minecraft.server.world.ServerWorld;
- import net.minecraft.util.math.BlockPos;
-@@ -91,7 +92,9 @@ public class SpawnHandler {
+@@ -140,7 +140,8 @@ public class SpawnHandler {
                                minPlayerDistance)) {
        return false;
      }
 -    var zombie = EntityType.ZOMBIE.spawn(world, pos, SpawnReason.NATURAL);
-+    var zombie =
-+        EntityType.ZOMBIE.spawn(world, (NbtCompound)null, null, null, pos,
-+                                SpawnReason.NATURAL, false, false);
++    var zombie = EntityType.ZOMBIE.spawn(world, null, null, pos,
++                                         SpawnReason.NATURAL, false, false);
      PotionEffectHandler.applyRandomPotionEffects(zombie);
      if (!world.isSpaceEmpty(zombie) ||
          !world.doesNotIntersectEntities(zombie)) {
