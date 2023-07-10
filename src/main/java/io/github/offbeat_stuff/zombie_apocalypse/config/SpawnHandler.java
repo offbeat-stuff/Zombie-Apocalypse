@@ -3,6 +3,7 @@ package io.github.offbeat_stuff.zombie_apocalypse.config;
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 import static net.minecraft.util.math.Direction.Axis.VALUES;
+import static net.minecraft.util.math.MathHelper.clamp;
 
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
@@ -17,7 +18,9 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.world.Difficulty;
 
 public class SpawnHandler {
 
@@ -25,6 +28,7 @@ public class SpawnHandler {
   private static int maxZombieCount;
 
   private static boolean spawnInstantly;
+  private static int lightLevel;
 
   private static SpawnParameters axis;
   private static SpawnParameters plane;
@@ -48,7 +52,10 @@ public class SpawnHandler {
     raw.instantSpawning.maxSpawnsPerTick =
         Math.max(raw.instantSpawning.maxSpawnsPerTick, 0);
 
+    raw.lightLevel = clamp(raw.lightLevel, 0, 15);
+
     spawnInstantly = raw.spawnInstantly;
+    lightLevel = raw.lightLevel;
 
     minPlayerDistance = raw.minPlayerDistance;
     maxZombieCount = raw.maxZombieCount;
@@ -63,12 +70,20 @@ public class SpawnHandler {
   }
 
   private static boolean isSpawnableForZombie(ServerWorld world, BlockPos pos) {
-    var box = EntityType.ZOMBIE.createSimpleBoundingBox(pos.getX() + 0.5,
-                                                        pos.getY(), pos.getZ());
-    return world.getWorldBorder().contains(pos) &&
-        MobEntity.canMobSpawn(EntityType.ZOMBIE, world, SpawnReason.NATURAL,
-                              pos, world.getRandom()) &&
-        world.isSpaceEmpty(box) && !world.containsFluid(box);
+    if (!world.getWorldBorder().contains(pos)) {
+      return false;
+    }
+    if (world.getLightLevel(pos) > lightLevel) {
+      return false;
+    }
+    if (world.getDifficulty() == Difficulty.PEACEFUL ||
+        !world.getBlockState(pos.down())
+             .isSideSolidFullSquare(world, pos.down(), Direction.UP)) {
+      return false;
+    }
+    var box = EntityType.ZOMBIE.createSimpleBoundingBox(
+        pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+    return world.isSpaceEmpty(box) && !world.containsFluid(box);
   }
 
   private static boolean spawnAttempt(ServerWorld world, BlockPos pos) {
@@ -190,6 +205,7 @@ public class SpawnHandler {
   public static class SpawnConfig {
     public boolean spawnInstantly = false;
     public InstantSpawning instantSpawning = new InstantSpawning();
+    public int lightLevel = 15;
 
     // minimum distance from player
     public float minPlayerDistance = 16f;
