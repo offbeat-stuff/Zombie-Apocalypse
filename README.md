@@ -37,6 +37,8 @@ frostZombieChance = 0.01
 fireZombieChance = 0.01
 ```
 
+If zombies burn in sunlight then they wont spawn under the sky in the day.
+
 Frost Zombies give freezing effect on hit.
 
 Fire Zombie set player on fire on hit.
@@ -47,6 +49,9 @@ Scream is just a on screen red message for now, will add sound later.
 ```toml
 [spawn]
 spawnInstantly = false
+vanillaSpawnRestrictionOnFoot = true
+checkIfBlockBelowAllowsSpawning = true
+lightLevel = 15
 minPlayerDistance = 16.0
 maxZombieCount = 150
 allowedDimensions = ["overworld", "ther_nether", "the_end"]
@@ -74,6 +79,12 @@ max = 64
 min = 1000
 max = 13000
 ```
+
+LightLevel will stay between 0 to 15.
+
+`checkIfBlockBelowAllowsSpawning` will block spawning if block state does not allow spawning zombies.
+
+`vanillaSpawnRestrictionOnFoot` will check for redstone power and `PREVENT_MOB_SPAWNING_INSIDE`,`INVALID_SPAWN_INSIDE` block tags.
 
 Instant spawning basically spawns them while disregarding the chances.
 
