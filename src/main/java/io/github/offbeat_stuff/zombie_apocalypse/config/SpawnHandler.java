@@ -5,7 +5,6 @@ import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 import static net.minecraft.util.math.Direction.Axis.VALUES;
 import static net.minecraft.util.math.MathHelper.clamp;
 
-import com.ibm.icu.util.CodePointTrie.Fast;
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieEntityInterface;
@@ -16,7 +15,6 @@ import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
