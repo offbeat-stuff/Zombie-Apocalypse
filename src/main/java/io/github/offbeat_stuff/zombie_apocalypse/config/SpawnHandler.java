@@ -269,7 +269,7 @@ public class SpawnHandler {
     public Range timeRange = new Range(1000, 13000);
 
     public List<String> allowedDimensions =
-        List.of("overworld", "ther_nether", "the_end");
+        List.of("overworld", "the_nether", "the_end");
   }
 
   public static class InstantSpawning {
