@@ -7,7 +7,7 @@ import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.ChanceList;
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.WeightList;
 import java.util.List;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
@@ -50,7 +50,7 @@ public class ArmorHandler {
     return r;
   }
 
-  public static void handleZombie(ServerWorld world, ZombieEntity entity) {
+  public static void handleZombie(ServerWorld world, LivingEntity entity) {
     if (tryChance(chances.get(0))) {
       entity.equipStack(EquipmentSlot.HEAD,
                         randomArmor(world, HELMETS, HELMETS_CHANCES));

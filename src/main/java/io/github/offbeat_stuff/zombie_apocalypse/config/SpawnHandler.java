@@ -1,32 +1,40 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
 
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
-import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 import static net.minecraft.util.math.Direction.Axis.VALUES;
 import static net.minecraft.util.math.MathHelper.clamp;
 
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.WeightList;
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieEntityInterface;
+import io.github.offbeat_stuff.zombie_apocalypse.config.Common.Range;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Common.SpawnParameters;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity.RemovalReason;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 
 public class SpawnHandler {
 
   private static float minPlayerDistance;
   private static int maxZombieCount;
+
+  private static List<EntityType<? extends LivingEntity>> mobs;
+  private static List<Float> chances;
 
   private static boolean spawnInstantly;
   private static boolean vanillaSpawnRestrictionOnFoot;
@@ -39,6 +47,26 @@ public class SpawnHandler {
 
   private static int maxSpawnAttemptsPerTick;
   private static int maxSpawnsPerTick;
+
+  @SuppressWarnings("unchecked")
+  public static List<EntityType<? extends LivingEntity>>
+  getMobs(List<String> mobs) {
+    var r = new ArrayList<EntityType<? extends LivingEntity>>();
+
+    for (var id : mobs) {
+      var entry = Registries.ENTITY_TYPE.getOrEmpty(new Identifier(id));
+      if (!entry.isPresent()) {
+        continue;
+      }
+      var entity = entry.get();
+      if (entity != null &&
+          LivingEntity.class.isAssignableFrom(entity.getBaseClass())) {
+        r.add((EntityType<? extends LivingEntity>)entity);
+      }
+    }
+
+    return r.stream().toList();
+  }
 
   public static void handle(SpawnConfig raw) {
     raw.minPlayerDistance = Math.max(0, raw.minPlayerDistance);
@@ -56,6 +84,15 @@ public class SpawnHandler {
         Math.max(raw.instantSpawning.maxSpawnsPerTick, 0);
 
     raw.lightLevel = clamp(raw.lightLevel, 0, 15);
+
+    raw.mobIds =
+        raw.mobIds.stream()
+            .map(f -> f.trim().toLowerCase())
+            .filter(f -> Registries.ENTITY_TYPE.containsId(new Identifier(f)))
+            .toList();
+
+    mobs = getMobs(raw.mobIds);
+    chances = raw.mobWeights.getChances(mobs.size());
 
     spawnInstantly = raw.spawnInstantly;
     vanillaSpawnRestrictionOnFoot = raw.vanillaSpawnRestrictionOnFoot;
@@ -81,7 +118,9 @@ public class SpawnHandler {
         state.isIn(BlockTags.INVALID_SPAWN_INSIDE);
   }
 
-  private static boolean isSpawnableForZombie(ServerWorld world, BlockPos pos) {
+  private static boolean
+  isSpawnableForEntity(ServerWorld world, BlockPos pos, LivingEntity entity,
+                       EntityType<? extends LivingEntity> entityType) {
     if (!world.getWorldBorder().contains(pos)) {
       return false;
     }
@@ -95,10 +134,6 @@ public class SpawnHandler {
       return false;
     }
 
-    if (world.getDifficulty().equals(Difficulty.PEACEFUL)) {
-      return false;
-    }
-
     var state = world.getBlockState(pos.down());
 
     if (!state.isSideSolidFullSquare(world, pos.down(), Direction.UP)) {
@@ -106,7 +141,7 @@ public class SpawnHandler {
     }
 
     if (checkIfBlockBelowAllowsSpawning &&
-        !state.allowsSpawning(world, pos, EntityType.ZOMBIE)) {
+        !state.allowsSpawning(world, pos, entityType)) {
       return false;
     }
 
@@ -114,17 +149,27 @@ public class SpawnHandler {
       return false;
     }
 
-    var box = EntityType.ZOMBIE.createSimpleBoundingBox(
-        pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+    entity.setPosition(Vec3d.add(pos, 0.5, 0.0, 0.5));
 
-    return world.isSpaceEmpty(box) && !world.containsFluid(box);
+    return world.doesNotIntersectEntities(entity) &&
+        world.isSpaceEmpty(entity.getBoundingBox()) &&
+        !world.containsFluid(entity.getBoundingBox());
   }
 
   private static boolean spawnAttempt(ServerWorld world, BlockPos pos) {
-    var spawnable = isSpawnableForZombie(world, pos);
+
+    var entityType = ProbabilityHandler.chooseRandom(mobs, chances);
+    var entity = entityType.create(world, null, null, pos, SpawnReason.NATURAL,
+                                   false, false);
+
+    if (entity == null) {
+      return false;
+    }
+
+    var spawnable = isSpawnableForEntity(world, pos, entity, entityType);
     if (!spawnable) {
       for (var bpos : BlockPos.iterate(pos.add(-4, -4, -4), pos.add(4, 4, 4))) {
-        if (isSpawnableForZombie(world, pos)) {
+        if (isSpawnableForEntity(world, pos, entity, entityType)) {
           spawnable = true;
           pos = bpos;
           break;
@@ -140,24 +185,23 @@ public class SpawnHandler {
                               minPlayerDistance)) {
       return false;
     }
-    var zombie = EntityType.ZOMBIE.spawn(world, pos, SpawnReason.NATURAL);
-    PotionEffectHandler.applyRandomPotionEffects(zombie);
-    if (!world.isSpaceEmpty(zombie) ||
-        !world.doesNotIntersectEntities(zombie)) {
-      zombie.setRemoved(RemovalReason.DISCARDED);
-      return false;
-    }
+
+    world.spawnEntityAndPassengers(entity);
+
+    PotionEffectHandler.applyRandomPotionEffects(entity);
 
     var chance = XRANDOM.nextFloat() - ConfigHandler.frostZombieChance;
 
-    if (chance < 0) {
-      ((ZombieEntityInterface)zombie).setZombieType("frost");
-    } else if (chance < ConfigHandler.fireZombieChance) {
-      ((ZombieEntityInterface)zombie).setZombieType("fire");
+    if (entity instanceof ZombieEntityInterface zombie) {
+      if (chance < 0) {
+        zombie.setZombieType("frost");
+      } else if (chance < ConfigHandler.fireZombieChance) {
+        zombie.setZombieType("fire");
+      }
     }
 
-    ArmorHandler.handleZombie(world, zombie);
-    WeaponHandler.handleZombie(world, zombie);
+    ArmorHandler.handleZombie(world, entity);
+    WeaponHandler.handleZombie(world, entity);
 
     return true;
   }
@@ -200,6 +244,10 @@ public class SpawnHandler {
   }
 
   public static void spawnZombiesInWorld(ServerWorld world) {
+    if (world.getDifficulty().equals(Difficulty.PEACEFUL)) {
+      return;
+    }
+
     int zombieCount =
         world.getChunkManager().getSpawnInfo().getGroupToCount().getInt(
             SpawnGroup.MONSTER);
@@ -244,6 +292,9 @@ public class SpawnHandler {
     public boolean checkIfBlockBelowAllowsSpawning = true;
     public InstantSpawning instantSpawning = new InstantSpawning();
     public int lightLevel = 15;
+
+    public List<String> mobIds = List.of("zombie", "zombie_villager");
+    public WeightList mobWeights = new WeightList(List.of(100, 5), 100);
 
     // minimum distance from player
     public float minPlayerDistance = 16f;

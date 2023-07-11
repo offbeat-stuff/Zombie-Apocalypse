@@ -4,9 +4,10 @@ import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryCh
 import static net.minecraft.util.math.MathHelper.clamp;
 
 import java.util.List;
+
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
@@ -17,7 +18,7 @@ public class PotionEffectHandler {
   private static int maxTimeInTicks;
   private static int maxAmplifier;
 
-  public static void applyRandomPotionEffects(ZombieEntity entity) {
+  public static void applyRandomPotionEffects(LivingEntity entity) {
     for (int i = 0; i < chances.size(); i++) {
       if (!tryChance(chances.get(i))) {
         return;
@@ -30,7 +31,7 @@ public class PotionEffectHandler {
     return Registries.STATUS_EFFECT.get(new Identifier(effect));
   }
 
-  private static void applyRandomPotionEffect(ZombieEntity entity) {
+  private static void applyRandomPotionEffect(LivingEntity entity) {
     var index = ZombieMod.XRANDOM.nextInt(effects.size());
     var effect = effects.get(index);
     var time = -1;
