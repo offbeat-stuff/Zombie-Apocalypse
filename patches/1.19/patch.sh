@@ -9,7 +9,6 @@ runPatch () {
 }
 
 patch gradle.properties -i $PATCH_HOME/gradle.properties.patch
-patch src/main/resources/fabric.mod.json -i $PATCH_HOME/fabric.mod.json.patch
 runPatch PotionEffectHandler.java .
 runPatch ArmorHandler.java config
 runPatch Common.java config

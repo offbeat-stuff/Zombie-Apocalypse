@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "zombie_apocalypse",
-  "version": "${version}",
+  "version": "${mod_version}",
   "name": "Zombie Apocalypse Mod",
   "description": "Zombies will eat your brains",
   "authors": [
@@ -19,9 +19,9 @@
     "modid.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.14.19",
+    "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
-    "minecraft": "~1.19.4",
+    "minecraft": "${minecraft_version}",
     "java": ">=17"
   }
 }
