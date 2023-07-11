@@ -8,6 +8,11 @@ import java.util.stream.IntStream;
 public class ProbabilityHandler {
 
   public static <T> T chooseRandom(List<T> items, List<Float> chances) {
+
+    if (items.size() == 0) {
+      return null;
+    }
+
     var r = Math.min(items.size(), chances.size());
     var f = ZombieMod.XRANDOM.nextFloat();
     for (int i = 0; i < r - 1; i++) {

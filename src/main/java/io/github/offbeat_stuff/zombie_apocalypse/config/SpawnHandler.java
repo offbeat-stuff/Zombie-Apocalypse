@@ -59,9 +59,13 @@ public class SpawnHandler {
         continue;
       }
       var entity = entry.get();
-      if (entity != null &&
-          LivingEntity.class.isAssignableFrom(entity.getBaseClass())) {
-        r.add((EntityType<? extends LivingEntity>)entity);
+
+      if (entity != null) {
+        try {
+          r.add((EntityType<? extends LivingEntity>)entity);
+        } catch (Exception e) {
+          continue;
+        }
       }
     }
 

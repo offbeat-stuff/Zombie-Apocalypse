@@ -4,7 +4,6 @@ import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.tryCh
 import static net.minecraft.util.math.MathHelper.clamp;
 
 import java.util.List;
-
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
