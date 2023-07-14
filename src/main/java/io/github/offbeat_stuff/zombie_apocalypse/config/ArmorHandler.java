@@ -29,7 +29,7 @@ public class ArmorHandler {
   private static List<Float> LEGGINGS_CHANCES;
   private static List<Float> BOOTS_CHANCES;
 
-  public static void handleRawArmorHandler(RawArmorHandler raw) {
+  public static void handleArmorConfig(ArmorConfig raw) {
     raw.fixAll();
     HELMETS = Common.getList(raw.helmets, allowedSlots.get(0));
     CHESTPLATES = Common.getList(raw.chestplates, allowedSlots.get(1));
@@ -69,7 +69,7 @@ public class ArmorHandler {
     }
   }
 
-  public static class RawArmorHandler {
+  public static class ArmorConfig {
     public List<String> helmets;
     public List<String> chestplates;
     public List<String> leggings;
@@ -78,7 +78,7 @@ public class ArmorHandler {
     public ChanceList chancesPerSlot;
     public WeightList materialWeights;
 
-    public RawArmorHandler(List<String> helmets, List<String> chestplates,
+    public ArmorConfig(List<String> helmets, List<String> chestplates,
                            List<String> leggings, List<String> boots,
                            ChanceList chances, WeightList weights) {
       this.helmets = helmets;
@@ -100,7 +100,7 @@ public class ArmorHandler {
 
     private static List<String> fixIt(List<String> materials) {
       return materials.stream()
-          .map(RawArmorHandler::fixPrefix)
+          .map(ArmorConfig::fixPrefix)
           .filter(f -> f != "")
           .toList();
     }

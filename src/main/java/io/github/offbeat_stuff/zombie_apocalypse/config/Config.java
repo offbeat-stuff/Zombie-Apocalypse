@@ -18,7 +18,7 @@ public class Config {
 
   public SpawnConfig spawn = new SpawnConfig();
 
-  public ArmorHandler.RawArmorHandler Armor = new ArmorHandler.RawArmorHandler(
+  public ArmorHandler.ArmorConfig Armor = new ArmorHandler.ArmorConfig(
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
               "turtle"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
@@ -27,8 +27,8 @@ public class Config {
       new ChanceList(List.of(0.1f, 0.1f, 0.1f, 0.1f), 0.1f),
       new WeightList(List.of(1, 10, 100, 50, 50, 100), 10));
 
-  public WeaponHandler.RawWeaponHandler Weapon =
-      new WeaponHandler.RawWeaponHandler(
+  public WeaponHandler.WeaponConfig Weapon =
+      new WeaponHandler.WeaponConfig(
           List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
           List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
           List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
