@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.registry.Registries;
@@ -33,7 +32,7 @@ public class SpawnHandler {
   private static float minPlayerDistance;
   private static int maxZombieCount;
 
-  private static List<EntityType<? extends LivingEntity>> mobs;
+  private static List<EntityType<? extends ZombieEntity>> mobs;
   private static List<Float> chances;
 
   private static boolean spawnInstantly;
@@ -49,9 +48,9 @@ public class SpawnHandler {
   private static int maxSpawnsPerTick;
 
   @SuppressWarnings("unchecked")
-  public static List<EntityType<? extends LivingEntity>>
+  public static List<EntityType<? extends ZombieEntity>>
   getMobs(List<String> mobs) {
-    var r = new ArrayList<EntityType<? extends LivingEntity>>();
+    var r = new ArrayList<EntityType<? extends ZombieEntity>>();
 
     for (var id : mobs) {
       var entry = Registries.ENTITY_TYPE.getOrEmpty(new Identifier(id));
@@ -62,7 +61,7 @@ public class SpawnHandler {
 
       if (entity != null) {
         try {
-          r.add((EntityType<? extends LivingEntity>)entity);
+          r.add((EntityType<? extends ZombieEntity>)entity);
         } catch (Exception e) {
           continue;
         }
@@ -123,8 +122,8 @@ public class SpawnHandler {
   }
 
   private static boolean
-  isSpawnableForEntity(ServerWorld world, BlockPos pos, LivingEntity entity,
-                       EntityType<? extends LivingEntity> entityType) {
+  isSpawnableForEntity(ServerWorld world, BlockPos pos, ZombieEntity entity,
+                       EntityType<? extends ZombieEntity> entityType) {
     if (!world.getWorldBorder().contains(pos)) {
       return false;
     }
