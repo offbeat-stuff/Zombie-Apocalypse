@@ -1,8 +1,8 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
 
 import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
-import static net.minecraft.util.math.MathHelper.clamp;
 
+// import static net.minecraft.util.math.MathHelper.clamp;
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import java.util.List;

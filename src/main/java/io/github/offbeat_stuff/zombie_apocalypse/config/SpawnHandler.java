@@ -208,9 +208,6 @@ public class SpawnHandler {
       }
     }
 
-    ArmorHandler.handleZombie(world, entity);
-    WeaponHandler.handleZombie(world, entity);
-
     return true;
   }
 
