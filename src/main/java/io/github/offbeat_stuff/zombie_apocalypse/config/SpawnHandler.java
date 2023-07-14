@@ -35,7 +35,9 @@ public class SpawnHandler {
   private static int maxZombieCount;
 
   private static List<EntityType<? extends ZombieEntity>> mobs;
-  private static List<Float> chances;
+  private static List<Float> mobChances;
+
+  private static List<Float> variantChances;
 
   private static boolean spawnInstantly;
   private static boolean vanillaSpawnRestrictionOnFoot;
@@ -97,7 +99,8 @@ public class SpawnHandler {
             .toList();
 
     mobs = getMobs(raw.mobIds);
-    chances = raw.mobWeights.getChances(mobs.size());
+    mobChances = raw.mobWeights.getChances(mobs.size());
+    variantChances = raw.variants.getChances();
 
     spawnInstantly = raw.spawnInstantly;
     vanillaSpawnRestrictionOnFoot = raw.vanillaSpawnRestrictionOnFoot;
@@ -163,7 +166,7 @@ public class SpawnHandler {
 
   private static boolean spawnAttempt(ServerWorld world, BlockPos pos) {
 
-    var entityType = ProbabilityHandler.chooseRandom(mobs, chances);
+    var entityType = ProbabilityHandler.chooseRandom(mobs, mobChances);
     var entity = entityType.create(world, null, null, pos, SpawnReason.NATURAL,
                                    false, false);
 
@@ -195,12 +198,12 @@ public class SpawnHandler {
 
     PotionEffectHandler.applyRandomPotionEffects(entity);
 
-    var chance = XRANDOM.nextFloat() - ConfigHandler.frostZombieChance;
+    var kindChance = XRANDOM.nextFloat();
 
     if (entity instanceof ZombieEntityInterface zombie) {
-      if (chance < 0) {
+      if (kindChance < variantChances.get(0)) {
         zombie.setKind(ZombieKind.Frost);
-      } else if (chance < ConfigHandler.flameZombieChance) {
+      } else if (kindChance < variantChances.get(1)) {
         zombie.setKind(ZombieKind.Flame);
       }
     }
@@ -300,6 +303,7 @@ public class SpawnHandler {
 
     public List<String> mobIds = List.of("zombie", "zombie_villager");
     public WeightList mobWeights = new WeightList(List.of(100, 5), 100);
+    public Variants variants = new Variants();
 
     // minimum distance from player
     public float minPlayerDistance = 16f;
@@ -326,6 +330,25 @@ public class SpawnHandler {
 
     public List<String> allowedDimensions =
         List.of("overworld", "the_nether", "the_end");
+  }
+
+  public static class Variants {
+    public float chance = 0.01f;
+    public int frostWeight = 1;
+    public int flameWeight = 1;
+
+    public List<Float> getChances() {
+      chance = clamp(chance, 0, 1);
+      frostWeight = Math.max(frostWeight, 0);
+      flameWeight = Math.max(flameWeight, 0);
+
+      var sum = (float)(frostWeight + flameWeight);
+      if (sum == 0) {
+        return List.of(0f, 0f);
+      }
+
+      return List.of(chance * (float)frostWeight / sum, chance);
+    }
   }
 
   public static class InstantSpawning {

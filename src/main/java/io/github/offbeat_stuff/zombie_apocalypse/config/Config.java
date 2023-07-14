@@ -13,9 +13,6 @@ public class Config {
   public boolean zombiesBurnInSunlight = false;
   public boolean doScream = true;
 
-  public float frostZombieChance = 0.01f;
-  public float flameZombieChance = 0.01f;
-
   public SpawnConfig spawn = new SpawnConfig();
 
   public ArmorHandler.ArmorConfig Armor = new ArmorHandler.ArmorConfig(
@@ -27,15 +24,14 @@ public class Config {
       new ChanceList(List.of(0.1f, 0.1f, 0.1f, 0.1f), 0.1f),
       new WeightList(List.of(1, 10, 100, 50, 50, 100), 10));
 
-  public WeaponHandler.WeaponConfig Weapon =
-      new WeaponHandler.WeaponConfig(
-          List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
-          List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
-          List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
-          List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
-          List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
-          new WeightList(List.of(100, 20, 20, 75, 1), 100),
-          new WeightList(List.of(1, 10, 100, 50, 50, 100), 100), 0.1f);
+  public WeaponHandler.WeaponConfig Weapon = new WeaponHandler.WeaponConfig(
+      List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
+      List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
+      List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
+      List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
+      List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
+      new WeightList(List.of(100, 20, 20, 75, 1), 100),
+      new WeightList(List.of(1, 10, 100, 50, 50, 100), 100), 0.1f);
 
   public RawTrimHandler ArmorTrims = new RawTrimHandler(
       ArmorTrimHandler.vanillaPatterns, ArmorTrimHandler.vanillaMaterials,

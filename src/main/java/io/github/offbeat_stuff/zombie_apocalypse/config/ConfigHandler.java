@@ -13,9 +13,6 @@ public class ConfigHandler {
 
   public static boolean zombiesBurnInSunlight;
 
-  public static float frostZombieChance = 0.01f;
-  public static float flameZombieChance = 0.01f;
-
   public static Predicate<Integer> isTimeRight;
 
   // Enchantment levels for armor and weapons
@@ -26,9 +23,6 @@ public class ConfigHandler {
   public static void handleConfig(Config config) {
     zombiesBurnInSunlight = config.zombiesBurnInSunlight;
     ScreamHandler.handle(config.doScream);
-
-    frostZombieChance = clamp(config.frostZombieChance, 0f, 1f);
-    flameZombieChance = clamp(config.flameZombieChance, 0f, 1f);
 
     ArmorHandler.handleArmorConfig(config.Armor);
     WeaponHandler.handleWeaponConfig(config.Weapon);

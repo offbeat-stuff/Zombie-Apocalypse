@@ -79,8 +79,8 @@ public class ArmorHandler {
     public WeightList materialWeights;
 
     public ArmorConfig(List<String> helmets, List<String> chestplates,
-                           List<String> leggings, List<String> boots,
-                           ChanceList chances, WeightList weights) {
+                       List<String> leggings, List<String> boots,
+                       ChanceList chances, WeightList weights) {
       this.helmets = helmets;
       this.chestplates = chestplates;
       this.leggings = leggings;
