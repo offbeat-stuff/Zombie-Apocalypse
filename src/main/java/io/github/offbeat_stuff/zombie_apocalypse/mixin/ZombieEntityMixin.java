@@ -1,6 +1,7 @@
 package io.github.offbeat_stuff.zombie_apocalypse.mixin;
 
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieEntityInterface;
+import io.github.offbeat_stuff.zombie_apocalypse.ZombieKind;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieEntity;
@@ -12,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ZombieEntity.class)
 public class ZombieEntityMixin implements ZombieEntityInterface {
 
-  private String zombieType;
+  private ZombieKind kind;
 
   @Inject(method = "burnsInDaylight", at = @At("HEAD"), cancellable = true)
   void dontBurn(CallbackInfoReturnable<Boolean> cir) {
@@ -20,13 +21,13 @@ public class ZombieEntityMixin implements ZombieEntityInterface {
   }
 
   @Override
-  public void setZombieType(String zombieType) {
-    this.zombieType = zombieType;
+  public void setKind(ZombieKind kind) {
+    this.kind = kind;
   }
 
   @Override
-  public String getZombieType() {
-    return this.zombieType;
+  public ZombieKind getKind() {
+    return this.kind;
   }
 
   @Inject(method = "tryAttack", at = @At("RETURN"), cancellable = true)
@@ -34,11 +35,6 @@ public class ZombieEntityMixin implements ZombieEntityInterface {
     if (!cir.getReturnValue()) {
       return;
     }
-    if (this.zombieType == "frost") {
-      target.setFrozenTicks(target.getMinFreezeDamageTicks() + 10);
-    }
-    if (this.zombieType == "fire") {
-      target.setOnFire(true);
-    }
+    this.kind.attack(target);
   }
 }

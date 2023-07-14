@@ -14,7 +14,7 @@ public class ConfigHandler {
   public static boolean zombiesBurnInSunlight;
 
   public static float frostZombieChance = 0.01f;
-  public static float fireZombieChance = 0.01f;
+  public static float flameZombieChance = 0.01f;
 
   public static Predicate<Integer> isTimeRight;
 
@@ -28,7 +28,7 @@ public class ConfigHandler {
     ScreamHandler.handle(config.doScream);
 
     frostZombieChance = clamp(config.frostZombieChance, 0f, 1f);
-    fireZombieChance = clamp(config.fireZombieChance, 0f, 1f);
+    flameZombieChance = clamp(config.flameZombieChance, 0f, 1f);
 
     ArmorHandler.handleRawArmorHandler(config.Armor);
     WeaponHandler.handleRawWeaponHandler(config.Weapon);

@@ -14,7 +14,7 @@ public class Config {
   public boolean doScream = true;
 
   public float frostZombieChance = 0.01f;
-  public float fireZombieChance = 0.01f;
+  public float flameZombieChance = 0.01f;
 
   public SpawnConfig spawn = new SpawnConfig();
 

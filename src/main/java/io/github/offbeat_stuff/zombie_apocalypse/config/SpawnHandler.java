@@ -8,6 +8,7 @@ import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.WeightList;
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieEntityInterface;
+import io.github.offbeat_stuff.zombie_apocalypse.ZombieKind;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Common.Range;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Common.SpawnParameters;
 import java.util.ArrayList;
@@ -198,9 +199,9 @@ public class SpawnHandler {
 
     if (entity instanceof ZombieEntityInterface zombie) {
       if (chance < 0) {
-        zombie.setZombieType("frost");
-      } else if (chance < ConfigHandler.fireZombieChance) {
-        zombie.setZombieType("fire");
+        zombie.setKind(ZombieKind.Frost);
+      } else if (chance < ConfigHandler.flameZombieChance) {
+        zombie.setKind(ZombieKind.Flame);
       }
     }
 
