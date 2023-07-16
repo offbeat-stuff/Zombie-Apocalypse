@@ -6,3 +6,5 @@ vscode:
   extensions:
     - EditorConfig.EditorConfig
     - vscjava.vscode-java-pack
+    - eamodio.gitlens
+    - xaver.clang-format
