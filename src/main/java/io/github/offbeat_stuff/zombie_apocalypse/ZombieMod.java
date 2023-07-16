@@ -23,8 +23,10 @@ public class ZombieMod implements ModInitializer {
       new Xoroshiro128PlusPlusRandom(new Random().nextLong());
 
   private void handleConfig() {
-    var settingsFile = FabricLoader.getInstance().getConfigDir().resolve(
-        "zombie_apocalypse.toml").toFile();
+    var settingsFile = FabricLoader.getInstance()
+                           .getConfigDir()
+                           .resolve("zombie_apocalypse.toml")
+                           .toFile();
     Config config = null;
     if (settingsFile.exists()) {
       try {

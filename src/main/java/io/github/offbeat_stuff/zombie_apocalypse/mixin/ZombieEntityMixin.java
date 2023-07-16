@@ -11,11 +11,11 @@ import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+// import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ZombieEntity.class)
-public class ZombieEntityMixin implements ZombieEntityInterface {
+public abstract class ZombieEntityMixin implements ZombieEntityInterface {
 
   private ZombieKind kind;
 
@@ -47,11 +47,11 @@ public class ZombieEntityMixin implements ZombieEntityInterface {
       at = @At(
           value = "INVOKE",
           target =
-              "Lnet/minecraft/entity/mob/MobEntity;initEquipment(Lnet/minecraft/util/math/random/Random;Lnet/minecraft/world/LocalDifficulty;)V")
+              "Lnet/minecraft/entity/mob/ZombieEntity;initEquipment(Lnet/minecraft/util/math/random/Random;Lnet/minecraft/world/LocalDifficulty;)V")
       ,
       cancellable = true)
   private void
-  handleEquipment(CallbackInfo ci) {
+  handleEquipment(CallbackInfoReturnable<?> ci) {
     ci.cancel();
     var zombie = (ZombieEntity)(Object)this;
 
