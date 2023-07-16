@@ -6,11 +6,11 @@ import io.github.offbeat_stuff.zombie_apocalypse.config.Config;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ScreamHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.SpawnHandler;
-import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Xoroshiro128PlusPlusRandom;
 import org.slf4j.Logger;
@@ -22,10 +22,9 @@ public class ZombieMod implements ModInitializer {
   public static Xoroshiro128PlusPlusRandom XRANDOM =
       new Xoroshiro128PlusPlusRandom(new Random().nextLong());
 
-  private final File settingsFile =
-      new File("config", "zombie_apocalypse.toml");
-
   private void handleConfig() {
+    var settingsFile = FabricLoader.getInstance().getConfigDir().resolve(
+        "zombie_apocalypse.toml").toFile();
     Config config = null;
     if (settingsFile.exists()) {
       try {
@@ -39,7 +38,9 @@ public class ZombieMod implements ModInitializer {
     if (config == null) {
       config = new Config();
     }
+
     ConfigHandler.handleConfig(config);
+
     if (settingsFile.exists())
       settingsFile.delete();
     try {
