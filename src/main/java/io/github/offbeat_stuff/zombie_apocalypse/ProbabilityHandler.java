@@ -1,5 +1,6 @@
 package io.github.offbeat_stuff.zombie_apocalypse;
 
+import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 import static net.minecraft.util.math.MathHelper.clamp;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class ProbabilityHandler {
     }
 
     var r = Math.min(items.size(), chances.size());
-    var f = ZombieMod.XRANDOM.nextFloat();
+    var f = XRANDOM.nextFloat();
     for (int i = 0; i < r - 1; i++) {
       f -= chances.get(i);
       if (f <= 0) {
@@ -24,8 +25,17 @@ public class ProbabilityHandler {
     return items.get(items.size() - 1);
   }
 
+  public static <T> T chooseRandom(List<T> items) {
+    if (items.size() == 0) {
+      return null;
+    }
+
+    var s = XRANDOM.nextBetweenExclusive(0, items.size());
+    return items.get(s);
+  }
+
   public static boolean tryChance(float chance) {
-    return ZombieMod.XRANDOM.nextFloat() < chance;
+    return XRANDOM.nextFloat() < chance;
   }
 
   public static class ChanceList {

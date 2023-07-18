@@ -1,16 +1,11 @@
 package io.github.offbeat_stuff.zombie_apocalypse;
 
-import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
+import static io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.chooseRandom;
 
 import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.WeightList;
 import java.util.List;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.trim.ArmorTrim;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -31,23 +26,8 @@ public class ArmorTrimHandler {
   public static List<Float> patternsChances;
   public static float chance;
 
-  private static <T> RegistryEntry<T> getEntry(Registry<T> registry,
-                                               Identifier s) {
-    var entry = registry.get(s);
-
-    if (entry == null) {
-      return null;
-    }
-
-    return registry.getEntry(entry);
-  }
-
-  public static void applyRandomArmorTrim(ServerWorld world, ItemStack istack) {
-    if (!(world.getEnabledFeatures().contains(FeatureFlags.UPDATE_1_20))) {
-      return;
-    }
-
-    if (!(istack.getItem() instanceof ArmorItem)) {
+  public static void applyRandomArmorTrim(ServerWorld world, ItemStack stack) {
+    if (!(stack.getItem() instanceof ArmorItem)) {
       return;
     }
 
@@ -55,22 +35,10 @@ public class ArmorTrimHandler {
       return;
     }
 
-    var pattern = getEntry(
-        world.getRegistryManager().get(RegistryKeys.TRIM_PATTERN),
-        patterns.get(XRANDOM.nextBetweenExclusive(0, patterns.size())));
-    if (pattern == null) {
-      return;
-    }
+    var material = chooseRandom(materials, materialsChances);
+    var pattern = chooseRandom(patterns, patternsChances);
 
-    var material = getEntry(
-        world.getRegistryManager().get(RegistryKeys.TRIM_MATERIAL),
-        materials.get(XRANDOM.nextBetweenExclusive(0, materials.size())));
-    if (material == null) {
-      return;
-    }
-
-    var trim = new ArmorTrim(material, pattern);
-    ArmorTrim.apply(world.getRegistryManager(), istack, trim);
+    VersionDependent.applyArmorTrim(world, stack, material, pattern);
   }
 
   public static void handleRawTrimHandler(RawTrimHandler raw) {
