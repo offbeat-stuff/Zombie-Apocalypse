@@ -2,6 +2,7 @@ plugins {
   alias libs.plugins.fabric.loom
   id 'maven-publish'
   alias libs.plugins.modrinth
+  alias libs.plugins.vineflower
 }
 
 version = project.mod_version
