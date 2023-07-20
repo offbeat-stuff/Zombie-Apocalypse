@@ -1,1 +1,1 @@
-find . -iname *.java | xargs clang-format -i
+ls src/*/java/**/*.java | xargs clang-format -i
