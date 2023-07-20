@@ -15,7 +15,7 @@ public class Config {
 
   public SpawnConfig spawn = new SpawnConfig();
 
-  public ArmorHandler.ArmorConfig Armor = new ArmorHandler.ArmorConfig(
+  public ArmorConfig Armor = new ArmorConfig(
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather",
               "turtle"),
       List.of("netherite", "diamond", "iron", "gold", "chainmail", "leather"),
