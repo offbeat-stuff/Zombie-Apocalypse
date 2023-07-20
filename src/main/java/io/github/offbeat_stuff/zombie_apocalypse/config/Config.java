@@ -24,7 +24,7 @@ public class Config {
       new ChanceList(List.of(0.1f, 0.1f, 0.1f, 0.1f), 0.1f),
       new WeightList(List.of(1, 10, 100, 50, 50, 100), 10));
 
-  public WeaponHandler.WeaponConfig Weapon = new WeaponHandler.WeaponConfig(
+  public WeaponConfig Weapon = new WeaponConfig(
       List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
       List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),
       List.of("netherite", "diamond", "iron", "gold", "stone", "wood"),

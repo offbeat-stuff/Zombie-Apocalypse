@@ -1,10 +1,10 @@
 package io.github.offbeat_stuff.zombie_apocalypse.mixin;
 
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.WeaponHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieEntityInterface;
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieKind;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
-import io.github.offbeat_stuff.zombie_apocalypse.config.WeaponHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.server.world.ServerWorld;

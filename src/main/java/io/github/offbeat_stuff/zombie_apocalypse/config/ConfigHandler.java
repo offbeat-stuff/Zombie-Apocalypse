@@ -5,6 +5,7 @@ import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.WeaponHandler;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.util.Identifier;
