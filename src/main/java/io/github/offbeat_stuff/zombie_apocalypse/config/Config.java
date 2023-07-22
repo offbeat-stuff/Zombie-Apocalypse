@@ -16,14 +16,14 @@ public class Config {
   public boolean zombiesBurnInSunlight = false;
   public boolean doScream = true;
 
-  public SpawnConfig Spawn = new SpawnConfig();
+  public SpawnConfig Spawning = new SpawnConfig();
 
   public EquipmentConfig Equipment = new EquipmentConfig();
 
   public TrimConfig ArmorTrims = new TrimConfig();
 
   // Enchantment levels for armor and weapons
-  public RangeConfig enchantmentLevel = new RangeConfig(5, 40);
+  public Range enchantmentLevel = new Range(5, 40);
 
   // Status effects for Zombie
   public StatusEffectConfig statusEffects = new StatusEffectConfig();
@@ -43,20 +43,17 @@ public class Config {
     public float minPlayerDistance = 16f;
 
     // Max zombie count per player
-    public int maxZombieCount = 150;
+    public int maxZombieCountPerPlayer = 150;
 
     // Chance that a zombie spawns in a single axis of player each tick
-    public SpawnParameters axisSpawnParameters =
-        new SpawnParameters(0.1f, 16, 48);
+    public SpawnConfig axisSpawn = new SpawnConfig(0.1f, 16, 48);
 
     // Chance that a zombie spawns in a single plane of player each tick
-    public SpawnParameters planeSpawnParameters =
-        new SpawnParameters(0.1f, 16, 48);
+    public SpawnConfig planeSpawn = new SpawnConfig(0.1f, 16, 48);
 
     // Chance that a zombie spawns in a box around player but not inside the
     // smaller box each tick
-    public SpawnParameters boxSpawnParameters =
-        new SpawnParameters(0.1f, 24, 64);
+    public SpawnConfig boxSpawn = new SpawnConfig(0.1f, 24, 64);
 
     // Time based Spawning in ticks - currently set to 0 to 1 am
     // each hour in minecraft represents 50 seconds or 1000 ticks
@@ -112,25 +109,7 @@ public class Config {
     public int maxAmplifier = 5;
   }
 
-  public static class Range {
-    public int min;
-    public int max;
+  public record Range(int min, int max) {}
 
-    public Range(int min, int max) {
-      this.min = min;
-      this.max = max;
-    }
-  }
-
-  public static class SpawnRange {
-    public float chance;
-    public int min;
-    public int max;
-
-    public SpawnRange(float chance, int min, int max) {
-      this.chance = chance;
-      this.min = min;
-      this.max = max;
-    }
-  }
+  public record SpawnRange(float chance, int min, int max) {}
 }

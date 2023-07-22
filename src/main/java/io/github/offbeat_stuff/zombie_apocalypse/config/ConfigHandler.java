@@ -44,4 +44,19 @@ public class ConfigHandler {
                             .map(f -> new Identifier(f))
                             .toList();
   }
+
+  public static void correct(Config config) { max(config.enchantmentLevel, 0); }
+
+  private static void correct(SpawnConfig conf) {}
+
+  private static int max(int v, int min) {
+    if (v < min)
+      return min;
+    return v;
+  }
+
+  private static void max(Range v, int min) {
+    v.min = max(v.min, min);
+    v.max = max(v.max, min);
+  }
 }
