@@ -22,11 +22,11 @@ public class ArmorHandler {
   private static List<Item> LEGGINGS;
   private static List<Item> BOOTS;
 
-  private static List<Float> chances;
-  private static List<Float> HELMETS_CHANCES;
-  private static List<Float> CHESTPLATES_CHANCES;
-  private static List<Float> LEGGINGS_CHANCES;
-  private static List<Float> BOOTS_CHANCES;
+  private static List<Double> chances;
+  private static List<Double> HELMETS_CHANCES;
+  private static List<Double> CHESTPLATES_CHANCES;
+  private static List<Double> LEGGINGS_CHANCES;
+  private static List<Double> BOOTS_CHANCES;
 
   public static void handleArmorConfig(ArmorConfig config) {
     config.fixAll();
@@ -43,7 +43,7 @@ public class ArmorHandler {
   }
 
   private static ItemStack randomArmor(ServerWorld world, List<Item> items,
-                                       List<Float> chances) {
+                                       List<Double> chances) {
     var r = Common.randomEnchanctedItemStack(items, chances);
     ArmorTrimHandler.applyRandomArmorTrim(world, r);
     return r;

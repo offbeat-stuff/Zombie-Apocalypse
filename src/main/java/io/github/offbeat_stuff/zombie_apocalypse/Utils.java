@@ -1,34 +1,32 @@
 package io.github.offbeat_stuff.zombie_apocalypse;
 
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
-import static net.minecraft.util.math.MathHelper.clamp;
 
-import it.unimi.dsi.fastutil.floats.*;
-import it.unimi.dsi.fastutil.ints.*;
+import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
+import it.unimi.dsi.fastutil.ints.IntImmutableList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.stream.IntStream;
+import net.minecraft.util.math.MathHelper;
 
 public class Utils {
 
   public static IntList setSize(IntList list, int len) {
     return IntImmutableList.toList(IntStream.range(0, len).map(
-        f -> f < list.size() ? Math.max(0, list.get(f)) : 0));
+        f -> f < list.size() ? Math.max(0, list.getInt(f)) : 0));
   }
 
-  public static FloatList correct(FloatList list) {
-    return FloatImmutableList.toList(list.stream().map(f -> validate(f)));
+  public static DoubleList correct(DoubleList list) {
+    return DoubleImmutableList.toList(list.stream().map(f -> validate(f)));
   }
 
-  public static FloatList setSize(FloatList list, int len) {
-    return FloatImmutableList.toList(IntStream.range(0, len).map(
-        f -> f < list.size() ? validate(list.get(i)) : 0f));
+  public static DoubleList setSize(DoubleList list, int len) {
+    return DoubleList.toList(IntStream.range(0, len).mapToObj(
+        f -> f < list.size() ? clamp(list.getDouble(f)) : 0f));
   }
 
-  public static T clamp(float chance, float min, float max) {
-    if (chance > max)
-      return max;
-    if (chance < min)
-      return min;
-    return chance;
+  public static double clamp(double chance) {
+    return MathHelper.clamp(chance, 0f, 1f);
   }
 
   public static int validate(int v) { return v > 0 ? v : 0; }
@@ -43,7 +41,7 @@ public class Utils {
     return v;
   }
 
-  public static boolean roll(float chance) {
-    return XRANDOM.nextFloat() < chance;
+  public static boolean roll(double chance) {
+    return XRANDOM.nextDouble() < chance;
   }
 }

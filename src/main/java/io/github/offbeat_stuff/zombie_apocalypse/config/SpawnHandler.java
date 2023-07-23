@@ -31,13 +31,13 @@ import net.minecraft.world.Difficulty;
 
 public class SpawnHandler {
 
-  private static float minPlayerDistance;
+  private static double minPlayerDistance;
   private static int maxZombieCount;
 
   private static List<EntityType<? extends ZombieEntity>> mobs;
-  private static List<Float> mobChances;
+  private static List<Double> mobChances;
 
-  private static List<Float> variantChances;
+  private static List<Double> variantChances;
 
   private static boolean spawnInstantly;
   private static boolean vanillaSpawnRestrictionOnFoot;
@@ -198,7 +198,7 @@ public class SpawnHandler {
 
     PotionEffectHandler.applyRandomPotionEffects(entity);
 
-    var kindChance = XRANDOM.nextFloat();
+    var kindChance = XRANDOM.nextDouble();
 
     if (entity instanceof ZombieEntityInterface zombie) {
       if (kindChance < variantChances.get(0)) {

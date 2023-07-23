@@ -24,14 +24,14 @@ public class WeaponHandler {
   private static List<Item> AXES;
   private static List<Item> HOES;
 
-  private static List<Float> CHANCES;
-  private static List<Float> SWORDS_CHANCES;
-  private static List<Float> SHOVELS_CHANCES;
-  private static List<Float> PICKAXES_CHANCES;
-  private static List<Float> AXES_CHANCES;
-  private static List<Float> HOES_CHANCES;
+  private static List<Double> CHANCES;
+  private static List<Double> SWORDS_CHANCES;
+  private static List<Double> SHOVELS_CHANCES;
+  private static List<Double> PICKAXES_CHANCES;
+  private static List<Double> AXES_CHANCES;
+  private static List<Double> HOES_CHANCES;
 
-  private static float chance;
+  private static double chance;
 
   public static void handleWeaponConfig(WeaponConfig raw) {
     raw.fixAll();
@@ -52,7 +52,7 @@ public class WeaponHandler {
   }
 
   private static ItemStack randomTool() {
-    var chance = XRANDOM.nextFloat();
+    var chance = XRANDOM.nextDouble();
     chance -= CHANCES.get(0);
     if (chance < 0) {
       return Common.randomEnchanctedItemStack(SWORDS, SWORDS_CHANCES);

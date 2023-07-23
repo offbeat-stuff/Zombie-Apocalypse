@@ -22,9 +22,9 @@ public class ArmorTrimHandler {
 
   public static List<Identifier> materials;
   public static List<Identifier> patterns;
-  public static List<Float> materialsChances;
-  public static List<Float> patternsChances;
-  public static float chance;
+  public static List<Double> materialsChances;
+  public static List<Double> patternsChances;
+  public static double chance;
 
   public static void applyRandomArmorTrim(ServerWorld world, ItemStack stack) {
     if (!(stack.getItem() instanceof ArmorItem)) {
@@ -56,12 +56,12 @@ public class ArmorTrimHandler {
     public WeightList patternsWeights;
     public WeightList materialsWeights;
     public boolean vanillaOnly;
-    public float chance;
+    public double chance;
 
     public RawTrimHandler(List<String> patterns, List<String> materials,
                           WeightList patternsWeights,
                           WeightList materialsWeights, boolean vanillaOnly,
-                          float chance) {
+                          double chance) {
       this.patterns = patterns;
       this.materials = materials;
       this.patternsWeights = patternsWeights;

@@ -16,12 +16,12 @@ public class WeaponConfig {
   public WeightList weightsForTools;
   public WeightList commonWeights;
 
-  public float chance;
+  public double chance;
 
   public WeaponConfig(List<String> swords, List<String> shovels,
                       List<String> pickaxes, List<String> axes,
                       List<String> hoes, WeightList weights, WeightList common,
-                      float chance) {
+                      double chance) {
     this.swords = swords;
     this.shovels = shovels;
     this.pickaxes = pickaxes;

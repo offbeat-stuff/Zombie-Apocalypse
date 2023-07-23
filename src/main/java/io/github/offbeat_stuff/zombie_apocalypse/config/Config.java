@@ -8,7 +8,7 @@ import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHandler.RawTrimHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler.RawStatusEffectHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.config.SpawnHandler.SpawnConfig;
-import it.unimi.dsi.fastutil.floats.*;
+import it.unimi.dsi.fastutil.doubles.*;
 import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.objects.*;
 
@@ -40,7 +40,7 @@ public class Config {
     public Variants variants = new Variants();
 
     // minimum distance from player
-    public float minPlayerDistance = 16f;
+    public double minPlayerDistance = 16f;
 
     // Max zombie count per player
     public int maxZombieCountPerPlayer = 150;
@@ -64,7 +64,7 @@ public class Config {
   }
 
   public static class Variants {
-    public float chance = 0.01f;
+    public double chance = 0.01f;
     public int frostWeight = 1;
     public int flameWeight = 1;
   }
@@ -75,13 +75,13 @@ public class Config {
   }
 
   public static class EquipmentConfig {
-    public FloatList armorChances = FloatList.of(0.1f, 0.1f, 0.1f, 0.1f);
+    public DoubleList armorChances = DoubleList.of(0.1f, 0.1f, 0.1f, 0.1f);
     public IntList armorMaterialWeights =
         IntList.of(1, 10, 100, 50, 50, 100, 10);
 
     public IntList weaponTypeWeights = IntList.of(100, 20, 20, 75, 1);
     public IntList weaponMaterialWeights = IntList.of(1, 10, 100, 50, 50, 100);
-    public float weaponChance = 0.1f;
+    public double weaponChance = 0.1f;
   }
 
   public static class TrimConfig {
@@ -94,7 +94,7 @@ public class Config {
         IntList.of(100, 100, 1, 50, 100, 100, 100, 10, 100, 100);
 
     public boolean vanillaOnly = true;
-    public float chance = 0.1f;
+    public double chance = 0.1f;
   }
 
   public static class StatusEffectConfig {
@@ -105,11 +105,12 @@ public class Config {
         "conduit_power", "dolphins_grace");
 
     public int maxTimeInTicks = -1;
-    public FloatList incrementalChances = FloatList.of(0.1f, 0.5f, 0.8f, 0.9f);
+    public DoubleList incrementalChances =
+        DoubleList.of(0.1f, 0.5f, 0.8f, 0.9f);
     public int maxAmplifier = 5;
   }
 
   public record Range(int min, int max) {}
 
-  public record SpawnRange(float chance, int min, int max) {}
+  public record SpawnRange(double chance, int min, int max) {}
 }

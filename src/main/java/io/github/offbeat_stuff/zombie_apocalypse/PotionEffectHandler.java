@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 public class PotionEffectHandler {
 
   private static List<StatusEffect> effects;
-  private static List<Float> chances;
+  private static List<Double> chances;
   private static int maxTimeInTicks;
   private static int maxAmplifier;
 
@@ -53,11 +53,11 @@ public class PotionEffectHandler {
   public static class RawStatusEffectHandler {
     public List<String> effects = List.of();
     public int maxTimeInTicks;
-    public List<Float> incrementalChances;
+    public List<Double> incrementalChances;
     public int maxAmplifier;
 
     public RawStatusEffectHandler(List<String> effects, int maxTimeInTicks,
-                                  List<Float> incrementalChances,
+                                  List<Double> incrementalChances,
                                   int maxAmplifier) {
       this.effects = effects;
       this.maxTimeInTicks = maxTimeInTicks;

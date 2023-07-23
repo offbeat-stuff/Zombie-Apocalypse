@@ -14,11 +14,11 @@ import net.minecraft.util.math.MathHelper;
 
 public class Common {
   public static class SpawnParameters {
-    public float chance;
+    public double chance;
     public int min;
     public int max;
 
-    public SpawnParameters(float chance, int min, int max) {
+    public SpawnParameters(double chance, int min, int max) {
       this.chance = chance;
       this.min = min;
       this.max = max;
@@ -78,7 +78,7 @@ public class Common {
   }
 
   public static ItemStack randomEnchanctedItemStack(List<Item> items,
-                                                    List<Float> chances) {
+                                                    List<Double> chances) {
     Item item = ProbabilityHandler.chooseRandom(items, chances);
     if (item == null) {
       return ItemStack.EMPTY;
