@@ -1,62 +1,108 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
 
-import io.github.offbeat_stuff.zombie_apocalypse.ArmorHandler;
+import static io.github.offbeat_stuff.zombie_apocalypse.Utils.*;
+
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHandler;
-import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
-import io.github.offbeat_stuff.zombie_apocalypse.WeaponHandler;
-import io.github.offbeat_stuff.zombie_apocalypse.config.Common.Range;
-import io.github.offbeat_stuff.zombie_apocalypse.config.Config.SpawnConfig;
-import java.util.List;
-import java.util.function.Predicate;
-import net.minecraft.util.Identifier;
+import io.github.offbeat_stuff.zombie_apocalypse.EquipmentHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.ScreamHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.SpawnHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.StatusEffectHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.VersionDependent;
+import io.github.offbeat_stuff.zombie_apocalypse.config.Config.*;
 import net.minecraft.util.math.MathHelper;
 
 public class ConfigHandler {
 
   public static boolean zombiesBurnInSunlight;
 
-  public static Predicate<Integer> isTimeRight;
-
-  // Enchantment levels for armor and weapons
-  public static Range enchantmentLevelRange = new Range(5, 40);
-
-  public static List<Identifier> allowedDimensions;
-
-  public static void handleConfig(Config config) {
+  public static void load(Config config) {
     zombiesBurnInSunlight = config.zombiesBurnInSunlight;
-    ScreamHandler.handle(config.doScream);
+    ScreamHandler.setDoScream(config.doScream);
 
-    ArmorHandler.handleArmorConfig(config.Armor);
-    WeaponHandler.handleWeaponConfig(config.Weapon);
-    PotionEffectHandler.handleRaw(config.statusEffects);
-    ArmorTrimHandler.handleRawTrimHandler(config.ArmorTrims);
-
-    SpawnHandler.handle(config.spawn);
-
-    isTimeRight = config.spawn.timeRange.toModPredicate(24000);
-
-    config.enchantmentLevelRange.min =
-        Math.max(1, config.enchantmentLevelRange.min);
-    config.enchantmentLevelRange.max =
-        Math.max(1, config.enchantmentLevelRange.max);
-    enchantmentLevelRange = config.enchantmentLevelRange;
-
-    allowedDimensions = config.spawn.allowedDimensions.stream()
-                            .map(f -> new Identifier(f))
-                            .toList();
+    SpawnHandler.load(config.Spawning);
+    EquipmentHandler.load(config.Equipment);
+    StatusEffectHandler.load(config.statusEffects);
+    ArmorTrimHandler.load(config.ArmorTrims);
   }
 
   public static void correct(Config config) {
-    max(config.enchantmentLevel, 0);
     correct(config.Spawning);
+    correct(config.Equipment);
+    correct(config.ArmorTrims);
+    correct(config.statusEffects);
   }
 
   private static void correct(SpawnConfig conf) {
     conf.lightLevel = MathHelper.clamp(conf.lightLevel, 0, 15);
+    conf.mobIds = identifiers(conf.mobIds, VersionDependent::isZombie);
+    conf.mobWeights = withSize(conf.mobWeights, conf.mobIds.size());
+
+    conf.minPlayerDistance = natural(conf.minPlayerDistance);
+    conf.maxZombieCountPerPlayer = natural(conf.maxZombieCountPerPlayer);
+    correct(conf.axisSpawn, conf.minPlayerDistance);
+    correct(conf.planeSpawn, conf.minPlayerDistance);
+    correct(conf.boxSpawn, conf.minPlayerDistance);
+
+    conf.timeRange.min = MathHelper.clamp(conf.timeRange.min, 0, 24000);
+    conf.timeRange.max = MathHelper.clamp(conf.timeRange.max, 0, 24000);
+
+    conf.allowedDimensions = identifiers(conf.allowedDimensions);
+
+    conf.variants.chance = chance(conf.variants.chance);
+    conf.variants.frostWeight = natural(conf.variants.frostWeight);
+    conf.variants.flameWeight = natural(conf.variants.flameWeight);
+
+    conf.instantSpawning.maxSpawnAttemptsPerTick =
+        natural(conf.instantSpawning.maxSpawnAttemptsPerTick);
+    conf.instantSpawning.maxSpawnsPerTick =
+        natural(conf.instantSpawning.maxSpawnsPerTick);
   }
 
-  private static void max(Range v, int min) {
-    v.min = Math.max(v.min, min);
-    v.max = Math.max(v.max, min);
+  private static void correct(EquipmentConfig conf) {
+    conf.armorChances = withSize(conf.armorChances, 4);
+    conf.armorMaterialWeights = withSize(conf.armorMaterialWeights, 7);
+
+    conf.weaponTypeWeights = withSize(conf.weaponTypeWeights, 5);
+    conf.weaponMaterialWeights = withSize(conf.weaponMaterialWeights, 6);
+
+    conf.weaponChance = chance(conf.weaponChance);
+
+    correct(conf.enchantmentLevel);
+  }
+
+  private static void correct(TrimConfig conf) {
+    conf.materials = identifiers(
+        conf.materials,
+        id
+        -> conf.vanillaOnly || ArmorTrimHandler.vanillaMaterials.contains(id));
+    conf.materialWeights =
+        withSize(conf.materialWeights, conf.materials.size());
+
+    conf.patterns = identifiers(
+        conf.patterns,
+        id
+        -> conf.vanillaOnly || ArmorTrimHandler.vanillaPatterns.contains(id));
+    conf.patternWeights = withSize(conf.patternWeights, conf.patterns.size());
+
+    conf.chance = chance(conf.chance);
+  }
+
+  private static void correct(StatusEffectConfig conf) {
+    conf.ids = identifiers(conf.ids, VersionDependent::isStatusEffect);
+
+    conf.maxTimeInTicks = Math.max(conf.maxTimeInTicks, -1);
+    conf.incrementalChances = chances(conf.incrementalChances);
+    conf.maxAmplifier = natural(conf.maxAmplifier);
+  }
+
+  private static void correct(SpawnRange range, int minDist) {
+    range.chance = chance(range.chance);
+    range.min = Math.max(range.min, minDist);
+    range.max = Math.max(range.max, range.min);
+  }
+
+  private static void correct(Range range) {
+    range.min = natural(range.min);
+    range.max = Math.max(range.max, range.min);
   }
 }

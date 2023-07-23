@@ -7,6 +7,9 @@ import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -35,6 +38,26 @@ public class Utils {
 
   public static boolean roll(double chance) {
     return XRANDOM.nextDouble() < chance;
+  }
+
+  public static ObjectList<Identifier> identified(ObjectList<String> ids) {
+    return ids.stream()
+        .map(id -> new Identifier(id))
+        .collect(ObjectImmutableList.toList());
+  }
+
+  public static ObjectList<String> identifiers(ObjectList<String> ids,
+                                               Predicate<String> filter) {
+    return ids.stream()
+        .map(id -> identifier(id))
+        .filter(filter)
+        .collect(ObjectImmutableList.toList());
+  }
+
+  public static ObjectList<String> identifiers(ObjectList<String> ids) {
+    return ids.stream()
+        .map(id -> identifier(id))
+        .collect(ObjectImmutableList.toList());
   }
 
   public static String identifier(String id) {

@@ -4,8 +4,6 @@ import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
-import io.github.offbeat_stuff.zombie_apocalypse.config.ScreamHandler;
-import io.github.offbeat_stuff.zombie_apocalypse.config.SpawnHandler;
 import java.io.IOException;
 import java.util.Random;
 import net.fabricmc.api.ModInitializer;
@@ -41,7 +39,7 @@ public class ZombieMod implements ModInitializer {
       config = new Config();
     }
 
-    ConfigHandler.handleConfig(config);
+    ConfigHandler.load(config);
 
     if (settingsFile.exists())
       settingsFile.delete();
@@ -55,15 +53,18 @@ public class ZombieMod implements ModInitializer {
   public static boolean wasTimeRight = false;
 
   private void spawnZombiesInWorld(ServerWorld world) {
-    if (!(ConfigHandler.allowedDimensions.contains(
-            world.getRegistryKey().getValue())))
-      return;
-
-    var time = world.getTimeOfDay() % 24000;
-    if (!ConfigHandler.isTimeRight.test((int)time)) {
-      wasTimeRight = false;
+    if (!SpawnHandler.checkWorld(world)) {
       return;
     }
+    // if (!(ConfigHandler.allowedDimensions.contains(
+    //         world.getRegistryKey().getValue())))
+    //   return;
+
+    // var time = world.getTimeOfDay() % 24000;
+    // if (!ConfigHandler.isTimeRight.test((int)time)) {
+    //   wasTimeRight = false;
+    //   return;
+    // }
 
     if (!wasTimeRight) {
       for (var player : world.getPlayers()) {

@@ -65,16 +65,7 @@ public class Common {
 
   public static Item getItem(String idString) {
     var id = new Identifier(idString);
-    if (!Registries.ITEM.containsId(id))
-      return null;
     return Registries.ITEM.get(id);
-  }
-
-  public static List<Item> getItems(List<String> idStrings) {
-    return idStrings.stream()
-        .map(Common::getItem)
-        .filter(f -> f != null)
-        .toList();
   }
 
   public static ItemStack randomEnchanctedItemStack(List<Item> items,

@@ -1,5 +1,6 @@
 package io.github.offbeat_stuff.zombie_apocalypse;
 
+import static io.github.offbeat_stuff.zombie_apocalypse.Utils.*;
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 
 import it.unimi.dsi.fastutil.ints.*;
@@ -13,14 +14,19 @@ public class WeightedList<T> {
   private final int sum;
   private final int right;
 
+  public static <T> WeightedList<T> newList(List<T> items, IntList weights) {
+    weights = withSize(weights, items.size());
+    return new WeightedList<T>(items, weights);
+  }
+
   public WeightedList(List<T> items, IntList weights) {
     var indices = IntImmutableList.toList(
-        IntStream.range(0, items.size()).filter(i -> weights.get(i) != 0));
+        IntStream.range(0, items.size()).filter(i -> weights.getInt(i) != 0));
     var cumSum = 0;
     var itemsFiltered = new ObjectArrayList<T>(indices.size());
     var weightsFiltered = new IntArrayList(indices.size());
     for (int i : indices) {
-      cumSum += weights.get(i);
+      cumSum += weights.getInt(i);
       weightsFiltered.add(cumSum);
       itemsFiltered.add(items.get(i));
     }
@@ -52,7 +58,7 @@ public class WeightedList<T> {
 
     while (left < right) {
       int mid = left + (right - left) / 2;
-      if (randomNumber <= this.weights.get(mid)) {
+      if (randomNumber <= this.weights.getInt(mid)) {
         right = mid;
       } else {
         left = mid + 1;
