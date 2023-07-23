@@ -1,14 +1,15 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
 
-import static io.github.offbeat_stuff.zombie_apocalypse.config.Common.*;
-
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.PotionEffectHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.WeaponHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.config.Common.Range;
+import io.github.offbeat_stuff.zombie_apocalypse.config.Config.SpawnConfig;
 import java.util.List;
 import java.util.function.Predicate;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 public class ConfigHandler {
 
@@ -45,18 +46,17 @@ public class ConfigHandler {
                             .toList();
   }
 
-  public static void correct(Config config) { max(config.enchantmentLevel, 0); }
+  public static void correct(Config config) {
+    max(config.enchantmentLevel, 0);
+    correct(config.Spawning);
+  }
 
-  private static void correct(SpawnConfig conf) {}
-
-  private static int max(int v, int min) {
-    if (v < min)
-      return min;
-    return v;
+  private static void correct(SpawnConfig conf) {
+    conf.lightLevel = MathHelper.clamp(conf.lightLevel, 0, 15);
   }
 
   private static void max(Range v, int min) {
-    v.min = max(v.min, min);
-    v.max = max(v.max, min);
+    v.min = Math.max(v.min, min);
+    v.max = Math.max(v.max, min);
   }
 }
