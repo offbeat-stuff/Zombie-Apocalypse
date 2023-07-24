@@ -1,6 +1,7 @@
 package io.github.offbeat_stuff.zombie_apocalypse;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.trim.ArmorTrim;
@@ -76,5 +77,9 @@ public class VersionDependent {
 
   public static boolean isStatusEffect(String id) {
     return Registries.STATUS_EFFECT.containsId(new Identifier(id));
+  }
+
+  public static StatusEffect getStatusEffect(String id) {
+    return Registries.STATUS_EFFECT.get(new Identifier(id));
   }
 }

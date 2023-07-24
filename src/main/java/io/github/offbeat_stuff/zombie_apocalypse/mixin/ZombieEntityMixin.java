@@ -1,7 +1,6 @@
 package io.github.offbeat_stuff.zombie_apocalypse.mixin;
 
-import io.github.offbeat_stuff.zombie_apocalypse.ArmorHandler;
-import io.github.offbeat_stuff.zombie_apocalypse.WeaponHandler;
+import io.github.offbeat_stuff.zombie_apocalypse.EquipmentHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieEntityInterface;
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieKind;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
@@ -58,7 +57,6 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
       return;
     }
 
-    ArmorHandler.handleZombie(world, zombie);
-    WeaponHandler.handleZombie(world, zombie);
+    EquipmentHandler.handleZombie(world, zombie);
   }
 }

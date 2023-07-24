@@ -2,23 +2,20 @@ package io.github.offbeat_stuff.zombie_apocalypse;
 
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 import static net.minecraft.util.math.Direction.Axis.VALUES;
-import static net.minecraft.util.math.MathHelper.clamp;
 
-import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler;
-import io.github.offbeat_stuff.zombie_apocalypse.ProbabilityHandler.WeightList;
-import io.github.offbeat_stuff.zombie_apocalypse.config.Common;
-import io.github.offbeat_stuff.zombie_apocalypse.config.Common.Range;
-import io.github.offbeat_stuff.zombie_apocalypse.config.Common.SpawnParameters;
+import io.github.offbeat_stuff.zombie_apocalypse.config.Config.Range;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.SpawnConfig;
+import io.github.offbeat_stuff.zombie_apocalypse.config.Config.SpawnRange;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
-import java.util.ArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import java.util.List;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -32,93 +29,74 @@ import net.minecraft.world.Difficulty;
 public class SpawnHandler {
 
   private static double minPlayerDistance;
-  private static int maxZombieCount;
+  private static int maxZombieCountPerPlayer;
 
-  private static List<EntityType<? extends ZombieEntity>> mobs;
-  private static List<Double> mobChances;
+  private static WeightedList<EntityType<? extends ZombieEntity>> mobs;
 
-  private static List<Double> variantChances;
+  private static double variant;
+  private static WeightedList<ZombieKind> variants;
 
   private static boolean spawnInstantly;
   private static boolean vanillaSpawnRestrictionOnFoot;
   private static boolean checkIfBlockBelowAllowsSpawning;
   private static int lightLevel;
 
-  private static SpawnParameters axis;
-  private static SpawnParameters plane;
-  private static SpawnParameters box;
+  private static SpawnRange axis;
+  private static SpawnRange plane;
+  private static SpawnRange box;
 
   private static int maxSpawnAttemptsPerTick;
   private static int maxSpawnsPerTick;
 
-  @SuppressWarnings("unchecked")
+  private static Range time;
+  private static ObjectList<Identifier> dimensions;
+
   public static ObjectList<EntityType<? extends ZombieEntity>>
   getMobs(List<String> mobs) {
-    var r = new ArrayList<EntityType<? extends ZombieEntity>>();
-
-    for (var id : mobs) {
-      var entry = Registries.ENTITY_TYPE.getOrEmpty(new Identifier(id));
-      if (!entry.isPresent()) {
-        continue;
-      }
-      var entity = entry.get();
-
-      if (entity != null) {
-        try {
-          r.add((EntityType<? extends ZombieEntity>)entity);
-        } catch (Exception e) {
-          continue;
-        }
-      }
-    }
-
-    return r.stream().toList();
+    return mobs.stream()
+        .map(VersionDependent::getZombie)
+        .filter(f -> f != null)
+        .collect(ObjectImmutableList.toList());
   }
 
-  public static boolean checkWorld(ServerWorld world) {}
+  public static boolean checkWorld(ServerWorld world) {
+    if (!(dimensions.contains(world.getRegistryKey().getValue())))
+      return false;
+
+    var ctime = world.getTimeOfDay() % 24000;
+    if (time.min < time.max) {
+      return ctime > time.min && ctime < time.max;
+    }
+
+    return ctime < time.min || ctime > time.max;
+  }
 
   public static void load(SpawnConfig conf) {
-    raw.minPlayerDistance = Math.max(0, raw.minPlayerDistance);
-    raw.maxZombieCount = Math.max(0, raw.maxZombieCount);
-    raw.axisSpawnParameters.fixup((int)raw.minPlayerDistance);
-    raw.planeSpawnParameters.fixup((int)raw.minPlayerDistance);
-    raw.boxSpawnParameters.fixup((int)raw.minPlayerDistance);
+    spawnInstantly = conf.spawnInstantly;
+    vanillaSpawnRestrictionOnFoot = conf.vanillaSpawnRestrictionOnFoot;
+    checkIfBlockBelowAllowsSpawning = conf.checkIfBlockBelowAllowsSpawning;
 
-    raw.timeRange.min = Math.max(raw.timeRange.min, 0) % 24000;
-    raw.timeRange.max = Math.max(raw.timeRange.max, 0) % 24000;
+    lightLevel = conf.lightLevel;
+    mobs = new WeightedList<EntityType<? extends ZombieEntity>>(
+        getMobs(conf.mobIds), conf.mobWeights);
 
-    raw.instantSpawning.maxSpawnAttemptsPerTick =
-        Math.max(raw.instantSpawning.maxSpawnAttemptsPerTick, 0);
-    raw.instantSpawning.maxSpawnsPerTick =
-        Math.max(raw.instantSpawning.maxSpawnsPerTick, 0);
+    variant = conf.variants.chance;
+    variants = new WeightedList<ZombieKind>(
+        ObjectList.of(ZombieKind.Frost, ZombieKind.Flame),
+        IntList.of(conf.variants.frostWeight, conf.variants.flameWeight));
 
-    raw.lightLevel = clamp(raw.lightLevel, 0, 15);
+    maxSpawnsPerTick = conf.instantSpawning.maxSpawnsPerTick;
+    maxSpawnAttemptsPerTick = conf.instantSpawning.maxSpawnAttemptsPerTick;
 
-    raw.mobIds =
-        raw.mobIds.stream()
-            .map(f -> f.trim().toLowerCase())
-            .filter(f -> Registries.ENTITY_TYPE.containsId(new Identifier(f)))
-            .toList();
+    minPlayerDistance = (double)conf.minPlayerDistance;
+    maxZombieCountPerPlayer = conf.maxZombieCountPerPlayer;
 
-    mobs = getMobs(conf.mobIds);
-    mobChances = raw.mobWeights.getChances(mobs.size());
-    variantChances = raw.variants.getChances();
+    axis = conf.axisSpawn;
+    plane = conf.planeSpawn;
+    box = conf.boxSpawn;
 
-    spawnInstantly = raw.spawnInstantly;
-    vanillaSpawnRestrictionOnFoot = raw.vanillaSpawnRestrictionOnFoot;
-    checkIfBlockBelowAllowsSpawning = raw.checkIfBlockBelowAllowsSpawning;
-    lightLevel = raw.lightLevel;
-
-    minPlayerDistance = raw.minPlayerDistance;
-    maxZombieCount = raw.maxZombieCount;
-    spawnInstantly = raw.spawnInstantly;
-
-    axis = raw.axisSpawnParameters;
-    plane = raw.planeSpawnParameters;
-    box = raw.boxSpawnParameters;
-
-    maxSpawnAttemptsPerTick = raw.instantSpawning.maxSpawnAttemptsPerTick;
-    maxSpawnsPerTick = raw.instantSpawning.maxSpawnsPerTick;
+    time = conf.timeRange;
+    dimensions = Utils.identified(conf.allowedDimensions);
   }
 
   private static boolean isBlockedAtFoot(ServerWorld world, BlockPos pos,
@@ -168,7 +146,7 @@ public class SpawnHandler {
 
   private static boolean spawnAttempt(ServerWorld world, BlockPos pos) {
 
-    var entityType = ProbabilityHandler.chooseRandom(mobs, mobChances);
+    var entityType = mobs.spit();
     var entity = entityType.create(world, null, null, pos, SpawnReason.NATURAL,
                                    false, false);
 
@@ -200,14 +178,8 @@ public class SpawnHandler {
 
     StatusEffectHandler.applyRandomPotionEffects(entity);
 
-    var kindChance = XRANDOM.nextDouble();
-
-    if (entity instanceof ZombieEntityInterface zombie) {
-      if (kindChance < variantChances.get(0)) {
-        zombie.setKind(ZombieKind.Frost);
-      } else if (kindChance < variantChances.get(1)) {
-        zombie.setKind(ZombieKind.Flame);
-      }
+    if (Utils.roll(variant) && entity instanceof ZombieEntityInterface zombie) {
+      zombie.setKind(variants.spit());
     }
 
     return true;
@@ -216,15 +188,15 @@ public class SpawnHandler {
   private static void handleSlowSpawning(ServerWorld world,
                                          ServerPlayerEntity player, int count,
                                          BlockPos pos) {
-    if (ProbabilityHandler.tryChance(axis.chance)) {
+    if (Utils.roll(axis.chance)) {
       spawnAttempt(world, randomAxisPos(pos));
     }
 
-    if (count > 1 && ProbabilityHandler.tryChance(plane.chance)) {
+    if (count > 1 && Utils.roll(plane.chance)) {
       spawnAttempt(world, randomPlanePos(pos));
     }
 
-    if (count > 2 && ProbabilityHandler.tryChance(box.chance)) {
+    if (count > 2 && Utils.roll(box.chance)) {
       spawnAttempt(world, randomBoxPos(pos));
     }
   }
@@ -255,6 +227,8 @@ public class SpawnHandler {
       return;
     }
 
+    var maxZombieCount = maxZombieCountPerPlayer * world.getPlayers().size();
+
     int zombieCount =
         world.getChunkManager().getSpawnInfo().getGroupToCount().getInt(
             SpawnGroup.MONSTER);
@@ -274,22 +248,30 @@ public class SpawnHandler {
 
   private static BlockPos randomAxisPos(BlockPos start) {
     return start.add(BlockPos.ORIGIN.offset(Axis.pickRandomAxis(XRANDOM),
-                                            axis.generateExclusive()));
+                                            generateExclusive(axis)));
   }
 
   private static BlockPos randomPlanePos(BlockPos start) {
     var r = XRANDOM.nextInt(3);
     var s = (r + XRANDOM.nextInt(2)) % 3;
 
-    return start.add(
-        BlockPos.ORIGIN.offset(VALUES[r], plane.generateExclusive())
-            .offset(VALUES[s], plane.generateInclusive()));
+    return start.add(BlockPos.ORIGIN.offset(VALUES[r], generateExclusive(plane))
+                         .offset(VALUES[s], generateInclusive(plane)));
   }
 
   private static BlockPos randomBoxPos(BlockPos start) {
     var r = XRANDOM.nextInt(3);
-    return start.add(BlockPos.ORIGIN.offset(VALUES[r], box.generateExclusive())
-                         .offset(VALUES[(r + 1) % 3], box.generateInclusive())
-                         .offset(VALUES[(r + 2) % 3], box.generateInclusive()));
+    return start.add(BlockPos.ORIGIN.offset(VALUES[r], generateExclusive(box))
+                         .offset(VALUES[(r + 1) % 3], generateInclusive(box))
+                         .offset(VALUES[(r + 2) % 3], generateInclusive(box)));
+  }
+
+  private static int generateExclusive(SpawnRange range) {
+    return XRANDOM.nextBetween(range.min, range.max) *
+        (XRANDOM.nextInt(2) == 0 ? -1 : 1);
+  }
+
+  private static int generateInclusive(SpawnRange range) {
+    return XRANDOM.nextBetween(-range.max, range.max);
   }
 }

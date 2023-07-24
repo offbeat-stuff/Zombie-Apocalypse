@@ -54,17 +54,9 @@ public class ZombieMod implements ModInitializer {
 
   private void spawnZombiesInWorld(ServerWorld world) {
     if (!SpawnHandler.checkWorld(world)) {
+      wasTimeRight = false;
       return;
     }
-    // if (!(ConfigHandler.allowedDimensions.contains(
-    //         world.getRegistryKey().getValue())))
-    //   return;
-
-    // var time = world.getTimeOfDay() % 24000;
-    // if (!ConfigHandler.isTimeRight.test((int)time)) {
-    //   wasTimeRight = false;
-    //   return;
-    // }
 
     if (!wasTimeRight) {
       for (var player : world.getPlayers()) {
