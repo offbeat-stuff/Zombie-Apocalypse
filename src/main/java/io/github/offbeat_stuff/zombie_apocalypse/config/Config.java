@@ -1,9 +1,7 @@
 package io.github.offbeat_stuff.zombie_apocalypse.config;
 
 import io.github.offbeat_stuff.zombie_apocalypse.ArmorTrimHandler;
-import it.unimi.dsi.fastutil.doubles.DoubleList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
+import java.util.List;
 
 public class Config {
   public boolean zombiesBurnInSunlight = false;
@@ -25,9 +23,8 @@ public class Config {
     public InstantSpawning instantSpawning = new InstantSpawning();
     public int lightLevel = 15;
 
-    public ObjectList<String> mobIds =
-        ObjectList.of("zombie", "zombie_villager");
-    public IntList mobWeights = IntList.of(95, 5);
+    public List<String> mobIds = List.of("zombie", "zombie_villager");
+    public List<Integer> mobWeights = List.of(95, 5);
     public Variants variants = new Variants();
 
     // minimum distance from player
@@ -50,8 +47,8 @@ public class Config {
     // each hour in minecraft represents 50 seconds or 1000 ticks
     public Range timeRange = new Range(1000, 13000);
 
-    public ObjectList<String> allowedDimensions =
-        ObjectList.of("overworld", "the_nether", "the_end");
+    public List<String> allowedDimensions =
+        List.of("overworld", "the_nether", "the_end");
   }
 
   public static class Variants {
@@ -66,12 +63,13 @@ public class Config {
   }
 
   public static class EquipmentConfig {
-    public DoubleList armorChances = DoubleList.of(0.1, 0.1, 0.1, 0.1);
-    public IntList armorMaterialWeights =
-        IntList.of(1, 10, 100, 50, 50, 100, 10);
+    public List<Double> armorChances = List.of(0.1, 0.1, 0.1, 0.1);
+    public List<Integer> armorMaterialWeights =
+        List.of(1, 10, 100, 50, 50, 100, 10);
 
-    public IntList weaponTypeWeights = IntList.of(100, 20, 20, 75, 1);
-    public IntList weaponMaterialWeights = IntList.of(1, 10, 100, 50, 50, 100);
+    public List<Integer> weaponTypeWeights = List.of(100, 20, 20, 75, 1);
+    public List<Integer> weaponMaterialWeights =
+        List.of(1, 10, 100, 50, 50, 100);
     public double weaponChance = 0.1;
 
     // Enchantment levels for armor and weapons
@@ -80,27 +78,27 @@ public class Config {
   }
 
   public static class TrimConfig {
-    public ObjectList<String> materials = ArmorTrimHandler.vanillaMaterials;
-    public IntList materialWeights =
-        IntList.of(100, 100, 1, 50, 100, 100, 100, 10, 100, 100);
+    public List<String> materials = ArmorTrimHandler.vanillaMaterials;
+    public List<Integer> materialWeights =
+        List.of(100, 100, 1, 50, 100, 100, 100, 10, 100, 100);
 
-    public ObjectList<String> patterns = ArmorTrimHandler.vanillaPatterns;
-    public IntList patternWeights =
-        IntList.of(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
+    public List<String> patterns = ArmorTrimHandler.vanillaPatterns;
+    public List<Integer> patternWeights =
+        List.of(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10);
 
     public boolean vanillaOnly = true;
     public double chance = 0.1;
   }
 
   public static class StatusEffectConfig {
-    public ObjectList<String> ids = ObjectList.of(
-        "speed", "haste", "strength", "jump_boost", "regeneration",
-        "resistance", "fire_resistance", "water_breathing", "invisibility",
-        "health_boost", "absorption", "saturation", "slow_falling",
-        "conduit_power", "dolphins_grace");
+    public List<String> ids =
+        List.of("speed", "haste", "strength", "jump_boost", "regeneration",
+                "resistance", "fire_resistance", "water_breathing",
+                "invisibility", "health_boost", "absorption", "saturation",
+                "slow_falling", "conduit_power", "dolphins_grace");
 
     public int maxTimeInTicks = -1;
-    public DoubleList incrementalChances = DoubleList.of(0.1, 0.5, 0.8, 0.9);
+    public List<Double> incrementalChances = List.of(0.1, 0.5, 0.8, 0.9);
     public int maxAmplifier = 5;
   }
 

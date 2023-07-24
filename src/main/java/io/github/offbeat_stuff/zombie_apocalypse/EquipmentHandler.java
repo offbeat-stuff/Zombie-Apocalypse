@@ -5,6 +5,7 @@ import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.EquipmentConfig;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.Range;
+import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
@@ -67,7 +68,7 @@ public class EquipmentHandler {
   private static boolean treasureAllowed;
 
   public static void load(EquipmentConfig conf) {
-    armor = conf.armorChances.toDoubleArray();
+    armor = (new DoubleImmutableList(conf.armorChances)).toDoubleArray();
     helmets = new WeightedList<Item>(HELMETS_LIST, conf.armorMaterialWeights);
     chestplates =
         new WeightedList<Item>(CHESTPLATE_LIST, conf.armorMaterialWeights);

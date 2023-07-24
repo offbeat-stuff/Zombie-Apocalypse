@@ -1,6 +1,7 @@
 package io.github.offbeat_stuff.zombie_apocalypse;
 
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.StatusEffectConfig;
+import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
@@ -40,7 +41,7 @@ public class StatusEffectHandler {
                   .map(VersionDependent::getStatusEffect)
                   .filter(f -> f != null)
                   .collect(ObjectImmutableList.toList());
-    chances = conf.incrementalChances;
+    chances = new DoubleImmutableList(conf.incrementalChances);
     maxTimeInTicks = conf.maxTimeInTicks;
     maxAmplifier = conf.maxAmplifier;
   }

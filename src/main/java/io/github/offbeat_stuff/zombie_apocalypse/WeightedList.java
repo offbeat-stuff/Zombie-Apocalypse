@@ -8,40 +8,40 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class WeightedList<T> {
-  private final List<T> items;
+  private final ObjectList<T> items;
   private final IntList weights;
   private final int sum;
   private final int right;
 
-  public WeightedList(List<List<T>> items, List<IntList> itemWeights,
-                      IntList weights) {
+  // public WeightedList(List<List<T>> items, List<List<Integer>> itemWeights,
+  //                     List<Integer> weights) {
+  //   this(IntStream.range(0, items.size())
+  //            .mapToObj(i
+  //                      -> filter(items.get(i), multiply(itemWeights.get(i),
+  //                                                       weights.get(i))))
+  //            .flatMap(c -> c.stream())
+  //            .collect(ObjectImmutableList.toList()));
+  // }
+
+  public WeightedList(List<List<T>> items, List<Integer> itemWeights,
+                      List<Integer> weights) {
     this(IntStream.range(0, items.size())
-             .mapToObj(i
-                       -> filter(items.get(i), multiply(itemWeights.get(i),
-                                                        weights.getInt(i))))
+             .mapToObj(
+                 i
+                 -> filter(items.get(i), multiply(itemWeights, weights.get(i))))
              .flatMap(c -> c.stream())
              .collect(ObjectImmutableList.toList()));
   }
 
-  public WeightedList(List<List<T>> items, IntList itemWeights,
-                      IntList weights) {
-    this(IntStream.range(0, items.size())
-             .mapToObj(i
-                       -> filter(items.get(i),
-                                 multiply(itemWeights, weights.getInt(i))))
-             .flatMap(c -> c.stream())
-             .collect(ObjectImmutableList.toList()));
+  private static List<Integer> multiply(List<Integer> list, int m) {
+    return IntImmutableList.toList(list.stream().mapToInt(i -> i * m));
   }
 
-  private static IntList multiply(IntList list, int m) {
-    return IntImmutableList.toList(list.intStream().map(i -> i * m));
-  }
-
-  public WeightedList(List<T> items, IntList weights) {
+  public WeightedList(List<T> items, List<Integer> weights) {
     this(filter(items, weights));
   }
 
-  public WeightedList(ObjectList<ObjectIntPair<T>> items) {
+  public WeightedList(List<ObjectIntPair<T>> items) {
     var cumSum = 0;
     var itemsFiltered = new ObjectArrayList<T>(items.size());
     var weightsFiltered = new IntArrayList(items.size());
@@ -56,11 +56,11 @@ public class WeightedList<T> {
     this.right = this.weights.size() - 1;
   }
 
-  private static <T> ObjectList<ObjectIntPair<T>> filter(List<T> items,
-                                                         IntList weights) {
+  private static <T> List<ObjectIntPair<T>> filter(List<T> items,
+                                                   List<Integer> weights) {
     return IntStream.range(0, items.size())
-        .filter(i -> weights.getInt(i) != 0)
-        .mapToObj(i -> ObjectIntPair.of(items.get(i), weights.getInt(i)))
+        .filter(i -> weights.get(i) != 0)
+        .mapToObj(i -> ObjectIntPair.of(items.get(i), weights.get(i)))
         .collect(ObjectImmutableList.toList());
   }
 
