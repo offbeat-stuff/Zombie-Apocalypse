@@ -18,4 +18,19 @@ public enum ZombieKind {
       break;
     }
   }
+
+  public int toInt() {
+    int i = 0;
+    for (var v : values()) {
+      if (this.equals(v)) {
+        return i;
+      }
+      i++;
+    }
+    return 0;
+  }
+
+  public static ZombieKind fromIndex(int i) {
+    return values()[Math.max(0, i % values().length)];
+  }
 }

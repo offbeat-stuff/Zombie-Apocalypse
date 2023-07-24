@@ -7,6 +7,8 @@ import io.github.offbeat_stuff.zombie_apocalypse.ZombieKind;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
@@ -46,7 +48,7 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
 
   @Inject(method = "initEquipment", at = @At("HEAD"), cancellable = true)
   private void initEquipment(Random random, LocalDifficulty difficulty,
-                               CallbackInfo ci) {
+                             CallbackInfo ci) {
     var zombie = (ZombieEntity)(Object)this;
 
     if (!SpawnHandler.isPartOfApocalypse(zombie)) {
@@ -59,5 +61,15 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
     }
 
     EquipmentHandler.initEquipment(world, zombie);
+  }
+
+  @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+  private void nbtIn(NbtCompound nbt) {
+    this.readNbt(nbt);
+  }
+
+  @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+  private void nbtOut(NbtCompound nbt) {
+    this.writeNbt(nbt);
   }
 }
