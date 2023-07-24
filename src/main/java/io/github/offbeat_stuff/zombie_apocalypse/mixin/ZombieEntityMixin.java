@@ -29,6 +29,9 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
 
   @Override
   public ZombieKind getKind() {
+    if (this.kind == null) {
+      this.kind = ZombieKind.Simple;
+    }
     return this.kind;
   }
 
