@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ZombieEntity.class)
 public abstract class ZombieEntityMixin implements ZombieEntityInterface {
 
-  private ZombieKind kind;
+  private ZombieKind kind = ZombieKind.Simple;
 
   @Inject(method = "burnsInDaylight", at = @At("HEAD"), cancellable = true)
   void dontBurn(CallbackInfoReturnable<Boolean> cir) {
@@ -29,9 +29,6 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
 
   @Override
   public ZombieKind getKind() {
-    if (this.kind == null) {
-      this.kind = ZombieKind.Simple;
-    }
     return this.kind;
   }
 
