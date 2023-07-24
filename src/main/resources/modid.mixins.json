@@ -6,7 +6,8 @@
   "mixins": [
     "ZombieEntityMixin",
     "EntityMixin",
-    "MobEntityMixin"
+    "MobEntityMixin",
+    "ZombieEquipmentMixin"
   ],
   "client": [],
   "injectors": {
