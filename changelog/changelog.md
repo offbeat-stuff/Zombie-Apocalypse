@@ -1,24 +1,19 @@
 ## New Features
 
-- Add vanilla spawn checks with config options
-- Specify light level for spawning in config [#5](https://github.com/offbeat-stuff/Zombie-Apocalypse/issues/5)
+- Major Rework on config system (mostly internal) (#8)
+- Specify Zombie types in config with ids
 
 
 ## Changes
 
-- frost and fire spawning chances are now independent
-- Zombies no longer spawn in sun if they burn in sunlight
+- Change config options for Zombie variants
+- extend freeze 1.5 secs + fire -> flame
+
 
 ## Fixes
 
-- Spawn zombies in nether by default
+- crash when ZombieKind is null
+- Crashing whem no config dir was present
+- No Crash on empty lists
 
 
-## Config Changes
-```toml
-[spawn]
-vanillaSpawnRestrictionOnFoot = true
-checkIfBlockBelowAllowsSpawning = true
-lightLevel = 15
-allowedDimensions = ["overworld", "the_nether", "the_end"]
-```
