@@ -85,9 +85,19 @@ public class EquipmentHandler {
     treasureAllowed = conf.treasureAllowed;
   }
 
-  private static ItemStack enchant(Item stack) {
+  public static void updateEnchantments(ServerWorld world,
+                                        ZombieEntity zombie) {
+    for (var slot : EquipmentSlot.values()) {
+      if (zombie.getEquippedStack(slot).isEmpty()) {
+        return;
+      }
+      zombie.equipStack(slot, enchant(zombie.getEquippedStack(slot)));
+    }
+  }
+
+  private static ItemStack enchant(ItemStack stack) {
     return EnchantmentHelper.enchant(
-        XRANDOM, stack.getDefaultStack(),
+        XRANDOM, stack,
         XRANDOM.nextBetween(enchanctmentLevel.min, enchanctmentLevel.max),
         treasureAllowed);
   }

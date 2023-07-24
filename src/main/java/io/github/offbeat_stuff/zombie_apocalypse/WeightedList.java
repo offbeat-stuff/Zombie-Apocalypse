@@ -97,7 +97,5 @@ public class WeightedList<T> {
     return left;
   }
 
-  public boolean contains(T entry) {
-    return items.contains(entry);
-  }
+  public boolean contains(T entry) { return items.contains(entry); }
 }
