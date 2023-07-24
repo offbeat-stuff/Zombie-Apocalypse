@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ZombieEntity.class)
@@ -40,12 +41,12 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
   }
 
   @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-  private void nbtIn(NbtCompound nbt) {
+  private void nbtIn(NbtCompound nbt, CallbackInfo info) {
     this.readNbt(nbt);
   }
 
   @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-  private void nbtOut(NbtCompound nbt) {
+  private void nbtOut(NbtCompound nbt, CallbackInfo info) {
     this.writeNbt(nbt);
   }
 }
