@@ -33,49 +33,50 @@ Latest Default Config
 ```toml
 zombiesBurnInSunlight = false
 doScream = true
-frostZombieChance = 0.01
-fireZombieChance = 0.01
 ```
 
 If zombies burn in sunlight then they wont spawn under the sky in the day.
-
-Frost Zombies give freezing effect on hit.
-
-Fire Zombie set player on fire on hit.
 
 Scream is just a on screen red message for now, will add sound later.
 
 
 ```toml
-[spawn]
+[Spawning]
 spawnInstantly = false
 vanillaSpawnRestrictionOnFoot = true
 checkIfBlockBelowAllowsSpawning = true
 lightLevel = 15
-minPlayerDistance = 16.0
-maxZombieCount = 150
-allowedDimensions = ["overworld", "ther_nether", "the_end"]
+mobIds = ["zombie", "zombie_villager"]
+mobWeights = [95, 5]
+minPlayerDistance = 16
+maxZombieCountPerPlayer = 150
+allowedDimensions = ["overworld", "the_nether", "the_end"]
 
-[spawn.instantSpawning]
+[Spawning.instantSpawning]
 maxSpawnAttemptsPerTick = 100
 maxSpawnsPerTick = 10
 
-[spawn.axisSpawnParameters]
+[Spawning.variants]
+chance = 0.01
+frostWeight = 1
+flameWeight = 1
+
+[Spawning.axisSpawn]
 chance = 0.1
 min = 16
 max = 48
 
-[spawn.planeSpawnParameters]
+[Spawning.planeSpawn]
 chance = 0.1
 min = 16
 max = 48
 
-[spawn.boxSpawnParameters]
+[Spawning.boxSpawn]
 chance = 0.1
 min = 24
 max = 64
 
-[spawn.timeRange]
+[Spawning.timeRange]
 min = 1000
 max = 13000
 ```
@@ -92,74 +93,51 @@ Time Range value will stay between 0 and 23999.
 
 > Note: day is 1000 and midnight is 18000.
 
+Frost Zombies give freezing effect on hit.
+
+Fire Zombie set player on fire on hit.
+
 ```toml
-[Armor]
-helmets = ["netherite", "diamond", "iron", "gold", "chainmail", "leather", "turtle"]
-chestplates = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
-leggings = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
-boots = ["netherite", "diamond", "iron", "gold", "chainmail", "leather"]
+[Equipment]
+armorChances = [0.1, 0.1, 0.1, 0.1]
+armorMaterialWeights = [1, 10, 100, 50, 50, 100, 10]
+weaponTypeWeights = [100, 20, 20, 75, 1]
+weaponMaterialWeights = [1, 10, 100, 50, 50, 100]
+weaponChance = 0.1
+treasureAllowed = true
 
-[Armor.chancesPerSlot]
-chances = [0.1, 0.1, 0.1, 0.1]
-defaultChance = 0.1
-
-[Armor.materialWeights]
-weights = [1, 10, 100, 50, 50, 100]
-weightsForExtraEntries = 10
+[Equipment.enchantmentLevel]
+min = 5
+max = 40
 ```
+
+TODO: Add a chance for enchanted gear.
 
 Slots are in order: `[head,chest,legs,boots]` 
-
-```toml
-[Weapon]
-swords = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-shovels = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-pickaxes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-axes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-hoes = ["netherite", "diamond", "iron", "gold", "stone", "wood"]
-chance = 0.1
-
-[Weapon.weightsForTools]
-weights = [100, 20, 20, 75, 1]
-weightsForExtraEntries = 100
-
-[Weapon.commonWeights]
-weights = [1, 10, 100, 50, 50, 100]
-weightsForExtraEntries = 100
-```
-
+Armor material are in order: `[netherite,diamond,iron,gold,chainmail,leather,turtle]`
 Tools are in order: `[swords,shovels,pickaxes,axes,hoes]`
+Tool material are in order: `[netherite,diamond,iron,gold,stone,wood]`
+
+`treasureAllowed` dictates treasure enchantments like mending.
 
 ```toml
 [ArmorTrims]
-patterns = ["sentry", "dune", "coast", "wild", "ward", "eye", "vex", "tide", "snout", "rib", "spire"]
 materials = ["quartz", "iron", "netherite", "redstone", "copper", "gold", "emerald", "diamond", "lapis", "amethyst"]
+materialWeights = [100, 100, 1, 50, 100, 100, 100, 10, 100, 100]
+patterns = ["sentry", "dune", "coast", "wild", "ward", "eye", "vex", "tide", "snout", "rib", "spire"]
+patternWeights = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
 vanillaOnly = true
 chance = 0.1
-
-[ArmorTrims.patternsWeights]
-weights = []
-weightsForExtraEntries = 110
-
-[ArmorTrims.materialsWeights]
-weights = [100, 100, 1, 50, 100, 100, 100, 10, 100, 100]
-weightsForExtraEntries = 100
 ```
 
 > Note: Armor trims can be added through datapacks and are tied to a world.
 
 ```toml
-[enchantmentLevelRange]
-min = 5
-max = 40
-
 [statusEffects]
-effects = ["speed", "haste", "strength", "jump_boost", "regeneration", "resistance", "fire_resistance", "water_breathing", "invisibility", "health_boost", "absorption", "saturation", "slow_falling", "conduit_power", "dolphins_grace"]
+ids = ["speed", "haste", "strength", "jump_boost", "regeneration", "resistance", "fire_resistance", "water_breathing", "invisibility", "health_boost", "absorption", "saturation", "slow_falling", "conduit_power", "dolphins_grace"]
 maxTimeInTicks = -1
 incrementalChances = [0.1, 0.5, 0.8, 0.9]
 maxAmplifier = 5
 ```
-
-Will add a chance for enchanted gear later. For now everything is enchanted.
 
 If maxTimeInTicks is -1 that means all effects will be infinite.
