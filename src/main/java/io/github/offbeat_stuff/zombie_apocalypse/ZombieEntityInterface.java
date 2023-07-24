@@ -10,13 +10,13 @@ public interface ZombieEntityInterface {
 
   public static String nbt_key = "apocalypse_variant";
 
-  default void readNbt(NbtCompound nbt) {
+  default void readNbtApocalypse(NbtCompound nbt) {
     if (nbt.contains(nbt_key, NbtElement.INT_TYPE)) {
       this.setKind(ZombieKind.fromIndex(nbt.getInt(nbt_key)));
     }
   }
 
-  default void writeNbt(NbtCompound nbt) {
+  default void writeNbtApocalypse(NbtCompound nbt) {
     nbt.putInt(nbt_key, this.getKind().toInt());
   }
 }

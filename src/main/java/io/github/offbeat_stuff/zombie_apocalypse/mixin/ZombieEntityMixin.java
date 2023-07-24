@@ -42,11 +42,11 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
 
   @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
   private void nbtIn(NbtCompound nbt, CallbackInfo info) {
-    this.readNbt(nbt);
+    this.readNbtApocalypse(nbt);
   }
 
   @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
   private void nbtOut(NbtCompound nbt, CallbackInfo info) {
-    this.writeNbt(nbt);
+    this.writeNbtApocalypse(nbt);
   }
 }
