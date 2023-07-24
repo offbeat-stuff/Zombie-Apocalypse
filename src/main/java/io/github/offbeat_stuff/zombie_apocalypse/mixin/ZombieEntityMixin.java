@@ -8,7 +8,6 @@ import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;

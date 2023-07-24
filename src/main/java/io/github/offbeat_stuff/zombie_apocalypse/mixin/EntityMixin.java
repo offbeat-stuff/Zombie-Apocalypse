@@ -16,7 +16,6 @@ public abstract class EntityMixin {
     if (this instanceof ZombieEntityInterface zombie &&
         zombie.getKind().equals(ZombieKind.Flame)) {
       cir.setReturnValue(true);
-      cir.cancel();
     }
   }
 }
