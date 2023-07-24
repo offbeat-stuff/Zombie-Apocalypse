@@ -45,7 +45,7 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
   }
 
   @Inject(method = "initEquipment", at = @At("HEAD"), cancellable = true)
-  protected void initEquipment(Random random, LocalDifficulty difficulty,
+  private void initEquipment(Random random, LocalDifficulty difficulty,
                                CallbackInfo ci) {
     var zombie = (ZombieEntity)(Object)this;
 

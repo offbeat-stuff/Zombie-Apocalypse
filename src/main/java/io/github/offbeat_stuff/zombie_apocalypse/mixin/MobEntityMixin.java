@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MobEntity.class)
 public class MobEntityMixin {
   @Inject(method = "updateEnchantments", at = @At("HEAD"), cancellable = true)
-  protected void updateEnchantments(Random random, LocalDifficulty difficulty,
+  private void updateEnchantments(Random random, LocalDifficulty difficulty,
                                     CallbackInfo ci) {
     if (!((Object)this instanceof ZombieEntity)) {
       return;
