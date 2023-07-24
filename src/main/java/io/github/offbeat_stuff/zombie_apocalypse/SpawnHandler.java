@@ -69,6 +69,11 @@ public class SpawnHandler {
     return ctime < time.min || ctime > time.max;
   }
 
+  @SuppressWarnings("unchecked")
+  public static boolean isPartOfApocalypse(ZombieEntity entity) {
+    return mobs.contains((EntityType<? extends ZombieEntity>)entity.getType());
+  }
+
   public static void load(SpawnConfig conf) {
     spawnInstantly = conf.spawnInstantly;
     vanillaSpawnRestrictionOnFoot = conf.vanillaSpawnRestrictionOnFoot;

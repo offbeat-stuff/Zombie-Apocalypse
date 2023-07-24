@@ -92,25 +92,34 @@ public class EquipmentHandler {
         treasureAllowed);
   }
 
-  public static void handleZombie(ServerWorld world, ZombieEntity zombie) {
+  public static void initEquipment(ServerWorld world, ZombieEntity zombie) {
     if (roll(armor[0])) {
-      zombie.equipStack(EquipmentSlot.HEAD, enchant(helmets.spit()));
+      equip(zombie, helmets.spit(), EquipmentSlot.HEAD);
     }
 
     if (roll(armor[1])) {
-      zombie.equipStack(EquipmentSlot.CHEST, enchant(chestplates.spit()));
+      equip(zombie, chestplates.spit(), EquipmentSlot.CHEST);
     }
 
     if (roll(armor[2])) {
-      zombie.equipStack(EquipmentSlot.LEGS, enchant(leggings.spit()));
+      equip(zombie, leggings.spit(), EquipmentSlot.LEGS);
     }
 
     if (roll(armor[3])) {
-      zombie.equipStack(EquipmentSlot.FEET, enchant(boots.spit()));
+      equip(zombie, boots.spit(), EquipmentSlot.FEET);
     }
 
     if (roll(weapon)) {
-      zombie.equipStack(EquipmentSlot.MAINHAND, enchant(weapons.spit()));
+      equip(zombie, weapons.spit(), EquipmentSlot.MAINHAND);
     }
+  }
+
+  private static void equip(ZombieEntity zombie, Item item,
+                            EquipmentSlot slot) {
+    if (item == null) {
+      return;
+    }
+
+    zombie.equipStack(slot, item.getDefaultStack());
   }
 }
