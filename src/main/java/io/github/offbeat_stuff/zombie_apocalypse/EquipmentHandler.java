@@ -1,12 +1,14 @@
 package io.github.offbeat_stuff.zombie_apocalypse;
 
-import io.github.offbeat_stuff.zombie_apocalypse.config.Common;
+import static io.github.offbeat_stuff.zombie_apocalypse.Utils.*;
+import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
+
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.EquipmentConfig;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.Range;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import java.util.List;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -62,59 +64,52 @@ public class EquipmentHandler {
   private static double weapon;
 
   private static Range enchanctmentLevel;
+  private static boolean treasureAllowed;
 
-  public static void load(EquipmentConfig conf) {}
+  public static void load(EquipmentConfig conf) {
+    armor = conf.armorChances.toDoubleArray();
+    helmets = new WeightedList<Item>(HELMETS_LIST, conf.armorMaterialWeights);
+    chestplates =
+        new WeightedList<Item>(CHESTPLATE_LIST, conf.armorMaterialWeights);
+    leggings = new WeightedList<Item>(LEGGINGS_LIST, conf.armorMaterialWeights);
+    boots = new WeightedList<Item>(BOOTS_LIST, conf.armorMaterialWeights);
 
-  private static ItemStack randomTool() {
-    var chance = XRANDOM.nextDouble();
-    chance -= CHANCES.get(0);
-    if (chance < 0) {
-      return Common.randomEnchanctedItemStack(SWORDS, SWORDS_CHANCES);
-    }
-    chance -= CHANCES.get(1);
-    if (chance < 0) {
-      return Common.randomEnchanctedItemStack(SHOVELS, SHOVELS_CHANCES);
-    }
-    chance -= CHANCES.get(2);
-    if (chance < 0) {
-      return Common.randomEnchanctedItemStack(PICKAXES, PICKAXES_CHANCES);
-    }
-    chance -= CHANCES.get(3);
-    if (chance < 0) {
-      return Common.randomEnchanctedItemStack(AXES, AXES_CHANCES);
-    }
-    return Common.randomEnchanctedItemStack(HOES, HOES_CHANCES);
+    weapon = conf.weaponChance;
+    weapons = new WeightedList<Item>(
+        ObjectList.of(SWORDS_LIST, SHOVELS_LIST, PICKAXES_LIST, AXES_LIST,
+                      HOES_LIST),
+        conf.weaponMaterialWeights, conf.weaponTypeWeights);
+
+    enchanctmentLevel = conf.enchantmentLevel;
+    treasureAllowed = conf.treasureAllowed;
   }
 
-  private static ItemStack randomArmor(ServerWorld world, List<Item> items,
-                                       List<Double> chances) {
-    var r = Common.randomEnchanctedItemStack(items, chances);
-    ArmorTrimHandler.applyRandomArmorTrim(world, r);
-    return r;
+  private static ItemStack enchant(Item stack) {
+    return EnchantmentHelper.enchant(
+        XRANDOM, stack.getDefaultStack(),
+        XRANDOM.nextBetween(enchanctmentLevel.min, enchanctmentLevel.max),
+        treasureAllowed);
   }
 
-  public static void handleZombie(ServerWorld world, LivingEntity entity) {
-    if (tryChance(chances.get(0))) {
-      entity.equipStack(EquipmentSlot.HEAD,
-                        randomArmor(world, HELMETS, HELMETS_CHANCES));
-    }
-    if (tryChance(chances.get(1))) {
-      entity.equipStack(EquipmentSlot.CHEST,
-                        randomArmor(world, CHESTPLATES, CHESTPLATES_CHANCES));
-    }
-    if (tryChance(chances.get(2))) {
-      entity.equipStack(EquipmentSlot.LEGS,
-                        randomArmor(world, LEGGINGS, LEGGINGS_CHANCES));
-    }
-    if (tryChance(chances.get(3))) {
-      entity.equipStack(EquipmentSlot.FEET,
-                        randomArmor(world, BOOTS, BOOTS_CHANCES));
+  public static void handleZombie(ServerWorld world, ZombieEntity zombie) {
+    if (roll(armor[0])) {
+      zombie.equipStack(EquipmentSlot.HEAD, enchant(helmets.spit()));
     }
 
-    if (!ProbabilityHandler.tryChance(chance)) {
-      return;
+    if (roll(armor[1])) {
+      zombie.equipStack(EquipmentSlot.CHEST, enchant(chestplates.spit()));
     }
 
-    entity.equipStack(EquipmentSlot.MAINHAND, randomTool());
+    if (roll(armor[2])) {
+      zombie.equipStack(EquipmentSlot.LEGS, enchant(leggings.spit()));
+    }
+
+    if (roll(armor[3])) {
+      zombie.equipStack(EquipmentSlot.FEET, enchant(boots.spit()));
+    }
+
+    if (roll(weapon)) {
+      zombie.equipStack(EquipmentSlot.MAINHAND, enchant(weapons.spit()));
+    }
   }
 }

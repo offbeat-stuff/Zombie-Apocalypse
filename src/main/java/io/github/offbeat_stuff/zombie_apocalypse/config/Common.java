@@ -83,7 +83,6 @@ public class Common {
     if (prefix.equals("gold")) {
       prefix = "golden";
     }
-
     return prefix + "_" + suffix;
   }
 

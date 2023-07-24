@@ -76,6 +76,7 @@ public class Config {
 
     // Enchantment levels for armor and weapons
     public Range enchantmentLevel = new Range(5, 40);
+    public boolean treasureAllowed = true;
   }
 
   public static class TrimConfig {
