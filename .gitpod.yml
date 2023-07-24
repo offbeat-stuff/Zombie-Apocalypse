@@ -8,3 +8,4 @@ vscode:
     - vscjava.vscode-java-pack
     - eamodio.gitlens
     - xaver.clang-format
+    - mnxn.jvm-bytecode-viewer
