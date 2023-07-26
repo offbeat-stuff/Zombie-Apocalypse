@@ -1,10 +1,10 @@
+## New Features
+
+- retain zombie kind across world saves (potentially)
+
+
 ## Changes
 
-- Flame zombies are now fire Immune
-
-
-## Fixes
-
-- sanitize config
+- armor on zombified piglin + drowned
 
 
