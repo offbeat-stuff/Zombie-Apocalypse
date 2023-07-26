@@ -7,9 +7,7 @@ import io.github.offbeat_stuff.zombie_apocalypse.config.Config.Range;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.SpawnConfig;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.SpawnRange;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
-import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import java.util.List;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -49,9 +47,9 @@ public class SpawnHandler {
   private static int maxSpawnsPerTick;
 
   private static Range time;
-  private static ObjectList<Identifier> dimensions;
+  private static List<Identifier> dimensions;
 
-  public static ObjectList<EntityType<? extends ZombieEntity>>
+  public static List<EntityType<? extends ZombieEntity>>
   getMobs(List<String> mobs) {
     return mobs.stream()
         .map(VersionDependent::getZombie)
@@ -71,6 +69,11 @@ public class SpawnHandler {
     return ctime < time.min || ctime > time.max;
   }
 
+  @SuppressWarnings("unchecked")
+  public static boolean isPartOfApocalypse(ZombieEntity entity) {
+    return mobs.contains((EntityType<? extends ZombieEntity>)entity.getType());
+  }
+
   public static void load(SpawnConfig conf) {
     spawnInstantly = conf.spawnInstantly;
     vanillaSpawnRestrictionOnFoot = conf.vanillaSpawnRestrictionOnFoot;
@@ -82,8 +85,8 @@ public class SpawnHandler {
 
     variant = conf.variants.chance;
     variants = new WeightedList<ZombieKind>(
-        ObjectList.of(ZombieKind.Frost, ZombieKind.Flame),
-        IntList.of(conf.variants.frostWeight, conf.variants.flameWeight));
+        List.of(ZombieKind.Frost, ZombieKind.Flame),
+        List.of(conf.variants.frostWeight, conf.variants.flameWeight));
 
     maxSpawnsPerTick = conf.instantSpawning.maxSpawnsPerTick;
     maxSpawnAttemptsPerTick = conf.instantSpawning.maxSpawnAttemptsPerTick;

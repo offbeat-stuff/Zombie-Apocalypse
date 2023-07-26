@@ -4,11 +4,9 @@ import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 
 import it.unimi.dsi.fastutil.chars.CharPredicate;
 import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
-import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.ints.IntImmutableList;
-import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import net.minecraft.util.Identifier;
@@ -16,18 +14,19 @@ import net.minecraft.util.math.MathHelper;
 
 public class Utils {
 
-  public static IntList withSize(IntList list, int len) {
+  public static List<Integer> withSizeI(List<Integer> list, int len) {
     return IntImmutableList.toList(IntStream.range(0, len).map(
-        f -> f < list.size() ? natural(list.getInt(f)) : 0));
+        f -> f < list.size() ? natural(list.get(f)) : 0));
   }
 
-  public static DoubleList chances(DoubleList list) {
-    return DoubleImmutableList.toList(list.doubleStream().map(f -> chance(f)));
+  public static List<Double> chances(List<Double> list) {
+    return DoubleImmutableList.toList(
+        list.stream().mapToDouble(f -> chance(f)));
   }
 
-  public static DoubleList withSize(DoubleList list, int len) {
+  public static List<Double> withSize(List<Double> list, int len) {
     return DoubleImmutableList.toList(IntStream.range(0, len).mapToDouble(
-        f -> f < list.size() ? chance(list.getDouble(f)) : 0f));
+        f -> f < list.size() ? chance(list.get(f)) : 0f));
   }
 
   public static double chance(double chance) {
@@ -40,21 +39,21 @@ public class Utils {
     return XRANDOM.nextDouble() < chance;
   }
 
-  public static ObjectList<Identifier> identified(ObjectList<String> ids) {
+  public static List<Identifier> identified(List<String> ids) {
     return ids.stream()
         .map(id -> new Identifier(id))
         .collect(ObjectImmutableList.toList());
   }
 
-  public static ObjectList<String> identifiers(ObjectList<String> ids,
-                                               Predicate<String> filter) {
+  public static List<String> identifiers(List<String> ids,
+                                         Predicate<String> filter) {
     return ids.stream()
         .map(id -> identifier(id))
         .filter(filter)
         .collect(ObjectImmutableList.toList());
   }
 
-  public static ObjectList<String> identifiers(ObjectList<String> ids) {
+  public static List<String> identifiers(List<String> ids) {
     return ids.stream()
         .map(id -> identifier(id))
         .collect(ObjectImmutableList.toList());

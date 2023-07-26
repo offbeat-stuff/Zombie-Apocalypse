@@ -5,6 +5,7 @@ import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.EquipmentConfig;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.Range;
+import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EquipmentSlot;
@@ -67,7 +68,7 @@ public class EquipmentHandler {
   private static boolean treasureAllowed;
 
   public static void load(EquipmentConfig conf) {
-    armor = conf.armorChances.toDoubleArray();
+    armor = (new DoubleImmutableList(conf.armorChances)).toDoubleArray();
     helmets = new WeightedList<Item>(HELMETS_LIST, conf.armorMaterialWeights);
     chestplates =
         new WeightedList<Item>(CHESTPLATE_LIST, conf.armorMaterialWeights);
@@ -84,32 +85,51 @@ public class EquipmentHandler {
     treasureAllowed = conf.treasureAllowed;
   }
 
-  private static ItemStack enchant(Item stack) {
+  public static void updateEnchantments(ServerWorld world,
+                                        ZombieEntity zombie) {
+    for (var slot : EquipmentSlot.values()) {
+      if (zombie.getEquippedStack(slot).isEmpty()) {
+        return;
+      }
+      zombie.equipStack(slot, enchant(zombie.getEquippedStack(slot)));
+    }
+  }
+
+  private static ItemStack enchant(ItemStack stack) {
     return EnchantmentHelper.enchant(
-        XRANDOM, stack.getDefaultStack(),
+        XRANDOM, stack,
         XRANDOM.nextBetween(enchanctmentLevel.min, enchanctmentLevel.max),
         treasureAllowed);
   }
 
-  public static void handleZombie(ServerWorld world, ZombieEntity zombie) {
+  public static void initEquipment(ServerWorld world, ZombieEntity zombie) {
     if (roll(armor[0])) {
-      zombie.equipStack(EquipmentSlot.HEAD, enchant(helmets.spit()));
+      equip(zombie, helmets.spit(), EquipmentSlot.HEAD);
     }
 
     if (roll(armor[1])) {
-      zombie.equipStack(EquipmentSlot.CHEST, enchant(chestplates.spit()));
+      equip(zombie, chestplates.spit(), EquipmentSlot.CHEST);
     }
 
     if (roll(armor[2])) {
-      zombie.equipStack(EquipmentSlot.LEGS, enchant(leggings.spit()));
+      equip(zombie, leggings.spit(), EquipmentSlot.LEGS);
     }
 
     if (roll(armor[3])) {
-      zombie.equipStack(EquipmentSlot.FEET, enchant(boots.spit()));
+      equip(zombie, boots.spit(), EquipmentSlot.FEET);
     }
 
     if (roll(weapon)) {
-      zombie.equipStack(EquipmentSlot.MAINHAND, enchant(weapons.spit()));
+      equip(zombie, weapons.spit(), EquipmentSlot.MAINHAND);
     }
+  }
+
+  private static void equip(ZombieEntity zombie, Item item,
+                            EquipmentSlot slot) {
+    if (item == null) {
+      return;
+    }
+
+    zombie.equipStack(slot, item.getDefaultStack());
   }
 }

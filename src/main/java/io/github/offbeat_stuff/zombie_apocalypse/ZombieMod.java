@@ -39,6 +39,7 @@ public class ZombieMod implements ModInitializer {
       config = new Config();
     }
 
+    ConfigHandler.correct(config);
     ConfigHandler.load(config);
 
     if (settingsFile.exists())

@@ -1,21 +1,21 @@
 package io.github.offbeat_stuff.zombie_apocalypse.mixin;
 
-import io.github.offbeat_stuff.zombie_apocalypse.EquipmentHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieEntityInterface;
 import io.github.offbeat_stuff.zombie_apocalypse.ZombieKind;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ZombieEntity.class)
 public abstract class ZombieEntityMixin implements ZombieEntityInterface {
 
-  private ZombieKind kind;
+  private ZombieKind kind = ZombieKind.Simple;
 
   @Inject(method = "burnsInDaylight", at = @At("HEAD"), cancellable = true)
   void dontBurn(CallbackInfoReturnable<Boolean> cir) {
@@ -40,23 +40,13 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
     this.kind.attack(target);
   }
 
-  @Inject(
-      method = "initialize",
-      at = @At(
-          value = "INVOKE",
-          target =
-              "Lnet/minecraft/entity/mob/ZombieEntity;initEquipment(Lnet/minecraft/util/math/random/Random;Lnet/minecraft/world/LocalDifficulty;)V")
-      ,
-      cancellable = true)
-  private void
-  handleEquipment(CallbackInfoReturnable<?> ci) {
-    ci.cancel();
-    var zombie = (ZombieEntity)(Object)this;
+  @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+  private void nbtIn(NbtCompound nbt, CallbackInfo info) {
+    this.readNbtApocalypse(nbt);
+  }
 
-    if (!(zombie.getWorld() instanceof ServerWorld world)) {
-      return;
-    }
-
-    EquipmentHandler.handleZombie(world, zombie);
+  @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+  private void nbtOut(NbtCompound nbt, CallbackInfo info) {
+    this.writeNbtApocalypse(nbt);
   }
 }

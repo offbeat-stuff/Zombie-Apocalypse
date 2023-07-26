@@ -4,7 +4,10 @@
   "package": "io.github.offbeat_stuff.zombie_apocalypse.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ZombieEntityMixin"
+    "ZombieEntityMixin",
+    "EntityMixin",
+    "MobEntityMixin",
+    "ZombieEquipmentMixin"
   ],
   "client": [],
   "injectors": {

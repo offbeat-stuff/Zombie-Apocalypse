@@ -9,6 +9,7 @@ import io.github.offbeat_stuff.zombie_apocalypse.SpawnHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.StatusEffectHandler;
 import io.github.offbeat_stuff.zombie_apocalypse.VersionDependent;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.*;
+import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
 import net.minecraft.util.math.MathHelper;
 
 public class ConfigHandler {
@@ -35,7 +36,7 @@ public class ConfigHandler {
   private static void correct(SpawnConfig conf) {
     conf.lightLevel = MathHelper.clamp(conf.lightLevel, 0, 15);
     conf.mobIds = identifiers(conf.mobIds, VersionDependent::isZombie);
-    conf.mobWeights = withSize(conf.mobWeights, conf.mobIds.size());
+    conf.mobWeights = withSizeI(conf.mobWeights, conf.mobIds.size());
 
     conf.minPlayerDistance = natural(conf.minPlayerDistance);
     conf.maxZombieCountPerPlayer = natural(conf.maxZombieCountPerPlayer);
@@ -60,10 +61,10 @@ public class ConfigHandler {
 
   private static void correct(EquipmentConfig conf) {
     conf.armorChances = withSize(conf.armorChances, 4);
-    conf.armorMaterialWeights = withSize(conf.armorMaterialWeights, 7);
+    conf.armorMaterialWeights = withSizeI(conf.armorMaterialWeights, 7);
 
-    conf.weaponTypeWeights = withSize(conf.weaponTypeWeights, 5);
-    conf.weaponMaterialWeights = withSize(conf.weaponMaterialWeights, 6);
+    conf.weaponTypeWeights = withSizeI(conf.weaponTypeWeights, 5);
+    conf.weaponMaterialWeights = withSizeI(conf.weaponMaterialWeights, 6);
 
     conf.weaponChance = chance(conf.weaponChance);
 
@@ -76,19 +77,20 @@ public class ConfigHandler {
         id
         -> conf.vanillaOnly || ArmorTrimHandler.vanillaMaterials.contains(id));
     conf.materialWeights =
-        withSize(conf.materialWeights, conf.materials.size());
+        withSizeI(conf.materialWeights, conf.materials.size());
 
     conf.patterns = identifiers(
         conf.patterns,
         id
         -> conf.vanillaOnly || ArmorTrimHandler.vanillaPatterns.contains(id));
-    conf.patternWeights = withSize(conf.patternWeights, conf.patterns.size());
+    conf.patternWeights = withSizeI(conf.patternWeights, conf.patterns.size());
 
     conf.chance = chance(conf.chance);
   }
 
   private static void correct(StatusEffectConfig conf) {
-    conf.ids = identifiers(conf.ids, VersionDependent::isStatusEffect);
+    conf.ids = identifiers(new ObjectImmutableList<String>(conf.ids),
+                           VersionDependent::isStatusEffect);
 
     conf.maxTimeInTicks = Math.max(conf.maxTimeInTicks, -1);
     conf.incrementalChances = chances(conf.incrementalChances);
