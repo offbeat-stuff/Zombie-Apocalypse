@@ -16,8 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin({ZombieEntity.class, DrownedEntity.class, ZombiePigmanEntity.class})
 public abstract class ZombieEquipmentMixin {
   @Inject(method = "initEquipment", at = @At("HEAD"), cancellable = true)
-  private void initEquipment(Random random, LocalDifficulty difficulty,
-                             CallbackInfo ci) {
+  private void initEquipment(LocalDifficulty difficulty, CallbackInfo ci) {
     var zombie = (ZombieEntity)(Object)this;
 
     if (!SpawnHandler.isPartOfApocalypse(zombie)) {

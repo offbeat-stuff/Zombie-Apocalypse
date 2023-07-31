@@ -5,7 +5,7 @@ import io.github.offbeat_stuff.zombie_apocalypse.ZombieKind;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,7 +17,7 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
 
   private ZombieKind kind = ZombieKind.Simple;
 
-  @Inject(method = "burnsInDaylight", at = @At("HEAD"), cancellable = true)
+  @Inject(method = "method_13605", at = @At("HEAD"), cancellable = true)
   void dontBurn(CallbackInfoReturnable<Boolean> cir) {
     cir.setReturnValue(ConfigHandler.zombiesBurnInSunlight);
   }
@@ -40,13 +40,13 @@ public abstract class ZombieEntityMixin implements ZombieEntityInterface {
     this.kind.attack(target);
   }
 
-  @Inject(method = "readCustomDataFromTag", at = @At("TAIL"))
-  private void nbtIn(CompoundTag nbt, CallbackInfo info) {
+  @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+  private void nbtIn(NbtCompound nbt, CallbackInfo info) {
     this.readNbtApocalypse(nbt);
   }
 
-  @Inject(method = "writeCustomDataToTag", at = @At("TAIL"))
-  private void nbtOut(CompoundTag nbt, CallbackInfo info) {
+  @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+  private void nbtOut(NbtCompound nbt, CallbackInfo info) {
     this.writeNbtApocalypse(nbt);
   }
 }

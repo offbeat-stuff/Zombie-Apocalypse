@@ -71,7 +71,7 @@ public class Utils {
   }
 
   public static String path(String path) {
-    return filter(path.toLowerCase(), Identifier::isCharValid);
+    return filter(path.toLowerCase(), Identifier::method_20440);
   }
 
   public static String namespace(String namespace) {

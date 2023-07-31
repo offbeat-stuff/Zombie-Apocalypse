@@ -8,12 +8,11 @@ import io.github.offbeat_stuff.zombie_apocalypse.config.Config.SpawnRange;
 import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
 import java.util.List;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnType;
 import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -69,7 +68,8 @@ public class SpawnHandler {
 
   @SuppressWarnings("unchecked")
   public static boolean isPartOfApocalypse(ZombieEntity entity) {
-    return mobs.contains((EntityType<? extends ZombieEntity>)entity.getType());
+    return mobs.contains(
+        (EntityType<? extends ZombieEntity>)entity.method_15557());
   }
 
   public static void load(SpawnConfig conf) {
@@ -108,27 +108,27 @@ public class SpawnHandler {
   private static boolean
   isSpawnableForEntity(ServerWorld world, BlockPos pos, ZombieEntity entity,
                        EntityType<? extends ZombieEntity> entityType) {
-    if (!world.getWorldBorder().contains(pos)) {
+    if (!world.method_8524().contains(pos)) {
       return false;
     }
 
-    if (world.getLightLevel(pos) > lightLevel) {
+    if (world.method_16358(pos) > lightLevel) {
       return false;
     }
 
     if (ConfigHandler.zombiesBurnInSunlight && world.isDay() &&
-        world.isSkyVisible(pos)) {
+        world.method_8555(pos)) {
       return false;
     }
 
     var state = world.getBlockState(pos.down());
 
-    if (!state.isSideSolidFullSquare(world, pos.down(), Direction.UP)) {
+    if (!Block.isFaceFullSquare(state.getCollisionShape(world, pos),
+                                Direction.UP)) {
       return false;
     }
 
-    if (checkIfBlockBelowAllowsSpawning &&
-        !state.allowsSpawning(world, pos, entityType)) {
+    if (checkIfBlockBelowAllowsSpawning && !state.method_16907()) {
       return false;
     }
 
@@ -138,16 +138,16 @@ public class SpawnHandler {
 
     entity.updatePosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 
-    return !world.intersectsEntities(entity) &&
-        !world.isAreaNotEmpty(entity.getBoundingBox()) &&
-        !world.intersectsFluid(entity.getBoundingBox());
+    return world.method_16382(entity, entity.getBoundingBox()) &&
+        world.method_16387(entity, entity.getBoundingBox()) &&
+        !world.method_16388(entity.getBoundingBox());
   }
 
   private static boolean spawnAttempt(ServerWorld world, BlockPos pos) {
 
     var entityType = mobs.spit();
-    var entity = entityType.create(world, null, null, null, pos,
-                                   SpawnType.NATURAL, false, false);
+    var entity =
+        entityType.method_15627(world, null, null, null, pos, false, false);
 
     if (entity == null) {
       return false;
@@ -173,7 +173,7 @@ public class SpawnHandler {
       return false;
     }
 
-    world.spawnEntity(entity);
+    world.method_3686(entity);
 
     StatusEffectHandler.applyRandomPotionEffects(entity);
 
@@ -222,31 +222,34 @@ public class SpawnHandler {
   }
 
   public static void spawnZombiesInWorld(ServerWorld world) {
-    if (world.getDifficulty().equals(Difficulty.PEACEFUL)) {
+    if (world.method_16346().equals(Difficulty.PEACEFUL)) {
       return;
     }
 
-    var maxZombieCount = maxZombieCountPerPlayer * world.getPlayers().size();
+    var maxZombieCount = maxZombieCountPerPlayer * world.playerEntities.size();
 
-    int zombieCount =
-        world.getMobCountsByCategory().getInt(EntityCategory.MONSTER);
+    int zombieCount = world.method_16324(ZombieEntity.class, maxZombieCount);
     if (zombieCount > maxZombieCount)
       return;
 
-    world.getPlayers().forEach(player -> {
+    world.playerEntities.forEach(player -> {
+      if (!(player instanceof ServerPlayerEntity serverPlayer)) {
+        return;
+      }
+      var pos = new BlockPos(player);
       if (spawnInstantly) {
-        handleFastSpawning(world, player, maxZombieCount - zombieCount,
-                           player.getBlockPos());
+        handleFastSpawning(world, serverPlayer, maxZombieCount - zombieCount,
+                           pos);
       } else {
-        handleSlowSpawning(world, player, maxZombieCount - zombieCount,
-                           player.getBlockPos());
+        handleSlowSpawning(world, serverPlayer, maxZombieCount - zombieCount,
+                           pos);
       }
     });
   }
 
   private static BlockPos randomAxisPos(BlockPos start) {
-    var dir =
-        Direction.from(Axis.method_16699(XRANDOM), AxisDirection.POSITIVE);
+    var dir = Direction.get(AxisDirection.POSITIVE,
+                            Axis.values()[XRANDOM.nextInt(3)]);
     return start.add(BlockPos.ORIGIN.offset(dir, generateExclusive(axis)));
   }
 
@@ -254,8 +257,8 @@ public class SpawnHandler {
     var r = XRANDOM.nextInt(3);
     var s = (r + XRANDOM.nextInt(2)) % 3;
 
-    var dirR = Direction.from(Axis.values()[r], AxisDirection.POSITIVE);
-    var dirS = Direction.from(Axis.values()[s], AxisDirection.POSITIVE);
+    var dirR = Direction.get(AxisDirection.POSITIVE, Axis.values()[r]);
+    var dirS = Direction.get(AxisDirection.POSITIVE, Axis.values()[s]);
 
     return start.add(BlockPos.ORIGIN.offset(dirR, generateExclusive(plane))
                          .offset(dirS, generateInclusive(plane)));
@@ -264,11 +267,11 @@ public class SpawnHandler {
   private static BlockPos randomBoxPos(BlockPos start) {
     var r = XRANDOM.nextInt(3);
 
-    var dirR = Direction.from(Axis.values()[r], AxisDirection.POSITIVE);
+    var dirR = Direction.get(AxisDirection.POSITIVE, Axis.values()[r]);
     var dirR1 =
-        Direction.from(Axis.values()[(r + 1) % 3], AxisDirection.POSITIVE);
+        Direction.get(AxisDirection.POSITIVE, Axis.values()[(r + 1) % 3]);
     var dirR2 =
-        Direction.from(Axis.values()[(r + 2) % 3], AxisDirection.POSITIVE);
+        Direction.get(AxisDirection.POSITIVE, Axis.values()[(r + 2) % 3]);
 
     return start.add(BlockPos.ORIGIN.offset(dirR, generateExclusive(box))
                          .offset(dirR1, generateInclusive(box))

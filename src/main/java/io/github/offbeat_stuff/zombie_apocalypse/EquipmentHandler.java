@@ -84,13 +84,13 @@ public class EquipmentHandler {
   public static void updateEnchantments(ServerWorld world,
                                         ZombieEntity zombie) {
     for (var slot : EquipmentSlot.values()) {
-      if (zombie.getEquippedStack(slot).isEmpty()) {
+      if (zombie.getStack(slot).isEmpty()) {
         continue;
       }
       if (!roll(enchantment.chance)) {
         continue;
       }
-      zombie.equipStack(slot, enchant(zombie.getEquippedStack(slot)));
+      zombie.equipStack(slot, enchant(zombie.getStack(slot)));
     }
   }
 

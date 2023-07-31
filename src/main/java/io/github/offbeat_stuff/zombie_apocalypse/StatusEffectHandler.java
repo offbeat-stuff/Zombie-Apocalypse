@@ -32,7 +32,7 @@ public class StatusEffectHandler {
     if (maxTimeInTicks > -1) {
       maxTimeInTicks = ZombieMod.XRANDOM.nextInt(maxTimeInTicks);
     }
-    entity.addStatusEffect(new StatusEffectInstance(
+    entity.method_2654(new StatusEffectInstance(
         effect, time, ZombieMod.XRANDOM.nextInt(maxAmplifier) + 1));
   }
 

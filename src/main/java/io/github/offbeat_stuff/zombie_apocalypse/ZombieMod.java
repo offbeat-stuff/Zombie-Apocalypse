@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Random;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,8 +57,9 @@ public class ZombieMod implements ModInitializer {
     }
 
     if (!wasTimeRight) {
-      for (var player : world.getPlayers()) {
-        ScreamHandler.scream(player);
+      for (var player : world.playerEntities) {
+        if (player instanceof ServerPlayerEntity serverPlayer)
+          ScreamHandler.scream(serverPlayer);
       }
     }
 
