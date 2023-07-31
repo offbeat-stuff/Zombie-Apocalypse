@@ -10,6 +10,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -29,6 +30,10 @@ public class VersionDependent {
   public static void applyArmorTrim(ServerWorld world, ItemStack stack,
                                     Identifier materialId,
                                     Identifier patternId) {
+    if (!(world.getEnabledFeatures().contains(FeatureFlags.UPDATE_1_20))) {
+      return;
+    }
+
     var material = getEntry(world, RegistryKeys.TRIM_MATERIAL, materialId);
     if (material == null) {
       return;
