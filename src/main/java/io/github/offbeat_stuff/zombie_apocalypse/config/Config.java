@@ -81,7 +81,12 @@ public class Config {
     public double weaponChance = 0.1;
 
     // Enchantment levels for armor and weapons
-    public Range enchantmentLevel = new Range(5, 40);
+    public EnchantmentConfig Enchantment = new EnchantmentConfig();
+  }
+
+  public static class EnchantmentConfig {
+    public Range level = new Range(5, 40);
+    public double chance = 0.5;
     public boolean treasureAllowed = true;
   }
 

@@ -80,7 +80,8 @@ public class ConfigHandler {
 
     conf.weaponChance = chance(conf.weaponChance);
 
-    correct(conf.enchantmentLevel);
+    correct(conf.Enchantment.level);
+    conf.Enchantment.chance = conf.Enchantment.chance;
   }
 
   private static void correct(TrimConfig conf) {
