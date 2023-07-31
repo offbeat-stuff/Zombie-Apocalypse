@@ -18,42 +18,40 @@ import net.minecraft.server.world.ServerWorld;
 public class EquipmentHandler {
 
   private static final ObjectList<Item> HELMETS_LIST = ObjectList.of(
-      Items.NETHERITE_HELMET, Items.DIAMOND_HELMET, Items.IRON_HELMET,
-      Items.GOLDEN_HELMET, Items.CHAINMAIL_HELMET, Items.LEATHER_HELMET,
-      Items.TURTLE_HELMET);
+      Items.DIAMOND_HELMET, Items.IRON_HELMET, Items.GOLDEN_HELMET,
+      Items.CHAINMAIL_HELMET, Items.LEATHER_HELMET, Items.TURTLE_HELMET);
 
-  private static final ObjectList<Item> CHESTPLATE_LIST =
-      ObjectList.of(Items.NETHERITE_CHESTPLATE, Items.DIAMOND_CHESTPLATE,
-                    Items.IRON_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
-                    Items.CHAINMAIL_CHESTPLATE, Items.LEATHER_CHESTPLATE);
+  private static final ObjectList<Item> CHESTPLATE_LIST = ObjectList.of(
+      Items.DIAMOND_CHESTPLATE, Items.IRON_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
+      Items.CHAINMAIL_CHESTPLATE, Items.LEATHER_CHESTPLATE);
 
   private static final ObjectList<Item> LEGGINGS_LIST = ObjectList.of(
-      Items.NETHERITE_LEGGINGS, Items.DIAMOND_LEGGINGS, Items.IRON_LEGGINGS,
-      Items.GOLDEN_LEGGINGS, Items.CHAINMAIL_LEGGINGS, Items.LEATHER_LEGGINGS);
+      Items.DIAMOND_LEGGINGS, Items.IRON_LEGGINGS, Items.GOLDEN_LEGGINGS,
+      Items.CHAINMAIL_LEGGINGS, Items.LEATHER_LEGGINGS);
 
-  private static final ObjectList<Item> BOOTS_LIST = ObjectList.of(
-      Items.NETHERITE_BOOTS, Items.DIAMOND_BOOTS, Items.IRON_BOOTS,
-      Items.GOLDEN_BOOTS, Items.CHAINMAIL_BOOTS, Items.LEATHER_BOOTS);
+  private static final ObjectList<Item> BOOTS_LIST =
+      ObjectList.of(Items.DIAMOND_BOOTS, Items.IRON_BOOTS, Items.GOLDEN_BOOTS,
+                    Items.CHAINMAIL_BOOTS, Items.LEATHER_BOOTS);
 
-  private static final ObjectList<Item> SWORDS_LIST = ObjectList.of(
-      Items.NETHERITE_SWORD, Items.DIAMOND_SWORD, Items.IRON_SWORD,
-      Items.GOLDEN_SWORD, Items.STONE_SWORD, Items.WOODEN_SWORD);
+  private static final ObjectList<Item> SWORDS_LIST =
+      ObjectList.of(Items.DIAMOND_SWORD, Items.IRON_SWORD, Items.GOLDEN_SWORD,
+                    Items.STONE_SWORD, Items.WOODEN_SWORD);
 
   private static final ObjectList<Item> SHOVELS_LIST = ObjectList.of(
-      Items.NETHERITE_SHOVEL, Items.DIAMOND_SHOVEL, Items.IRON_SHOVEL,
-      Items.GOLDEN_SHOVEL, Items.STONE_SHOVEL, Items.WOODEN_SHOVEL);
+      Items.DIAMOND_SHOVEL, Items.IRON_SHOVEL, Items.GOLDEN_SHOVEL,
+      Items.STONE_SHOVEL, Items.WOODEN_SHOVEL);
 
   private static final ObjectList<Item> PICKAXES_LIST = ObjectList.of(
-      Items.NETHERITE_PICKAXE, Items.DIAMOND_PICKAXE, Items.IRON_PICKAXE,
-      Items.GOLDEN_PICKAXE, Items.STONE_PICKAXE, Items.WOODEN_PICKAXE);
+      Items.DIAMOND_PICKAXE, Items.IRON_PICKAXE, Items.GOLDEN_PICKAXE,
+      Items.STONE_PICKAXE, Items.WOODEN_PICKAXE);
 
   private static final ObjectList<Item> AXES_LIST =
-      ObjectList.of(Items.NETHERITE_AXE, Items.DIAMOND_AXE, Items.IRON_AXE,
-                    Items.GOLDEN_AXE, Items.STONE_AXE, Items.WOODEN_AXE);
+      ObjectList.of(Items.DIAMOND_AXE, Items.IRON_AXE, Items.GOLDEN_AXE,
+                    Items.STONE_AXE, Items.WOODEN_AXE);
 
   private static final ObjectList<Item> HOES_LIST =
-      ObjectList.of(Items.NETHERITE_HOE, Items.DIAMOND_HOE, Items.IRON_HOE,
-                    Items.GOLDEN_HOE, Items.STONE_HOE, Items.WOODEN_HOE);
+      ObjectList.of(Items.DIAMOND_HOE, Items.IRON_HOE, Items.GOLDEN_HOE,
+                    Items.STONE_HOE, Items.WOODEN_HOE);
 
   private static WeightedList<Item> helmets;
   private static WeightedList<Item> chestplates;
@@ -131,6 +129,6 @@ public class EquipmentHandler {
       return;
     }
 
-    zombie.equipStack(slot, item.getDefaultStack());
+    zombie.equipStack(slot, new ItemStack(item));
   }
 }

@@ -9,17 +9,17 @@ import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import it.unimi.dsi.fastutil.objects.ObjectImmutableList;
 import java.util.List;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.SpawnType;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.math.Direction.AxisDirection;
 import net.minecraft.world.Difficulty;
 
 public class SpawnHandler {
@@ -56,8 +56,8 @@ public class SpawnHandler {
   }
 
   public static boolean checkWorld(ServerWorld world) {
-    if (!(dimensions.contains(world.getRegistryKey().getValue())))
-      return false;
+    // if (!(dimensions.contains(world.getRegistryKey().getValue())))
+    //   return false;
 
     var ctime = world.getTimeOfDay() % 24000;
     if (time.min < time.max) {
@@ -102,8 +102,7 @@ public class SpawnHandler {
 
   private static boolean isBlockedAtFoot(ServerWorld world, BlockPos pos,
                                          BlockState state) {
-    return state.emitsRedstonePower() ||
-        state.isIn(BlockTags.PREVENT_MOB_SPAWNING_INSIDE);
+    return state.emitsRedstonePower();
   }
 
   private static boolean
@@ -137,10 +136,10 @@ public class SpawnHandler {
       return false;
     }
 
-    entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+    entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 
     return !world.intersectsEntities(entity) &&
-        world.isSpaceEmpty(entity.getBoundingBox()) &&
+        !world.isAreaNotEmpty(entity.getBoundingBox()) &&
         !world.containsFluid(entity.getBoundingBox());
   }
 
@@ -148,7 +147,7 @@ public class SpawnHandler {
 
     var entityType = mobs.spit();
     var entity = entityType.create(world, null, null, null, pos,
-                                   SpawnReason.NATURAL, false, false);
+                                   SpawnType.NATURAL, false, false);
 
     if (entity == null) {
       return false;
@@ -174,7 +173,7 @@ public class SpawnHandler {
       return false;
     }
 
-    world.spawnEntityAndPassengers(entity);
+    world.spawnEntity(entity);
 
     StatusEffectHandler.applyRandomPotionEffects(entity);
 
@@ -230,8 +229,7 @@ public class SpawnHandler {
     var maxZombieCount = maxZombieCountPerPlayer * world.getPlayers().size();
 
     int zombieCount =
-        world.getChunkManager().getSpawnInfo().getGroupToCount().getInt(
-            SpawnGroup.MONSTER);
+        world.getMobCountsByCategory().getInt(EntityCategory.MONSTER);
     if (zombieCount > maxZombieCount)
       return;
 
@@ -247,25 +245,34 @@ public class SpawnHandler {
   }
 
   private static BlockPos randomAxisPos(BlockPos start) {
-    return start.add(BlockPos.ORIGIN.offset(Axis.pickRandomAxis(XRANDOM),
-                                            generateExclusive(axis)));
+    var dir =
+        Direction.from(Axis.pickRandomAxis(XRANDOM), AxisDirection.POSITIVE);
+    return start.add(BlockPos.ORIGIN.offset(dir, generateExclusive(axis)));
   }
 
   private static BlockPos randomPlanePos(BlockPos start) {
     var r = XRANDOM.nextInt(3);
     var s = (r + XRANDOM.nextInt(2)) % 3;
 
-    return start.add(
-        BlockPos.ORIGIN.offset(Axis.values()[r], generateExclusive(plane))
-            .offset(Axis.values()[s], generateInclusive(plane)));
+    var dirR = Direction.from(Axis.values()[r], AxisDirection.POSITIVE);
+    var dirS = Direction.from(Axis.values()[s], AxisDirection.POSITIVE);
+
+    return start.add(BlockPos.ORIGIN.offset(dirR, generateExclusive(plane))
+                         .offset(dirS, generateInclusive(plane)));
   }
 
   private static BlockPos randomBoxPos(BlockPos start) {
     var r = XRANDOM.nextInt(3);
-    return start.add(
-        BlockPos.ORIGIN.offset(Axis.values()[r], generateExclusive(box))
-            .offset(Axis.values()[(r + 1) % 3], generateInclusive(box))
-            .offset(Axis.values()[(r + 2) % 3], generateInclusive(box)));
+
+    var dirR = Direction.from(Axis.values()[r], AxisDirection.POSITIVE);
+    var dirR1 =
+        Direction.from(Axis.values()[(r + 1) % 3], AxisDirection.POSITIVE);
+    var dirR2 =
+        Direction.from(Axis.values()[(r + 2) % 3], AxisDirection.POSITIVE);
+
+    return start.add(BlockPos.ORIGIN.offset(dirR, generateExclusive(box))
+                         .offset(dirR1, generateInclusive(box))
+                         .offset(dirR2, generateInclusive(box)));
   }
 
   private static int generateExclusive(SpawnRange range) {

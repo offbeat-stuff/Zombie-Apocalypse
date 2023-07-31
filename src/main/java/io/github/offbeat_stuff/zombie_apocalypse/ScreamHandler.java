@@ -7,6 +7,7 @@ import net.minecraft.network.packet.s2c.play.TitleS2CPacket.Action;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
@@ -20,7 +21,8 @@ public class ScreamHandler {
 
   public static void load(ScreamConfig conf) {
     disabled = !conf.enabled;
-    message = Text.of(conf.message).copy().formatted(Formatting.DARK_RED);
+    message =
+        new LiteralText(conf.message).copy().formatted(Formatting.DARK_RED);
     sound = VersionDependent.getSound(conf.sound);
     volume = (float)conf.volume;
     pitch = (float)conf.pitch;

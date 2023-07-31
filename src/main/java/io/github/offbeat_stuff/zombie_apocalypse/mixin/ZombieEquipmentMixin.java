@@ -5,7 +5,7 @@ import io.github.offbeat_stuff.zombie_apocalypse.SpawnHandler;
 import java.util.Random;
 import net.minecraft.entity.mob.DrownedEntity;
 import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.entity.mob.ZombifiedPiglinEntity;
+import net.minecraft.entity.mob.ZombiePigmanEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.LocalDifficulty;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin({ZombieEntity.class, DrownedEntity.class, ZombifiedPiglinEntity.class})
+@Mixin({ZombieEntity.class, DrownedEntity.class, ZombiePigmanEntity.class})
 public abstract class ZombieEquipmentMixin {
   @Inject(method = "initEquipment", at = @At("HEAD"), cancellable = true)
   private void initEquipment(Random random, LocalDifficulty difficulty,

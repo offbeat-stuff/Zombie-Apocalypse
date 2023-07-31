@@ -73,10 +73,10 @@ public class ConfigHandler {
 
   private static void correct(EquipmentConfig conf) {
     conf.armorChances = withSize(conf.armorChances, 4);
-    conf.armorMaterialWeights = withSizeI(conf.armorMaterialWeights, 7);
+    conf.armorMaterialWeights = withSizeI(conf.armorMaterialWeights, 6);
 
     conf.weaponTypeWeights = withSizeI(conf.weaponTypeWeights, 5);
-    conf.weaponMaterialWeights = withSizeI(conf.weaponMaterialWeights, 6);
+    conf.weaponMaterialWeights = withSizeI(conf.weaponMaterialWeights, 5);
 
     conf.weaponChance = chance(conf.weaponChance);
 
