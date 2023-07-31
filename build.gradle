@@ -26,6 +26,8 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	implementation libs.toml4j
 	include libs.toml4j
+  implementation 'it.unimi.dsi:fastutil:8.5.12'
+  include 'it.unimi.dsi:fastutil:8.5.12'
 
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.

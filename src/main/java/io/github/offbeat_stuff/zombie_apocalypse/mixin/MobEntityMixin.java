@@ -27,7 +27,7 @@ public class MobEntityMixin {
     }
 
     ci.cancel();
-    if (!(zombie.getWorld() instanceof ServerWorld world)) {
+    if (!(zombie.world instanceof ServerWorld world)) {
       return;
     }
 

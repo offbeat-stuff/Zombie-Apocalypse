@@ -140,7 +140,7 @@ public class SpawnHandler {
 
     entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 
-    return world.doesNotIntersectEntities(entity) &&
+    return !world.intersectsEntities(entity) &&
         world.isSpaceEmpty(entity.getBoundingBox()) &&
         !world.containsFluid(entity.getBoundingBox());
   }
