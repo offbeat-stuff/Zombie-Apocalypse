@@ -79,7 +79,11 @@ public class VersionDependent {
     return Registries.STATUS_EFFECT.get(new Identifier(id));
   }
 
-  public static RegistryEntry<SoundEvent> getSound(String id) {
+  public static boolean isSound(String id) {
+    return Registries.SOUND_EVENT.get(new Identifier(id)) != null;
+  }
+
+  public static RegistryEntry<SoundEvent> getSoundEntry(String id) {
     var sound = Registries.SOUND_EVENT.get(new Identifier(id));
     return Registries.SOUND_EVENT.getEntry(sound);
   }

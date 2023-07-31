@@ -18,7 +18,7 @@ public class ConfigHandler {
 
   public static void load(Config config) {
     zombiesBurnInSunlight = config.zombiesBurnInSunlight;
-    ScreamHandler.setDoScream(config.doScream);
+    ScreamHandler.load(config.Scream);
 
     SpawnHandler.load(config.Spawning);
     EquipmentHandler.load(config.Equipment);
@@ -27,10 +27,22 @@ public class ConfigHandler {
   }
 
   public static void correct(Config config) {
+    correct(config.Scream);
     correct(config.Spawning);
     correct(config.Equipment);
     correct(config.ArmorTrims);
     correct(config.statusEffects);
+  }
+
+  private static void correct(ScreamConfig conf) {
+    conf.message = conf.message == null || conf.message.equals("")
+                       ? "Zombies are coming"
+                       : conf.message;
+    conf.sound = identifier(conf.sound);
+    conf.sound = VersionDependent.isSound(conf.sound) ? conf.sound
+                                                      : "entity.zombie.ambient";
+    conf.volume = Math.max(0, conf.volume);
+    conf.pitch = Math.max(0, conf.pitch);
   }
 
   private static void correct(SpawnConfig conf) {
