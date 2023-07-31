@@ -33,7 +33,8 @@ public class ScreamHandler {
       return;
     }
     player.networkHandler.sendPacket(new TitleS2CPacket(Action.TITLE, message));
-    var v = new Vec3d(player.getX(), player.getEyeY(), player.getZ());
+    var v =
+        new Vec3d(player.x, player.y + player.getStandingEyeHeight(), player.z);
     player.networkHandler.sendPacket(new PlaySoundS2CPacket(
         sound, SoundCategory.AMBIENT, v.x, v.y, v.z, volume, pitch));
   }

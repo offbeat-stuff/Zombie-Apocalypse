@@ -136,11 +136,11 @@ public class SpawnHandler {
       return false;
     }
 
-    entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+    entity.updatePosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 
     return !world.intersectsEntities(entity) &&
         !world.isAreaNotEmpty(entity.getBoundingBox()) &&
-        !world.containsFluid(entity.getBoundingBox());
+        !world.intersectsFluid(entity.getBoundingBox());
   }
 
   private static boolean spawnAttempt(ServerWorld world, BlockPos pos) {
@@ -246,7 +246,7 @@ public class SpawnHandler {
 
   private static BlockPos randomAxisPos(BlockPos start) {
     var dir =
-        Direction.from(Axis.pickRandomAxis(XRANDOM), AxisDirection.POSITIVE);
+        Direction.from(Axis.method_16699(XRANDOM), AxisDirection.POSITIVE);
     return start.add(BlockPos.ORIGIN.offset(dir, generateExclusive(axis)));
   }
 
