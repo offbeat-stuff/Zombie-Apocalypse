@@ -1,7 +1,6 @@
 package io.github.offbeat_stuff.zombie_apocalypse;
 
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
-import static net.minecraft.util.math.Direction.Axis.VALUES;
 
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.Range;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.SpawnConfig;
@@ -256,15 +255,17 @@ public class SpawnHandler {
     var r = XRANDOM.nextInt(3);
     var s = (r + XRANDOM.nextInt(2)) % 3;
 
-    return start.add(BlockPos.ORIGIN.offset(VALUES[r], generateExclusive(plane))
-                         .offset(VALUES[s], generateInclusive(plane)));
+    return start.add(
+        BlockPos.ORIGIN.offset(Axis.values()[r], generateExclusive(plane))
+            .offset(Axis.values()[s], generateInclusive(plane)));
   }
 
   private static BlockPos randomBoxPos(BlockPos start) {
     var r = XRANDOM.nextInt(3);
-    return start.add(BlockPos.ORIGIN.offset(VALUES[r], generateExclusive(box))
-                         .offset(VALUES[(r + 1) % 3], generateInclusive(box))
-                         .offset(VALUES[(r + 2) % 3], generateInclusive(box)));
+    return start.add(
+        BlockPos.ORIGIN.offset(Axis.values()[r], generateExclusive(box))
+            .offset(Axis.values()[(r + 1) % 3], generateInclusive(box))
+            .offset(Axis.values()[(r + 2) % 3], generateInclusive(box)));
   }
 
   private static int generateExclusive(SpawnRange range) {

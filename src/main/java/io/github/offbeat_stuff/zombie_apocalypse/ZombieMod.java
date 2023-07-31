@@ -9,12 +9,11 @@ import java.util.Random;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.world.ServerWorld;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ZombieMod implements ModInitializer {
-  public static final Logger LOGGER =
-      LoggerFactory.getLogger("zombie_apocalypse");
+  public static final Logger LOGGER = LogManager.getLogger("zombie_apocalypse");
   public static Random XRANDOM = new Random();
 
   private void handleConfig() {

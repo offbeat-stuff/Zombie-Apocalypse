@@ -10,10 +10,10 @@ public enum ZombieKind {
   public void attack(Entity target) {
     switch (this) {
     case Frost:
-      target.setFrozenTicks(target.getMinFreezeDamageTicks() + 40);
+      // target.setFrozenTicks(target.getMinFreezeDamageTicks() + 40);
       break;
     case Flame:
-      target.setOnFire(true);
+      target.setOnFireFor(40);
     default:
       break;
     }
