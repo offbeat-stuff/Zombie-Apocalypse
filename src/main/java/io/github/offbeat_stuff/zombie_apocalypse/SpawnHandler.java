@@ -268,11 +268,11 @@ public class SpawnHandler {
   }
 
   private static int generateExclusive(SpawnRange range) {
-    return XRANDOM.nextBetween(range.min, range.max) *
+    return XRANDOM.nextInt(range.min, range.max) *
         (XRANDOM.nextInt(2) == 0 ? -1 : 1);
   }
 
   private static int generateInclusive(SpawnRange range) {
-    return XRANDOM.nextBetween(-range.max, range.max);
+    return XRANDOM.nextInt(-range.max, range.max);
   }
 }

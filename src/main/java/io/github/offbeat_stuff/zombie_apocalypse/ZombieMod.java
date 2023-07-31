@@ -9,15 +9,13 @@ import java.util.Random;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.random.Xoroshiro128PlusPlusRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ZombieMod implements ModInitializer {
   public static final Logger LOGGER =
       LoggerFactory.getLogger("zombie_apocalypse");
-  public static Xoroshiro128PlusPlusRandom XRANDOM =
-      new Xoroshiro128PlusPlusRandom(new Random().nextLong());
+  public static Random XRANDOM = new Random();
 
   private void handleConfig() {
     var settingsFile = FabricLoader.getInstance()

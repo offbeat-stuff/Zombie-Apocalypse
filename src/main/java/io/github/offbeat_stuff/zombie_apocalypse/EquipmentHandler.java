@@ -99,7 +99,7 @@ public class EquipmentHandler {
   private static ItemStack enchant(ItemStack stack) {
     return EnchantmentHelper.enchant(
         XRANDOM, stack,
-        XRANDOM.nextBetween(enchantment.level.min, enchantment.level.max),
+        XRANDOM.nextInt(enchantment.level.min, enchantment.level.max),
         enchantment.treasureAllowed);
   }
 
