@@ -14,14 +14,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 
 public class SpawnHandler {
@@ -105,8 +104,7 @@ public class SpawnHandler {
   private static boolean isBlockedAtFoot(ServerWorld world, BlockPos pos,
                                          BlockState state) {
     return state.emitsRedstonePower() ||
-        state.isIn(BlockTags.PREVENT_MOB_SPAWNING_INSIDE) ||
-        state.isIn(BlockTags.INVALID_SPAWN_INSIDE);
+        state.isIn(BlockTags.PREVENT_MOB_SPAWNING_INSIDE);
   }
 
   private static boolean
@@ -140,7 +138,7 @@ public class SpawnHandler {
       return false;
     }
 
-    entity.setPosition(Vec3d.add(pos, 0.5, 0.0, 0.5));
+    entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 
     return world.doesNotIntersectEntities(entity) &&
         world.isSpaceEmpty(entity.getBoundingBox()) &&
@@ -150,8 +148,8 @@ public class SpawnHandler {
   private static boolean spawnAttempt(ServerWorld world, BlockPos pos) {
 
     var entityType = mobs.spit();
-    var entity = entityType.create(world, null, null, pos, SpawnReason.NATURAL,
-                                   false, false);
+    var entity = entityType.create(world, null, null, null, pos,
+                                   SpawnReason.NATURAL, false, false);
 
     if (entity == null) {
       return false;
