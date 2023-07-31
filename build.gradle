@@ -24,7 +24,6 @@ dependencies {
 	modImplementation libs.fabric.loader
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation libs.fabric.api
 	implementation libs.toml4j
 	include libs.toml4j
 
