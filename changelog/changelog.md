@@ -9,4 +9,7 @@
 
 - remove dependency on fabric api
 
+## Fixes
+
+- Fix 1.16.5 mixins error
 
