@@ -1,10 +1,12 @@
 ## New Features
 
-- retain zombie kind across world saves (potentially)
+- Enchantment chance
+- config options for scream
+- sound when screaming zombie message
 
 
 ## Changes
 
-- armor on zombified piglin + drowned
+- remove dependency on fabric api
 
 

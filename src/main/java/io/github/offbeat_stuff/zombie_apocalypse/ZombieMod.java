@@ -7,7 +7,6 @@ import io.github.offbeat_stuff.zombie_apocalypse.config.ConfigHandler;
 import java.io.IOException;
 import java.util.Random;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Xoroshiro128PlusPlusRandom;
@@ -53,7 +52,7 @@ public class ZombieMod implements ModInitializer {
 
   public static boolean wasTimeRight = false;
 
-  private void spawnZombiesInWorld(ServerWorld world) {
+  public static void spawnZombiesInWorld(ServerWorld world) {
     if (!SpawnHandler.checkWorld(world)) {
       wasTimeRight = false;
       return;
@@ -73,7 +72,5 @@ public class ZombieMod implements ModInitializer {
   @Override
   public void onInitialize() {
     handleConfig();
-    ServerTickEvents.END_SERVER_TICK.register(
-        server -> server.getWorlds().forEach(this::spawnZombiesInWorld));
   }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Config {
   public boolean zombiesBurnInSunlight = false;
-  public boolean doScream = true;
+  public ScreamConfig Scream = new ScreamConfig();
 
   public SpawnConfig Spawning = new SpawnConfig();
 
@@ -15,6 +15,14 @@ public class Config {
 
   // Status effects for Zombie
   public StatusEffectConfig statusEffects = new StatusEffectConfig();
+
+  public static class ScreamConfig {
+    public boolean enabled = true;
+    public String message = "Zombies are coming";
+    public String sound = "entity.zombie.ambient";
+    public double volume = 2.0;
+    public double pitch = 1.0;
+  }
 
   public static class SpawnConfig {
     public boolean spawnInstantly = false;
@@ -73,7 +81,12 @@ public class Config {
     public double weaponChance = 0.1;
 
     // Enchantment levels for armor and weapons
-    public Range enchantmentLevel = new Range(5, 40);
+    public EnchantmentConfig Enchantment = new EnchantmentConfig();
+  }
+
+  public static class EnchantmentConfig {
+    public Range level = new Range(5, 40);
+    public double chance = 0.5;
     public boolean treasureAllowed = true;
   }
 

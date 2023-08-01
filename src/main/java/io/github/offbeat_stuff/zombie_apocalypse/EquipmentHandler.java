@@ -3,8 +3,8 @@ package io.github.offbeat_stuff.zombie_apocalypse;
 import static io.github.offbeat_stuff.zombie_apocalypse.Utils.*;
 import static io.github.offbeat_stuff.zombie_apocalypse.ZombieMod.XRANDOM;
 
+import io.github.offbeat_stuff.zombie_apocalypse.config.Config.EnchantmentConfig;
 import io.github.offbeat_stuff.zombie_apocalypse.config.Config.EquipmentConfig;
-import io.github.offbeat_stuff.zombie_apocalypse.config.Config.Range;
 import it.unimi.dsi.fastutil.doubles.DoubleImmutableList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -64,8 +64,7 @@ public class EquipmentHandler {
   private static double[] armor;
   private static double weapon;
 
-  private static Range enchanctmentLevel;
-  private static boolean treasureAllowed;
+  private static EnchantmentConfig enchantment;
 
   public static void load(EquipmentConfig conf) {
     armor = (new DoubleImmutableList(conf.armorChances)).toDoubleArray();
@@ -81,15 +80,17 @@ public class EquipmentHandler {
                       HOES_LIST),
         conf.weaponMaterialWeights, conf.weaponTypeWeights);
 
-    enchanctmentLevel = conf.enchantmentLevel;
-    treasureAllowed = conf.treasureAllowed;
+    enchantment = conf.Enchantment;
   }
 
   public static void updateEnchantments(ServerWorld world,
                                         ZombieEntity zombie) {
     for (var slot : EquipmentSlot.values()) {
       if (zombie.getEquippedStack(slot).isEmpty()) {
-        return;
+        continue;
+      }
+      if (!roll(enchantment.chance)) {
+        continue;
       }
       zombie.equipStack(slot, enchant(zombie.getEquippedStack(slot)));
     }
@@ -98,8 +99,8 @@ public class EquipmentHandler {
   private static ItemStack enchant(ItemStack stack) {
     return EnchantmentHelper.enchant(
         XRANDOM, stack,
-        XRANDOM.nextBetween(enchanctmentLevel.min, enchanctmentLevel.max),
-        treasureAllowed);
+        XRANDOM.nextBetween(enchantment.level.min, enchantment.level.max),
+        enchantment.treasureAllowed);
   }
 
   public static void initEquipment(ServerWorld world, ZombieEntity zombie) {

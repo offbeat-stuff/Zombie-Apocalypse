@@ -11,6 +11,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 public class VersionDependent {
@@ -76,5 +77,14 @@ public class VersionDependent {
 
   public static StatusEffect getStatusEffect(String id) {
     return Registries.STATUS_EFFECT.get(new Identifier(id));
+  }
+
+  public static boolean isSound(String id) {
+    return Registries.SOUND_EVENT.get(new Identifier(id)) != null;
+  }
+
+  public static RegistryEntry<SoundEvent> getSoundEntry(String id) {
+    var sound = Registries.SOUND_EVENT.get(new Identifier(id));
+    return Registries.SOUND_EVENT.getEntry(sound);
   }
 }
