@@ -182,7 +182,10 @@ public class SpawnHandler {
     StatusEffectHandler.applyRandomPotionEffects(entity);
 
     if (Utils.roll(variant) && entity instanceof ZombieEntityInterface zombie) {
-      zombie.setKind(variants.spit());
+      var variant = variants.spit();
+      if (variant != null) {
+        zombie.setKind(variant);
+      }
     }
 
     return true;
