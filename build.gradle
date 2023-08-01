@@ -1,6 +1,5 @@
 plugins {
   alias libs.plugins.fabric.loom
-  id 'maven-publish'
   alias libs.plugins.modrinth
   alias libs.plugins.vineflower
 }
@@ -92,38 +91,21 @@ def getSupportedVersions() {
 
 tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
 
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
-  
-  modrinth {
-    token = System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
-    projectId = "Q1KtvmCe" // This can be the project ID or the slug. Either will work!
-    versionNumber = project.mod_version + '-' + project.minecraft_version // You don't need to set this manually. Will fail if Modrinth has this version already
-    versionType = rootProject.getVersionType() // This is the default -- can also be `beta` or `alpha`
-    uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
-    gameVersions = rootProject.getSupportedVersions() // Must be an array, even with only one version
-    loaders = ["fabric","quilt"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
-    changelog = rootProject.file("changelog/changelog.md").text
-    syncBodyFrom = rootProject.file("README.md").text
-    dependencies { // A special DSL for creating dependencies
-        // scope.type
-        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
-        // The type can either be `project` or `version`
-        required.project "fabric-api" // Creates a new required dependency on Fabric API
-        // optional.version "sodium", "mc1.19.3-0.4.8" // Creates a new optional dependency on this specific version of Sodium
-    }
+modrinth {
+  token = System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
+  projectId = "Q1KtvmCe" // This can be the project ID or the slug. Either will work!
+  versionNumber = project.mod_version + '-' + project.minecraft_version // You don't need to set this manually. Will fail if Modrinth has this version already
+  versionType = rootProject.getVersionType() // This is the default -- can also be `beta` or `alpha`
+  uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+  gameVersions = rootProject.getSupportedVersions() // Must be an array, even with only one version
+  loaders = ["fabric","quilt"] // Must also be an array - no need to specify this if you're using Loom or ForgeGradle
+  changelog = rootProject.file("changelog/changelog.md").text
+  syncBodyFrom = rootProject.file("README.md").text
+  dependencies { // A special DSL for creating dependencies
+      // scope.type
+      // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+      // The type can either be `project` or `version`
+      // required.project "fabric-api" // Creates a new required dependency on Fabric API
+      // optional.version "sodium", "mc1.19.3-0.4.8" // Creates a new optional dependency on this specific version of Sodium
   }
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	}
 }
