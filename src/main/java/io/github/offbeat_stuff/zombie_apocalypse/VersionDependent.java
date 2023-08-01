@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.Sound;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class VersionDependent {
 
@@ -17,13 +16,13 @@ public class VersionDependent {
 
   @SuppressWarnings("unchecked")
   public static boolean isZombie(String id) {
-    var entity = Registry.ENTITY_TYPE.getByIdentifier(new Identifier(id));
+    var entity = EntityType.REGISTRY.get(new Identifier(id));
     if (entity == null) {
       return false;
     }
 
     try {
-      var z = (EntityType<? extends ZombieEntity>)entity;
+      var z = (Class<? extends ZombieEntity>)entity;
       return true;
     } catch (Exception e) {
       return false;
@@ -31,31 +30,31 @@ public class VersionDependent {
   }
 
   @SuppressWarnings("unchecked")
-  public static EntityType<? extends ZombieEntity> getZombie(String id) {
-    var entity = Registry.ENTITY_TYPE.getByIdentifier(new Identifier(id));
+  public static Class<? extends ZombieEntity> getZombie(String id) {
+    var entity = EntityType.REGISTRY.get(new Identifier(id));
     if (entity == null) {
       return null;
     }
     try {
-      return (EntityType<? extends ZombieEntity>)entity;
+      return (Class<? extends ZombieEntity>)entity;
     } catch (Exception e) {
       return null;
     }
   }
 
   public static boolean isStatusEffect(String id) {
-    return Registry.MOB_EFFECT.containsId(new Identifier(id));
+    return StatusEffect.REGISTRY.containsKey(new Identifier(id));
   }
 
   public static StatusEffect getStatusEffect(String id) {
-    return Registry.MOB_EFFECT.getByIdentifier(new Identifier(id));
+    return StatusEffect.REGISTRY.get(new Identifier(id));
   }
 
   public static boolean isSound(String id) {
-    return Registry.SOUND_EVENT.containsId(new Identifier(id));
+    return Sound.REGISTRY.containsKey(new Identifier(id));
   }
 
   public static Sound getSound(String id) {
-    return Registry.SOUND_EVENT.getByIdentifier(new Identifier(id));
+    return Sound.REGISTRY.get(new Identifier(id));
   }
 }

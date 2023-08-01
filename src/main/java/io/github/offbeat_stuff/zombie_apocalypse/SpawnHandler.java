@@ -26,7 +26,7 @@ public class SpawnHandler {
   private static double minPlayerDistance;
   private static int maxZombieCountPerPlayer;
 
-  private static WeightedList<EntityType<? extends ZombieEntity>> mobs;
+  private static WeightedList<EntityType> mobs;
 
   private static double variant;
   private static WeightedList<ZombieKind> variants;
@@ -46,8 +46,7 @@ public class SpawnHandler {
   private static Range time;
   private static List<Identifier> dimensions;
 
-  public static List<EntityType<? extends ZombieEntity>>
-  getMobs(List<String> mobs) {
+  public static List<Identifier> getMobs(List<String> mobs) {
     return mobs.stream()
         .map(VersionDependent::getZombie)
         .filter(f -> f != null)
@@ -69,7 +68,7 @@ public class SpawnHandler {
   @SuppressWarnings("unchecked")
   public static boolean isPartOfApocalypse(ZombieEntity entity) {
     return mobs.contains(
-        (EntityType<? extends ZombieEntity>)entity.method_15557());
+        EntityType.REGISTRY.getIdentifier(entity.getClass()).toString());
   }
 
   public static void load(SpawnConfig conf) {
@@ -78,8 +77,7 @@ public class SpawnHandler {
     checkIfBlockBelowAllowsSpawning = conf.checkIfBlockBelowAllowsSpawning;
 
     lightLevel = conf.lightLevel;
-    mobs = new WeightedList<EntityType<? extends ZombieEntity>>(
-        getMobs(conf.mobIds), conf.mobWeights);
+    mobs = new WeightedList<EntityType>(getMobs(conf.mobIds), conf.mobWeights);
 
     variant = conf.variants.chance;
     variants = new WeightedList<ZombieKind>(
