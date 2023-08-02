@@ -43,19 +43,25 @@ public class PotionAttackGoal extends Goal {
     return true;
   }
 
+  @Override
   public boolean shouldContinue() {
     return this.canStart() ||
         this.target.isAlive() && !this.owner.getNavigation().isIdle();
   }
 
+  @Override
   public void stop() {
     this.target = null;
     this.lastSeenTarget = 0;
     this.countdown = -1;
   }
 
-  public boolean shouldRunEveryTick() { return true; }
+  @Override
+  public boolean shouldRunEveryTick() {
+    return true;
+  }
 
+  @Override
   public void tick() {
     var dist = this.owner.squaredDistanceTo(this.target);
     var canSee = this.owner.getVisibilityCache().canSee(this.target);
